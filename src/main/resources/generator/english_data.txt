@@ -1,0 +1,19 @@
+plugins: plugin,minigame
+entities: team,generator,shops,event,command
+colors: dark red:DARK_RED,red:RED,orange:ORANGE,yellow:YELLOW,dark green:DARK_GREEN,green:GREEN,aqua:AQUA,cyan:CYAN,dark blue:DARK_BLUE,blue:BLUE,magenta:MAGENTA,purple:PURPLE,white:WHITE,dark gray:DARK_GRAY,gray:GRAY,black:BLACK
+events: a player joins the server: onPlayerJoin-player, a player leaves the server: onPlayerLeave-player
+materials: diamond:DIAMOND,diamonds:DIAMOND,iron ingot:IRON_INGOT,iron ingots:IRON_INGOT
+Action Grammar:
+create: create PLUGIN
+add: add ENTITY
+named: named TEXT... and TEXT|named TEXT_NAME
+name: with name TEXT_NAME
+names: with names TEXT... and TEXT
+teams: with NUMBER_TEAMS teams => team
+players: of NUMBER_PLAYERS players|of NUMBER... and NUMBER players|with NUMBER_PLAYERS players|with NUMBER... and NUMBER players
+colors: with colors COLOR... and COLOR
+color: with color COLOR
+prompt: with prompt TEXT_PROMPT
+to: to detect when EVENT|to execute -> function|to player_PLAYER/console_CONSOLE
+send: send message_MESSAGE TEXT|send title_TITLE TEXT => send
+give: give NUMBER MATERIAL|give MATERIAL|give NUMBER levels|give NUMBER xp|give POTION => give

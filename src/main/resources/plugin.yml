@@ -1,0 +1,8 @@
+name: PluginCoder
+version: '${project.version}'
+main: berty.plugincoder.main.PluginCoder
+api-version: 1.19
+commands:
+  plugincoder:
+    description: pc commands
+    aliases: [pc]
