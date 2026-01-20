@@ -130,7 +130,7 @@ public class PluginCoder extends JavaPlugin{
 		}
 		//comprobar carpeta generators
 		File generator= new File(this.getDataFolder().getParentFile().getPath()+"/PluginCoder/generator");
-		if(!generator.exists())generator.mkdir();
+		if(!generator.exists())generator.mkdirs();
 	}
 	public void onDisable() {
 		FileConfiguration config=this.getConfig();
@@ -146,56 +146,6 @@ public class PluginCoder extends JavaPlugin{
 			writer.savePlugin(plugin);
 			PluginConfig.save(plugin);
 		}
-	}
-	public Map<String,Object> getPluginVars(Plugin plugin){
-		Map<String,Object> pluginVars=new HashMap<>();
-		pluginVars.put("plugin",plugin.getMainObjectInstance());
-		pluginVars.put("server", Bukkit.getServer());
-		//TODO añadir más variables si es necesario
-		return pluginVars;
-	}
-	public Map<String,String> getPluginVarTypes(){
-		Map<String,String> pluginVars=new HashMap<>();
-		pluginVars.put("plugin","PluginObject.Plugin");
-		pluginVars.put("server", Bukkit.getServer().getClass().getTypeName());
-		//TODO añadir más variables si es necesario
-		return pluginVars;
-	}
-	public int getVersionNumber() {
-		return versionNumber;
-	}
-
-	public Language getLanguage() {
-		return language;
-	}
-
-	public void updateLanguage(Language language){
-		this.language=language;
-		reader.readLanguage();
-	}
-	public List<Plugin> getPlugins() {
-		return plugins;
-	}
-
-	public Plugin getSelectedPlugin() {
-		return selectedPlugin;
-	}
-
-	public void setSelectedPlugin(Plugin selectedPlugin) {
-		this.selectedPlugin = selectedPlugin;
-	}
-
-	public CodeUtils getCodeUtils() {
-		return codeUtils;
-	}
-
-
-	public Map<String, List<String>> getMethodTranslator() {
-		Map<String, List<String>> methodTranslator=new HashMap<>();
-		for(PluginMethod method:methods){
-			methodTranslator.put(method.getName(),new ArrayList<>(method.getTranslatedMethodClasses().keySet()));
-		}
-		return methodTranslator;
 	}
 	public Plugin createNewPlugin(String name){
 		Plugin plugin=new Plugin(name);
@@ -216,6 +166,53 @@ public class PluginCoder extends JavaPlugin{
 			if(method.getName().equalsIgnoreCase(name))return method;
 		}
 		return null;
+	}
+	public Map<String,Object> getPluginVars(Plugin plugin){
+		Map<String,Object> pluginVars=new HashMap<>();
+		pluginVars.put("plugin",plugin.getMainObjectInstance());
+		pluginVars.put("server", Bukkit.getServer());
+		//TODO añadir más variables si es necesario
+		return pluginVars;
+	}
+	public Map<String,String> getPluginVarTypes(){
+		Map<String,String> pluginVars=new HashMap<>();
+		pluginVars.put("plugin","PluginObject.Plugin");
+		pluginVars.put("server", Bukkit.getServer().getClass().getTypeName());
+		//TODO añadir más variables si es necesario
+		return pluginVars;
+	}
+	public void updateLanguage(Language language){
+		this.language=language;
+		reader.readLanguage();
+	}
+	public Map<String, List<String>> getMethodTranslator() {
+		Map<String, List<String>> methodTranslator=new HashMap<>();
+		for(PluginMethod method:methods){
+			methodTranslator.put(method.getName(),new ArrayList<>(method.getTranslatedMethodClasses().keySet()));
+		}
+		return methodTranslator;
+	}
+	public List<Plugin> getPlugins() {
+		return plugins;
+	}
+
+	public Plugin getSelectedPlugin() {
+		return selectedPlugin;
+	}
+
+	public void setSelectedPlugin(Plugin selectedPlugin) {
+		this.selectedPlugin = selectedPlugin;
+	}
+	public int getVersionNumber() {
+		return versionNumber;
+	}
+
+	public Language getLanguage() {
+		return language;
+	}
+
+	public CodeUtils getCodeUtils() {
+		return codeUtils;
 	}
 	public static boolean isErrorFound() {
 		return errorFound;

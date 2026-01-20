@@ -18,8 +18,7 @@ import java.util.zip.ZipOutputStream;
 public class PluginCompiler {
     public static PluginCoder mainPlugin;
     public static void compilePlugin(Plugin plugin) throws Exception {
-        String filesPrefix = mainPlugin.getDataFolder().getParentFile().getPath() +
-                "/PluginCoder/plugins/"+ plugin.getName();
+        String filesPrefix = mainPlugin.getDataFolder().getPath()+"/plugins/"+ plugin.getName();
         File pluginFolder=new File(filesPrefix);
         if(!pluginFolder.exists())pluginFolder.mkdir();
         filesPrefix+="/"+ plugin.getName();
@@ -32,8 +31,8 @@ public class PluginCompiler {
     }
 
     public static void deletePluginFiles(Plugin plugin){
-        deleteFiles(new File(mainPlugin.getDataFolder().getParentFile().getPath()+ "/PluginCoder/plugins/"+plugin.getName()+"/"+plugin.getName()));
-        deleteFiles(new File(mainPlugin.getDataFolder().getParentFile().getPath()+ "/PluginCoder/plugins/"+plugin.getName()+"/output"));
+        deleteFiles(new File(mainPlugin.getDataFolder().getPath()+ "/plugins/"+plugin.getName()+"/"+plugin.getName()));
+        deleteFiles(new File(mainPlugin.getDataFolder().getPath()+ "/plugins/"+plugin.getName()+"/output"));
     }
     private static void deleteFiles(File rootDir) {
         if(!rootDir.exists())return;
@@ -43,9 +42,9 @@ public class PluginCompiler {
     }
 
     private static void compileFiles(Plugin plugin) throws Exception {
-        String sourcePath = mainPlugin.getDataFolder().getParentFile().getPath()+ "/PluginCoder/plugins/"+plugin.getName()+"/"+plugin.getName();
+        String sourcePath = mainPlugin.getDataFolder().getPath()+ "/plugins/"+plugin.getName()+"/"+plugin.getName();
         String mainJavaFilePath = sourcePath + "/main/Plugin.java";
-        String outputDirectoryPath = mainPlugin.getDataFolder().getParentFile().getPath()+ "/PluginCoder/plugins/"+plugin.getName()+"/output";
+        String outputDirectoryPath = mainPlugin.getDataFolder().getPath()+ "/plugins/"+plugin.getName()+"/output";
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
         if (compiler == null) {
             //no hay compilador
@@ -68,8 +67,8 @@ public class PluginCompiler {
         }catch (Exception e){}
     }
     private static void createJarFile(Plugin plugin) {
-        String outputJarDirectoryPath=mainPlugin.getDataFolder().getParentFile().getPath() + "/PluginCoder/plugins/"+plugin.getName();
-        String sourceDirectoryPath=mainPlugin.getDataFolder().getParentFile().getPath() + "/PluginCoder/plugins/"+plugin.getName()+"/output";
+        String outputJarDirectoryPath=mainPlugin.getDataFolder().getPath() + "/plugins/"+plugin.getName();
+        String sourceDirectoryPath=mainPlugin.getDataFolder().getPath() + "/plugins/"+plugin.getName()+"/output";
         try {
             String jarFileName = outputJarDirectoryPath + "/"+plugin.getName()+".jar";
             FileOutputStream fos = new FileOutputStream(jarFileName);

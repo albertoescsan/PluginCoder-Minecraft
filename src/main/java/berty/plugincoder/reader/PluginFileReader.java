@@ -34,7 +34,7 @@ public class PluginFileReader {
 		return lineas;
 	}
 	public void registerPlugins() {
-		File dir = new File(mainPlugin.getDataFolder().getParentFile().getPath()+"/PluginCoder/plugins");
+		File dir = new File(mainPlugin.getDataFolder().getPath()+"/plugins");
 		if (!dir.exists())dir.mkdirs();
 		if (!dir.isDirectory())return;
 		if (dir.listFiles() == null)return;
@@ -44,7 +44,7 @@ public class PluginFileReader {
 		}
 	}
 	public void readCode(Plugin plugin) {
-		File file=new File(mainPlugin.getDataFolder().getParentFile().getPath()+"/PluginCoder/plugins/"+plugin.getName()+".txt");
+		File file=new File(mainPlugin.getDataFolder().getPath()+"/plugins/"+plugin.getName()+".txt");
 		if(!file.exists()){
 			try{file.createNewFile();return;}
 			catch (Exception e){e.printStackTrace();}

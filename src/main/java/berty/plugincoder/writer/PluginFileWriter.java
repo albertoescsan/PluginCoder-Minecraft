@@ -18,9 +18,9 @@ public class PluginFileWriter {
         mainPlugin=pluginCoder;
     }
     public void savePlugin(Plugin plugin){
-        File pluginDir=new File(mainPlugin.getDataFolder().getParentFile().getPath()+"/PluginCoder/plugins/");
+        File pluginDir=new File(mainPlugin.getDataFolder().getPath()+"/plugins/");
         if(!pluginDir.exists())pluginDir.mkdirs();
-        File pluginFile=new File(mainPlugin.getDataFolder().getParentFile().getPath()+"/PluginCoder/plugins/"+plugin.getName()+".txt");
+        File pluginFile=new File(mainPlugin.getDataFolder().getPath()+"/plugins/"+plugin.getName()+".txt");
         try{
             if(!pluginFile.exists())pluginFile.createNewFile();
         }catch (Exception e){return;}

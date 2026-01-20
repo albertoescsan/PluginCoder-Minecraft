@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="PluginCoder:jar">
-    <output-path>$PROJECT_DIR$/../SpigotServer/plugins</output-path>
-    <root id="archive" name="PluginCoder.jar">
-      <element id="module-output" name="PluginCoder" />
-    </root>
-  </artifact>
-</component>
