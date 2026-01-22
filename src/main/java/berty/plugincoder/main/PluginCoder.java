@@ -129,7 +129,7 @@ public class PluginCoder extends JavaPlugin{
 					.forEach(var->plugin.getMainObjectInstance().getProperties().put(var,variables.get(var)));
 		}
 		//comprobar carpeta generators
-		File generator= new File(this.getDataFolder().getParentFile().getPath()+"/PluginCoder/generator");
+		File generator= new File(this.getDataFolder().getPath()+"/generator");
 		if(!generator.exists())generator.mkdirs();
 	}
 	public void onDisable() {
@@ -266,29 +266,5 @@ public class PluginCoder extends JavaPlugin{
 	}
 	public static CoderGUI getCoderGUI() {
 		return coderGUI;
-	}
-	public static EventsGUI getEventsGUI() {
-		return coderGUI.getEventsGUI();
-	}
-	public FunctionGUI getFunctionGUI() {
-		return coderGUI.getFunctionGUI();
-	}
-	public VariableGUI getVariableGUI() {
-		return coderGUI.getVariableGUI();
-	}
-	public ExecutionWriterGUI getExecutionWriterGUI() {
-		return coderGUI.getExecutionWriterGUI();
-	}
-	public static ObjectsGUI getObjectsGUI() {
-		return coderGUI.getObjectsGUI();
-	}
-	public ReturnGUI getReturnGUI() {
-		return coderGUI.getReturnGUI();
-	}
-	public PluginsGUI getPluginsGUI() {
-		return coderGUI.getPluginsGUI();
-	}
-	public SetValueGUI getSetValueGUI() {
-		return coderGUI.getSetValueGUI();
 	}
 }

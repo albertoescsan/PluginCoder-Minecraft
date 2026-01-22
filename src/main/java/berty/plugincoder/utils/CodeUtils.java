@@ -273,4 +273,16 @@ public class CodeUtils {
         if(org.bukkit.scoreboard.Scoreboard.class.isAssignableFrom(classType))type=Scoreboard.class.getTypeName();
         return type;
     }
+    public static Class<?> primitiveToWrapper(Class<?> clazz) {
+        if (clazz == boolean.class) return Boolean.class;
+        if (clazz == byte.class)    return Byte.class;
+        if (clazz == char.class)    return Character.class;
+        if (clazz == short.class)   return Short.class;
+        if (clazz == int.class)     return Integer.class;
+        if (clazz == long.class)    return Long.class;
+        if (clazz == float.class)   return Float.class;
+        if (clazz == double.class)  return Double.class;
+        if (clazz == void.class)    return Void.class;
+        return clazz;
+    }
 }

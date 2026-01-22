@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 public class MathGUI {
-    private PluginCoder plugin;
+    private PluginCoder mainPlugin;
     private Inventory gui;
 
     private List<String> renderedInstructions=new ArrayList<>();
@@ -24,8 +24,8 @@ public class MathGUI {
     private List<Boolean> isNewNumber=new ArrayList<>();
     private List<Integer> lastIndex=new ArrayList<>();
     public MathGUI(PluginCoder pluginCoder){
-        plugin=pluginCoder;
-        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> createInventory(), 2);
+        mainPlugin =pluginCoder;
+        Bukkit.getScheduler().scheduleSyncDelayedTask(mainPlugin, () -> createInventory(), 2);
     }
 
     public void createInventory() {
@@ -61,7 +61,7 @@ public class MathGUI {
     closeParentesis.setItemMeta(meta);
     gui.setItem(37,plus);gui.setItem(38,minus);gui.setItem(39,product);gui.setItem(40,division);gui.setItem(41,rest);
     gui.setItem(42,openParentesis);gui.setItem(43,closeParentesis);
-    ItemStack negro=plugin.getVersionNumber()<13?
+    ItemStack negro= mainPlugin.getVersionNumber()<13?
                 new ItemStack(Material.getMaterial("STAINED_GLASS_PANE"),1,(short)15):new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
     meta=negro.getItemMeta();
     meta.setDisplayName(ChatColor.WHITE+"");
@@ -76,7 +76,7 @@ public class MathGUI {
     meta.setDisplayName(ChatColor.WHITE+"");
     nextItem.setItemMeta(meta);
     gui.setItem(18,backItem);gui.setItem(26,nextItem);
-    ItemStack instructionItem=new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.OAK_SIGN));
+    ItemStack instructionItem=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.OAK_SIGN));
     gui.setItem(4,instructionItem);
     updateInventoryLanguage();
     }
@@ -125,8 +125,8 @@ public class MathGUI {
         else if(operation.equals("("))operationItem=gui.getItem(42);
         else if(operation.equals(")"))operationItem=gui.getItem(43);
         else{
-            operationItem=!operation.isEmpty()?(new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP)))
-                    :(new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.MAP)));
+            operationItem=!operation.isEmpty()?(new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP)))
+                    :(new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.MAP)));
             ItemMeta meta=operationItem.getItemMeta();
             meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',"&f"+PluginCoder.getCoderGUI().putTextColor(operation)));
             operationItem.setItemMeta(meta);
@@ -244,13 +244,13 @@ public class MathGUI {
     }
     public boolean executionIsNumber(String instruction){
         if(instruction.trim().isEmpty())return true;
-        String type=plugin.getExecutionWriterGUI().getTypeOfExecution(instruction);
+        String type= PluginCoder.getCoderGUI().getExecutionWriterGUI().getTypeOfExecution(instruction);
         if(type==null){
-            for(String execution:plugin.getCodeExecuter().getElements(instruction,new String[]{"+","-","*","/","%","(",")"})){
+            for(String execution: mainPlugin.getCodeExecuter().getElements(instruction,new String[]{"+","-","*","/","%","(",")"})){
                 try {
                     Double.parseDouble(execution);
                 }catch (Exception e){
-                    String executionType=plugin.getExecutionWriterGUI().getTypeOfExecution(execution);
+                    String executionType= PluginCoder.getCoderGUI().getExecutionWriterGUI().getTypeOfExecution(execution);
                     if(executionType==null||!typeIsMath(executionType))return false;
                 }
             }
@@ -259,7 +259,7 @@ public class MathGUI {
         else return typeIsMath(type);
     }
     public boolean typeIsMath(String type){
-        return plugin.getCodeExecuter().typeIsMath(type);
+        return mainPlugin.getCodeExecuter().typeIsMath(type);
     }
     public boolean checkNewContent(String content){
         List<String> mathSymbols=Arrays.asList("+","-","*","/","%");

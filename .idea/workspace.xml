@@ -1,22 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="ArtifactsWorkspaceSettings">
+    <artifacts-to-build>
+      <artifact name="PluginCoder" />
+    </artifacts-to-build>
+  </component>
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1fedac6f-f050-4100-bda6-5b53d5223be2" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/artifacts/PluginCoder_jar.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PluginCoder.iml" beforeDir="false" afterPath="$PROJECT_DIR$/PluginCoder.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/berty/plugincoder/compiler/PluginCompiler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/berty/plugincoder/compiler/PluginCompiler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/berty/plugincoder/GUI/guis/CoderGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/berty/plugincoder/GUI/guis/CoderGUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/berty/plugincoder/GUI/guis/commands/CommandsGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/berty/plugincoder/GUI/guis/commands/CommandsGUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/berty/plugincoder/GUI/guis/conditions/ConditionsGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/berty/plugincoder/GUI/guis/conditions/ConditionsGUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/berty/plugincoder/GUI/guis/event/EventsGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/berty/plugincoder/GUI/guis/event/EventsGUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/berty/plugincoder/GUI/guis/function/ExecutionWriterGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/berty/plugincoder/GUI/guis/function/ExecutionWriterGUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/berty/plugincoder/GUI/guis/function/FunctionGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/berty/plugincoder/GUI/guis/function/FunctionGUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/berty/plugincoder/GUI/guis/math/MathGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/berty/plugincoder/GUI/guis/math/MathGUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/berty/plugincoder/GUI/guis/parameters/ParametersGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/berty/plugincoder/GUI/guis/parameters/ParametersGUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/berty/plugincoder/GUI/listener/PluginGuiListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/berty/plugincoder/GUI/listener/PluginGuiListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/berty/plugincoder/GUI/listener/PluginGuiSavingListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/berty/plugincoder/GUI/listener/PluginGuiSavingListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/berty/plugincoder/interpreter/executer/CodeExecuter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/berty/plugincoder/interpreter/executer/CodeExecuter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/berty/plugincoder/interpreter/listener/PluginListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/berty/plugincoder/interpreter/listener/PluginListener.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/berty/plugincoder/main/PluginCoder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/berty/plugincoder/main/PluginCoder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/berty/plugincoder/reader/PluginFileReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/berty/plugincoder/reader/PluginFileReader.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/berty/plugincoder/writer/PluginFileWriter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/berty/plugincoder/writer/PluginFileWriter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/berty/plugincoder/utils/CodeUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/berty/plugincoder/utils/CodeUtils.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,20 +52,21 @@
   <component name="ProjectViewState">
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
-    "kotlin-language-version-configured": "true",
-    "project.structure.last.edited": "Artifacts",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "MavenSettings"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_MARK_IGNORED_FILES_AS_EXCLUDED&quot;: &quot;true&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Artifacts&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;MavenSettings&quot;
   }
-}]]></component>
+}</component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>

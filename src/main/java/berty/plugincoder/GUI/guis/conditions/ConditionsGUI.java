@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 public class ConditionsGUI {
 
-    private PluginCoder plugin;
+    private PluginCoder mainPlugin;
 
     private List<String> renderedInstructions=new ArrayList<>();
     private List<Inventory> previousInvs=new ArrayList<>();
@@ -26,7 +26,7 @@ public class ConditionsGUI {
     private List<Integer> lastIndex=new ArrayList<>();
     private int startContentIndex=0;
     public ConditionsGUI(PluginCoder plugin){
-        this.plugin=plugin;
+        this.mainPlugin =plugin;
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> createInventory(), 2);
     }
     private Inventory gui;
@@ -55,7 +55,7 @@ public class ConditionsGUI {
         meta.setDisplayName(ChatColor.WHITE+")");
         closeParentesis.setItemMeta(meta);
         gui.setItem(37,and);gui.setItem(38,or);gui.setItem(39,exclamation);gui.setItem(40,openParentesis);gui.setItem(41,closeParentesis);
-        ItemStack negro=plugin.getVersionNumber()<13?
+        ItemStack negro= mainPlugin.getVersionNumber()<13?
                 new ItemStack(Material.getMaterial("STAINED_GLASS_PANE"),1,(short)15):new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
         meta=negro.getItemMeta();
         meta.setDisplayName(ChatColor.WHITE+"");
@@ -70,14 +70,14 @@ public class ConditionsGUI {
         meta.setDisplayName(ChatColor.WHITE+"");
         nextItem.setItemMeta(meta);
         gui.setItem(18,backItem);gui.setItem(26,nextItem);
-        ItemStack instructionItem=new ItemStack(plugin.getVersionNumber()<14?Material.getMaterial("SIGN"):Material.OAK_SIGN);
+        ItemStack instructionItem=new ItemStack(mainPlugin.getVersionNumber()<14?Material.getMaterial("SIGN"):Material.OAK_SIGN);
         gui.setItem(4,instructionItem);
-        ItemStack trueItem=plugin.getVersionNumber()<13?
+        ItemStack trueItem= mainPlugin.getVersionNumber()<13?
                 new ItemStack(Material.getMaterial("WOOL"),1,(short)5):new ItemStack(Material.LIME_WOOL);
         meta=trueItem.getItemMeta();
         meta.setDisplayName(ChatColor.GREEN+"true");
         trueItem.setItemMeta(meta);
-        ItemStack falseItem=plugin.getVersionNumber()<13?
+        ItemStack falseItem= mainPlugin.getVersionNumber()<13?
                 new ItemStack(Material.getMaterial("WOOL"),1,(short)14):new ItemStack(Material.RED_WOOL);
         meta=falseItem.getItemMeta();
         meta.setDisplayName(ChatColor.RED+"false");
@@ -128,8 +128,8 @@ public class ConditionsGUI {
         fillConditionalContents(instruction);
     }
     private void fillConditionalContents(String instruction){
-        String[] booleans=plugin.getCodeExecuter().getElementsNotModifyingParentesis(instruction, new String[]{" and ", " or "});
-        List<String> operadores= Arrays.stream(plugin.getCodeExecuter().getElementsNotModifyingParentesis(instruction, new String[]{" "}))
+        String[] booleans= mainPlugin.getCodeExecuter().getElementsNotModifyingParentesis(instruction, new String[]{" and ", " or "});
+        List<String> operadores= Arrays.stream(mainPlugin.getCodeExecuter().getElementsNotModifyingParentesis(instruction, new String[]{" "}))
                 .filter(op->op.equals("and")||op.equals("or")).collect(Collectors.toList());
         for(int i=0;i<booleans.length;i++){
             String booleanInst=booleans[i];
@@ -206,8 +206,8 @@ public class ConditionsGUI {
         else if(operation.equals("true"))operationItem=gui.getItem(42);
         else if(operation.equals("false"))operationItem=gui.getItem(43);
         else{
-            operationItem=!operation.isEmpty()?(new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP)))
-                    :(new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.MAP)));
+            operationItem=!operation.isEmpty()?(new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP)))
+                    :(new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.MAP)));
             ItemMeta meta=operationItem.getItemMeta();
             meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',"&f"+PluginCoder.getCoderGUI().putTextColor(operation)));
             operationItem.setItemMeta(meta);
@@ -244,10 +244,10 @@ public class ConditionsGUI {
     }
     public boolean executionIsBoolean(String instruction){
         if(instruction.trim().isEmpty())return true;
-        for(String execution:plugin.getCodeExecuter().getElements(instruction,new String[]{" and "," or ","!","(",")"})){
+        for(String execution: mainPlugin.getCodeExecuter().getElements(instruction,new String[]{" and "," or ","!","(",")"})){
             String booleanType=getBooleanType(execution);
             if(booleanType.equals("checkObjectType")||booleanType.equals("equality"))continue;
-            String executionType=plugin.getExecutionWriterGUI().getTypeOfExecution(execution);
+            String executionType= PluginCoder.getCoderGUI().getExecutionWriterGUI().getTypeOfExecution(execution);
             if(executionType==null||!executionType.equals(boolean.class.getTypeName()))return false;
         }
         return true;

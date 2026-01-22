@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 
 public class ParametersGUI {
 
-    private PluginCoder plugin;
+    private PluginCoder mainPlugin;
     private Inventory gui;
     private List<Inventory> previousInvs=new ArrayList<>();
     private List<String> paramTypes=new ArrayList<>();
@@ -38,13 +38,13 @@ public class ParametersGUI {
     private List<Boolean> hasMoreOptions=new ArrayList<>();
     private List<Integer> paramItemDelays=new ArrayList<>();
     public ParametersGUI(PluginCoder plugin){
-        this.plugin=plugin;
+        this.mainPlugin =plugin;
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> createInventory(), 2);
     }
     private void createInventory(){
         gui=Bukkit.createInventory(null,54," ");
         PluginCoder.getCoderGUI().createUpperLineInventory(gui,true);
-        ItemStack instructionItem=new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.OAK_SIGN));
+        ItemStack instructionItem=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.OAK_SIGN));
         gui.setItem(4,instructionItem);
         updateInventoryLanguage();
     }
@@ -75,7 +75,7 @@ public class ParametersGUI {
             gui.setItem(37+i,null);
         }
         String containerName=paramContainer.replaceAll("^([^(]+)\\s*\\((.+)$","$1");
-        List<String> parameters=plugin.getCodeExecuter().getStringParameters(paramContainer);
+        List<String> parameters= mainPlugin.getCodeExecuter().getStringParameters(paramContainer);
         if(paramContainer.matches("^if\\s*\\((.+)$")||paramContainer.matches("^else\\s+if\\s*\\((.+)$")
                 ||paramContainer.matches("^while\\s*\\((.+)$")){
             paramTypes.add(boolean.class.getTypeName());
@@ -89,26 +89,26 @@ public class ParametersGUI {
             paramTypes.add(double.class.getTypeName());//TODO poner opcion del segundo param del repeat
             gui.setItem(10,getParamItem(double.class.getTypeName(),0,parameters));
             hasMoreOptions.add(true);
-        }else if(plugin.getConstructorTranslator().containsKey(containerName)){
+        }else if(mainPlugin.getConstructorTranslator().containsKey(containerName)){
             isMethod.add(false);
             if(containerName.equals("Inventory")){
                 ContentParams contentParams= new ContentParams(containerName,Arrays.asList(String.class.getTypeName(),int.class.getTypeName()));
                 methodsOrConstructors.add(contentParams);
             }else{
-                Class constructorClass=plugin.getConstructorTranslator().get(containerName);
+                Class constructorClass= mainPlugin.getConstructorTranslator().get(containerName);
                 for(Constructor constructor:constructorClass.getConstructors()){
                     List<String> paramTypes= Arrays.stream(constructor.getParameterTypes()).map(p->p.getTypeName()).collect(Collectors.toList());
                     ContentParams contentParams= new ContentParams(containerName,paramTypes);
                     methodsOrConstructors.add(contentParams);
                 }
             }
-        }else if(plugin.getSelectedPlugin().getObjects().stream().anyMatch(o->o.getName().equals(containerName))){
+        }else if(mainPlugin.getSelectedPlugin().getObjects().stream().anyMatch(o->o.getName().equals(containerName))){
             isMethod.add(false);
-            PluginObject object=plugin.getSelectedPlugin().getObject(containerName);
+            PluginObject object= mainPlugin.getSelectedPlugin().getObject(containerName);
             for(String constructor:object.getConstructors())checkObjectFunctionParams(object,constructor,containerName);
 
         }else if(classType.startsWith("PluginObject.")){
-            PluginObject object=plugin.getSelectedPlugin().getObject(classType.replace("PluginObject.",""));
+            PluginObject object= mainPlugin.getSelectedPlugin().getObject(classType.replace("PluginObject.",""));
             for(String function:object.getFunctions()) checkObjectFunctionParams(object,function,containerName);
         }else{ //execution
             isMethod.add(true);
@@ -139,12 +139,12 @@ public class ParametersGUI {
     private void checkObjectFunctionParams(PluginObject object, String function, String containerName){
         String functionContainer=function.replaceAll("^([^{]+)\\s*\\{(.+)$","$1");
         if(!functionContainer.replaceAll("^([^(]+)\\s*\\((.+)$","$1").equals(containerName))return;
-        List<String> functionParams=plugin.getCodeExecuter().getStringParameters(functionContainer);
+        List<String> functionParams= mainPlugin.getCodeExecuter().getStringParameters(functionContainer);
         List<String> paramTypes= new ArrayList<>();
         Set<String> predictParams=new HashSet<>(object.getProperties());
         predictParams.addAll(functionParams);
         for(String param:functionParams){
-            paramTypes.add(PredictType.predictTypeOfVar(plugin.getSelectedPlugin(),param,function,predictParams));
+            paramTypes.add(PredictType.predictTypeOfVar(mainPlugin.getSelectedPlugin(),param,function,predictParams));
         }
         ContentParams contentParams= new ContentParams(containerName,paramTypes);
         methodsOrConstructors.add(contentParams);
@@ -168,7 +168,7 @@ public class ParametersGUI {
         for(int j = 0; j<paramTypes.size(); j++){
             String param=paramNames.get(j);
             if(param.equals("null")||param.isEmpty())continue;
-            String paramType=plugin.getExecutionWriterGUI().getTypeOfExecution(param);
+            String paramType= PluginCoder.getCoderGUI().getExecutionWriterGUI().getTypeOfExecution(param);
             try {
                 if(!paramType.equals(paramTypes.get(j))
                         &&!Class.forName(paramTypes.get(j)).isAssignableFrom(Class.forName(paramType))){
@@ -200,7 +200,7 @@ public class ParametersGUI {
         }
     }
     private ItemStack getParamItem(String paramType,int index,List<String> parameters){
-        ItemStack paramItem=new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP));
+        ItemStack paramItem=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP));
         ItemMeta meta=paramItem.getItemMeta();
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         if(index==0){
@@ -246,11 +246,11 @@ public class ParametersGUI {
         Set<String> possibleParams=new HashSet<>();
         renderElements.clear();
         elementPage=0;
-        Map<String,List<String>> reverseTranslation=plugin.getCodeUtils().getReverseTranslation();
+        Map<String,List<String>> reverseTranslation= mainPlugin.getCodeUtils().getReverseTranslation();
         boolean isEnum=false;
-        plugin.getExecutionWriterGUI().updateVariables();
-        for(String variable:plugin.getExecutionWriterGUI().getVariables()){
-            String varType=plugin.getExecutionWriterGUI().getVariableTypes().get(variable);
+        PluginCoder.getCoderGUI().getExecutionWriterGUI().updateVariables();
+        for(String variable: PluginCoder.getCoderGUI().getExecutionWriterGUI().getVariables()){
+            String varType= PluginCoder.getCoderGUI().getExecutionWriterGUI().getVariableTypes().get(variable);
             try{
                 if(varType.equals(searchType)||Class.forName(searchType).isAssignableFrom(Class.forName(varType)))possibleParams.add(variable);
                 searchPossibleParams(variable,varType,searchType,0,possibleParams,reverseTranslation);
@@ -263,7 +263,7 @@ public class ParametersGUI {
                 for(Object enumValue:(Object[])paramClass.getMethod("values").invoke(null)){
                     possibleParams.add(enumValue.toString());
                 }
-                for(String var:plugin.getExecutionWriterGUI().getVariables()){
+                for(String var: PluginCoder.getCoderGUI().getExecutionWriterGUI().getVariables()){
                     if(!var.getClass().equals(String.class))continue;
                     try {
                         paramClass.getMethod("valueOf").invoke(var);
@@ -275,15 +275,15 @@ public class ParametersGUI {
         List<String> paramsSorted;
         if(isEnum){
             List<String> enumParamsSorted=possibleParams.stream().sorted().collect(Collectors.toList());
-            paramsSorted=plugin.getExecutionWriterGUI().getVariables().stream().filter(var->
-                    plugin.getExecutionWriterGUI().getVariableTypes().get(var).equals(String.class.getTypeName())).collect(Collectors.toList());
+            paramsSorted= PluginCoder.getCoderGUI().getExecutionWriterGUI().getVariables().stream().filter(var->
+                    PluginCoder.getCoderGUI().getExecutionWriterGUI().getVariableTypes().get(var).equals(String.class.getTypeName())).collect(Collectors.toList());
             paramsSorted.addAll(enumParamsSorted);
         }
         else paramsSorted=possibleParams.stream().sorted(Comparator.comparing(par->par.length())).collect(Collectors.toList());
         addRenderParamItems(paramsSorted,0);
         for(int pages=1;pages<(paramsSorted.size()/14);pages++){
             final int pageCount=pages*14;
-            Bukkit.getScheduler().scheduleSyncDelayedTask(plugin,() -> {
+            Bukkit.getScheduler().scheduleSyncDelayedTask(mainPlugin,() -> {
                 addRenderParamItems(paramsSorted,pageCount);
             },pages);
         }
@@ -292,7 +292,7 @@ public class ParametersGUI {
         meta.setDisplayName(ChatColor.GOLD+PluginCoder.getCoderGUI().getGuiText("variablesTitle"));
         vars.setItemMeta(meta);
         gui.setItem(48,vars);
-        ItemStack newObject=new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.CRAFTING_TABLE));
+        ItemStack newObject=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.CRAFTING_TABLE));
         meta=newObject.getItemMeta();
         meta.setDisplayName(ChatColor.GOLD+PluginCoder.getCoderGUI().getGuiText("newObject"));
         newObject.setItemMeta(meta);
@@ -311,7 +311,7 @@ public class ParametersGUI {
                 paramItem=new ItemStack(itemMaterial);
                 if(!paramItem.getType().isItem()||param.startsWith("LEGACY_"))continue;
             }
-            else  paramItem=new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP));
+            else  paramItem=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP));
             ItemMeta itemMeta=paramItem.getItemMeta();
             if(itemMeta==null)continue;
             itemMeta.setDisplayName(ChatColor.WHITE+param);
@@ -322,10 +322,10 @@ public class ParametersGUI {
     }
     private void searchPossibleParams(String variable,String varType,String searchType,int iterations,Set<String> possibleParams,Map<String,List<String>> reverseTranslation) throws ClassNotFoundException {
        if(iterations==2)return;
-       if(plugin.getCodeUtils().isFinishMethod(varType))return;
+       if(mainPlugin.getCodeUtils().isFinishMethod(varType))return;
         if(!varType.startsWith("PluginObject.")) {
             Arrays.stream(Class.forName(varType).getMethods()).forEach(method -> {
-                String methodName=plugin.getCodeUtils().getMethodName(method,reverseTranslation.get(method.getName()));
+                String methodName= mainPlugin.getCodeUtils().getMethodName(method,reverseTranslation.get(method.getName()));
                 if(methodName==null)return;
                 if(varType.equals(method.getReturnType().getTypeName()))return;
                 //TODO cambiar y poner el tipo del parámetro
@@ -342,7 +342,7 @@ public class ParametersGUI {
                 }catch (Exception e){}
             });
         }else{
-            PluginObject object=plugin.getSelectedPlugin().getObject(varType.replace("PluginObject.",""));
+            PluginObject object= mainPlugin.getSelectedPlugin().getObject(varType.replace("PluginObject.",""));
             Map<String,String> inicVarTypes= InicVars.getInicVarTypes(object.getPlugin(),"",varType);
             for(String property:object.getProperties()){
                 searchPossibleParams(variable+"."+property,inicVarTypes.get(property),searchType,0,possibleParams,reverseTranslation);
@@ -438,7 +438,7 @@ public class ParametersGUI {
         if(previousInv.equals(PluginCoder.getCoderGUI().getExecutionWriterGUI().getGui())){
             PluginCoder.getCoderGUI().getExecutionWriterGUI().saveToExecutiongWritterGUI(instruction,closingInventoryWithoutReturning);
         }else if(PluginCoder.getCoderGUI().getFunctionGUI().getGUI().stream().anyMatch(inv->inv.equals(previousInv))){
-            plugin.getFunctionGUI().saveToFunctionGUI(instruction,closingInventoryWithoutReturning);
+            PluginCoder.getCoderGUI().getFunctionGUI().saveToFunctionGUI(instruction,closingInventoryWithoutReturning);
         }else if(previousInv.equals(PluginCoder.getCoderGUI().getConstructorsGUI().getGUI())){
             PluginCoder.getCoderGUI().getConstructorsGUI().saveToConstructorsGUI(instruction,closingInventoryWithoutReturning);
         }
@@ -500,7 +500,7 @@ public class ParametersGUI {
     }
     private List<Method> getMethod(String method,String type){
         List<Method> methods=new ArrayList<>();
-        List<String> translatedMethods=plugin.getMethodTranslator().get(method+"()");
+        List<String> translatedMethods= mainPlugin.getMethodTranslator().get(method+"()");
         try{
             Arrays.stream(Class.forName(type).getMethods()).filter(m->translatedMethods.contains(m.getName())
             &&m.getParameters().length>0).forEach(m->methods.add(m));

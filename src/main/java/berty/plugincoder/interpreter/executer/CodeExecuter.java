@@ -8,7 +8,7 @@ import java.lang.reflect.Method;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.ClassUtils;
+import berty.plugincoder.utils.CodeUtils;
 import berty.plugincoder.interpreter.classes.scoreboard.Scoreboard;
 import berty.plugincoder.interpreter.loops.PluginFor;
 import berty.plugincoder.interpreter.loops.PluginWhile;
@@ -204,7 +204,7 @@ public class CodeExecuter {
 					Class constParamClass=constructor.getParameterTypes()[i];
 					Class paramClass=paramsClasses.get(i);
 					if(paramClass==null||constParamClass.equals(paramClass)||constParamClass.isAssignableFrom(paramClass)
-					||ClassUtils.primitiveToWrapper(constParamClass).equals(ClassUtils.primitiveToWrapper(paramClass)))continue;
+					||CodeUtils.primitiveToWrapper(constParamClass).equals(CodeUtils.primitiveToWrapper(paramClass)))continue;
 					try{
 						if(constParamClass.isEnum()){
 							Object enumValue=constParamClass.getMethod("valueOf", String.class).invoke(null, parameters.get(i).toString());
@@ -258,11 +258,13 @@ public class CodeExecuter {
 		}
 		String[] methods=getMethodsOfInstruction(instruction);
 		Object variable=variables.get(methods[0]);
-		if(variable==null&&variables.containsKey(methods[0])){
-			ErrorManager.nullVariable(methods[0],originalInstruction);
-			return Void.class;
-		}else if(!variables.containsKey(methods[0])){
-			if(methods.length==1||!methods[0].matches("^([a-zA-Z0-9_]+)$")||methods[0].matches("^([0-9])"))return instruction;
+		if(variables.containsKey(methods[0])){
+			if(variable==null&&methods.length>1){
+				ErrorManager.nullVariable(methods[0],originalInstruction);
+				return Void.class;
+			}
+		}else{
+			if(!(methods[0].matches("^([a-zA-Z0-9_]+)$")&&methods.length>1))return instruction;
 			ErrorManager.varNotExists(methods[0],instruction);
 			return Void.class;
 		}
@@ -450,7 +452,7 @@ public class CodeExecuter {
 		for(int index=0;index<parameterTypes.length;index++){
 			Class methodParam=parameterTypes[index];
 			if(methodParam.isArray()&&methodParam.isArray()&&params.subList(index,params.size()).stream().allMatch(param->
-					ClassUtils.primitiveToWrapper(param.getClass()).equals(ClassUtils.primitiveToWrapper(methodParam.getComponentType())))){
+					CodeUtils.primitiveToWrapper(param.getClass()).equals(CodeUtils.primitiveToWrapper(methodParam.getComponentType())))){
 				for(int paramIndex=index;paramIndex<params.size();paramIndex++)methodParameterTypes.add(methodParam.getComponentType());
 			}else methodParameterTypes.add(methodParam);
 		}
@@ -463,11 +465,11 @@ public class CodeExecuter {
 	private boolean validateGenericParams(Class paramClass,List<Object> params,boolean isExecutingCode,int i){
 		try{
 			if(paramClass.getTypeName().equals(Object.class.getTypeName()))return true;
-			paramClass=ClassUtils.primitiveToWrapper(paramClass);
+			paramClass=CodeUtils.primitiveToWrapper(paramClass);
 			Object param=params.get(i);
 			if(param==null)return !typeIsMath(paramClass.getTypeName())&&!paramClass.getTypeName().equals(boolean.class.getTypeName());
 			String paramType=isExecutingCode?param.getClass().getTypeName():param.toString();
-			Class entryParamClass=ClassUtils.primitiveToWrapper(ClassUtils.getClass(paramType));
+			Class entryParamClass= CodeUtils.primitiveToWrapper(Class.forName(paramType));
 			//pasar de un numero a otro cuando sea necesario
 			if(Number.class.isAssignableFrom(paramClass)&&Number.class.isAssignableFrom(entryParamClass)&&isExecutingCode){
 				try{
@@ -632,20 +634,15 @@ public class CodeExecuter {
 	public List<Object> getParameters(List<String> params,String instruction, Map<String, Object> variables) {
 		List<Object> parametrosObject=new ArrayList<>();
 		for(String param:params) {
-			if(variables.get(param)!=null) {
-				parametrosObject.add(variables.get(param));
-			}else {
-				Object resultado= mainPlugin.getMath().checkDoubleLong(param);
-				if(resultado!=null)parametrosObject.add(resultado);
-				else {//ejecutar codigo dentro del parámetro
-					String type=getVarInstructionType(param,variables);
-					if(type.equalsIgnoreCase("Boolean")) parametrosObject.add(mainPlugin.getLogic().executeBoolean(param,instruction, variables));
-					else if(type.equalsIgnoreCase("Math")) parametrosObject.add(mainPlugin.getMath().executeMath(param,instruction, variables));
-					else if(type.equalsIgnoreCase("String"))parametrosObject.add(executeString(param, instruction, variables));
-					else parametrosObject.add(executeInstruction(param,instruction,variables));
-
-				}
-			}
+			if(variables.get(param)!=null) {parametrosObject.add(variables.get(param));continue;}
+			Object resultado= mainPlugin.getMath().checkDoubleLong(param);
+			if(resultado!=null){parametrosObject.add(resultado);continue;}
+			//ejecutar codigo dentro del parámetro
+			String type=getVarInstructionType(param,variables);
+			if(type.equalsIgnoreCase("Boolean")) parametrosObject.add(mainPlugin.getLogic().executeBoolean(param,instruction, variables));
+			else if(type.equalsIgnoreCase("Math")) parametrosObject.add(mainPlugin.getMath().executeMath(param,instruction, variables));
+			else if(type.equalsIgnoreCase("String"))parametrosObject.add(executeString(param, instruction, variables));
+			else parametrosObject.add(executeInstruction(param,instruction,variables));
 		}
 		return parametrosObject;
 	}

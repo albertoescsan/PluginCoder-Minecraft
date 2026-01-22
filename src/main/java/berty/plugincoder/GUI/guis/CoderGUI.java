@@ -45,7 +45,7 @@ import java.util.function.Function;
 
 public class CoderGUI {
 
-	private PluginCoder plugin;
+	private PluginCoder mainPlugin;
 	private Player guiPlayer;
 	private PluginsGUI pluginsGUI;
 	private Inventory pluginCoderGUI;
@@ -99,7 +99,7 @@ public class CoderGUI {
 	}
 
 	public CoderGUI(PluginCoder plugin) {
-		this.plugin=plugin;
+		this.mainPlugin =plugin;
 		pluginsGUI=new PluginsGUI(plugin);
 		eventsGUI=new EventsGUI(plugin);
 		objectsGUI=new ObjectsGUI(plugin);
@@ -141,9 +141,9 @@ public class CoderGUI {
 		ItemMeta meta=plugins.getItemMeta();
 		meta.setDisplayName(ChatColor.GOLD+"Plugins");
 		plugins.setItemMeta(meta);
-		updatePluginItem(plugin.getSelectedPlugin().getName());
+		updatePluginItem(mainPlugin.getSelectedPlugin().getName());
 		String commandTitle=getGuiText("commandsTitle");
-		ItemStack commands=new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.COMMAND_BLOCK));
+		ItemStack commands=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.COMMAND_BLOCK));
 		meta=commands.getItemMeta();
 		meta.setDisplayName(ChatColor.RED+commandTitle);
 		commands.setItemMeta(meta);
@@ -152,7 +152,7 @@ public class CoderGUI {
 		String objectsTitle=getGuiText("objectsTitle");
 		meta.setDisplayName(ChatColor.GOLD+objectsTitle);
 		objects.setItemMeta(meta);
-		ItemStack listener=new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.ENDER_EYE));
+		ItemStack listener=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.ENDER_EYE));
 		meta=listener.getItemMeta();
 		String eventsTitle=getGuiText("eventsTitle");
 		meta.setDisplayName(ChatColor.AQUA+eventsTitle);
@@ -163,12 +163,12 @@ public class CoderGUI {
 		meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',"&3"+languageTitle));
 		languageItem.setItemMeta(meta);
 		String onEnableTitle=getGuiText("onEnableTitle");
-		ItemStack onEnable=new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.WRITABLE_BOOK));
+		ItemStack onEnable=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.WRITABLE_BOOK));
 		meta=onEnable.getItemMeta();
 		meta.setDisplayName(ChatColor.GREEN+onEnableTitle);
 		onEnable.setItemMeta(meta);
 		String onDisableTitle=getGuiText("onDisableTitle");
-		ItemStack onDisable=new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.WRITABLE_BOOK));
+		ItemStack onDisable=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.WRITABLE_BOOK));
 		meta=onDisable.getItemMeta();
 		meta.setDisplayName(ChatColor.DARK_RED+onDisableTitle);
 		onDisable.setItemMeta(meta);
@@ -235,11 +235,11 @@ public class CoderGUI {
 		PluginCoder.getCoderGUI().updateNextItem();
 		PluginCoder.getCoderGUI().createMainInventory();
 		PluginCoder.getCoderGUI().createLanguageInventory();
-		PluginCoder.getEventsGUI().updateGUI();
-		PluginCoder.getObjectsGUI().updateGUI();
+		PluginCoder.getCoderGUI().getEventsGUI().updateGUI();
+		PluginCoder.getCoderGUI().getObjectsGUI().updateGUI();
 		PluginCoder.getCoderGUI().getCommandsGUI().updateGUI();
 		PluginCoder.getCoderGUI().getPluginsGUI().createPluginEditor();
-		PluginCoder.getEventsGUI().updateEventItemsGUI();
+		PluginCoder.getCoderGUI().getEventsGUI().updateEventItemsGUI();
 		PluginCoder.getCoderGUI().getVariableGUI().createInventory();
 		PluginCoder.getCoderGUI().getInstructionsGUI().updateGUI();
 		PluginCoder.getCoderGUI().getExecutionWriterGUI().createInventory();
@@ -261,7 +261,7 @@ public class CoderGUI {
 		PluginCoder.getCoderGUI().getDictConstructorGUI().updateInventoryLanguage();
 	}
 	private void fillWithWhiteBorder(Inventory inventory){
-		ItemStack blanco=new ItemStack(plugin.getVersionNumber()<13?
+		ItemStack blanco=new ItemStack(mainPlugin.getVersionNumber()<13?
 				Material.getMaterial("STAINED_GLASS_PANE"):Material.WHITE_STAINED_GLASS_PANE);
 		ItemMeta meta=blanco.getItemMeta();
 		meta.setDisplayName(ChatColor.WHITE+"");
@@ -276,9 +276,9 @@ public class CoderGUI {
 		}
 	}
 	public ItemStack getPlayerHead(String url) {
-		ItemStack head = plugin.getVersionNumber()<13?new ItemStack(Material.getMaterial("SKULL_ITEM"),1,(short)3):
+		ItemStack head = mainPlugin.getVersionNumber()<13?new ItemStack(Material.getMaterial("SKULL_ITEM"),1,(short)3):
 				new ItemStack(Material.PLAYER_HEAD);
-		if(plugin.getVersionNumber()<17){//codigo para versiones inferiores a 1.17
+		if(mainPlugin.getVersionNumber()<17){//codigo para versiones inferiores a 1.17
 			//TODO funciona para versiones inferiores a 1.13, pero hay que comprobar que funcione para 1.16
 			ItemMeta headMeta=head.getItemMeta();
 			if (url != null && !url.isEmpty()) {
@@ -340,22 +340,22 @@ public class CoderGUI {
 		nextItem.setItemMeta(meta);
 	}
 	public void buttonSound(Player p){
-		p.playSound(p.getLocation(),plugin.getVersionNumber()<9?Sound.valueOf("CLICK"):Sound.BLOCK_DISPENSER_DISPENSE, 4, (float) 0);
+		p.playSound(p.getLocation(), mainPlugin.getVersionNumber()<9?Sound.valueOf("CLICK"):Sound.BLOCK_DISPENSER_DISPENSE, 4, (float) 0);
 	}
 	public void errorSound(Player p) {
-		p.playSound(p.getLocation(),plugin.getVersionNumber()<9?Sound.valueOf("ANVIL_LAND"):Sound.BLOCK_ANVIL_LAND, 4, (float) 0);
+		p.playSound(p.getLocation(), mainPlugin.getVersionNumber()<9?Sound.valueOf("ANVIL_LAND"):Sound.BLOCK_ANVIL_LAND, 4, (float) 0);
 	}
 	public String putTextColor(String s){
-		for(String color:plugin.getColorTranslator().keySet()){
+		for(String color: mainPlugin.getColorTranslator().keySet()){
 			if(color.equals("BOLD")||color.equals("ITALIC")||color.equals("UNDERLINE")||color.equals("STRIKE")){
-				s=s.replaceAll("^"+color+"\\+","&f"+plugin.getColorTranslator().get(color)+color+"&f+");
-				s=s.replaceAll("([+,(=])"+color+"\\+","$1&f"+plugin.getColorTranslator().get(color)+color+"&f+");
+				s=s.replaceAll("^"+color+"\\+","&f"+ mainPlugin.getColorTranslator().get(color)+color+"&f+");
+				s=s.replaceAll("([+,(=])"+color+"\\+","$1&f"+ mainPlugin.getColorTranslator().get(color)+color+"&f+");
 			}else if(color.equals("RESET")){
 				s=s.replaceAll("^"+color+"\\+","&f"+color+"&f+");
 				s=s.replaceAll("([+,(=])"+color+"\\+","$1&f"+color+"&f+");
 			}else{
-				s=s.replaceAll("^"+color+"\\+",plugin.getColorTranslator().get(color)+color+"&f+");
-				s=s.replaceAll("([+,(=])"+color+"\\+","$1"+plugin.getColorTranslator().get(color)+color+"&f+");
+				s=s.replaceAll("^"+color+"\\+", mainPlugin.getColorTranslator().get(color)+color+"&f+");
+				s=s.replaceAll("([+,(=])"+color+"\\+","$1"+ mainPlugin.getColorTranslator().get(color)+color+"&f+");
 			}
 		}
 		s=getColoredValueText(s,"true","&a");
@@ -379,11 +379,11 @@ public class CoderGUI {
 			p.openInventory(PluginCoder.getCoderGUI().getPluginCoderGUI());
 		}else guiPlayer=null;
 
-		plugin.getFunctionGUI().setDeleteInstruction(false);
-		plugin.getFunctionGUI().getFunctions().clear();
-		plugin.getFunctionGUI().getGUI().clear();
-		plugin.getFunctionGUI().getFunctionsIndexes().clear();
-		plugin.getFunctionGUI().setOriginalFunctionIndex(0);
+		PluginCoder.getCoderGUI().getFunctionGUI().setDeleteInstruction(false);
+		PluginCoder.getCoderGUI().getFunctionGUI().getFunctions().clear();
+		PluginCoder.getCoderGUI().getFunctionGUI().getGUI().clear();
+		PluginCoder.getCoderGUI().getFunctionGUI().getFunctionsIndexes().clear();
+		PluginCoder.getCoderGUI().getFunctionGUI().setOriginalFunctionIndex(0);
 		InicVars.functionType="";
 	}
 	public void createInventoryBase(Inventory inventory,boolean paged){
@@ -464,7 +464,7 @@ public class CoderGUI {
 	}
 	private List<String> getDisplayLore(String function){
 		List<String> instructions=new ArrayList<>();
-		for(String instruction:plugin.getCodeExecuter().getGUIInstructionsFromFunction(function)){
+		for(String instruction: mainPlugin.getCodeExecuter().getGUIInstructionsFromFunction(function)){
 			if(instruction.matches("^([^{]+)\\{(.*)}$")&&!instruction.matches("^([A-Za-z0-9_]+)\\s*=(.*)$")){
 				String functionTitle=instruction.replaceAll("^([^{]+)\\{(.*)}$","$1{");
 				functionTitle=ChatColor.translateAlternateColorCodes('&',"&f"+PluginCoder.getCoderGUI().putTextColor(functionTitle));
@@ -502,13 +502,13 @@ public class CoderGUI {
 	}
 	public void createCenteredItemInventory(Inventory inventory){
 		PluginCoder.getCoderGUI().createInventoryBase(inventory,false);
-		ItemStack negro=plugin.getVersionNumber()<13?
+		ItemStack negro= mainPlugin.getVersionNumber()<13?
 				new ItemStack(Material.getMaterial("STAINED_GLASS_PANE"),1,(short)15):new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
 		ItemMeta meta=negro.getItemMeta();
 		meta.setDisplayName(ChatColor.WHITE+"");
 		negro.setItemMeta(meta);
 		PluginCoder.getCoderGUI().createCircleArroundSlot(22,inventory,negro);
-		ItemStack gris=plugin.getVersionNumber()<13?
+		ItemStack gris= mainPlugin.getVersionNumber()<13?
 				new ItemStack(Material.getMaterial("STAINED_GLASS_PANE"),1,(short)8):new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
 		meta=negro.getItemMeta();
 		meta.setDisplayName(ChatColor.WHITE+"");
@@ -521,7 +521,7 @@ public class CoderGUI {
 	}
 	public void createUpperLineInventory(Inventory inventory,boolean paged){
 		PluginCoder.getCoderGUI().createInventoryBase(inventory,paged);
-		ItemStack blanco=new ItemStack(plugin.getVersionNumber()<13?
+		ItemStack blanco=new ItemStack(mainPlugin.getVersionNumber()<13?
 				Material.getMaterial("STAINED_GLASS_PANE"):Material.WHITE_STAINED_GLASS_PANE);
 		ItemMeta meta=blanco.getItemMeta();
 		meta.setDisplayName(ChatColor.WHITE+"");

@@ -29,9 +29,9 @@ public class PluginListener implements Listener {
 			if(!plugin.isEnabled())continue;
 			Map<String,Object> inicVars=mainPlugin.getPluginVars(plugin);
 			inicVars.put("event", event);
-			plugin.getListener().stream().filter(f->f.matches("^"+eventName+"\\s*\\{(.+)$")).forEach(f->{
+			plugin.getListener().stream().filter(function->function.matches("^"+eventName+"\\s*\\{(.+)$")).forEach(function->{
 				//function,Map of inicVars and names
-				mainPlugin.getCodeExecuter().executeFunction(f,"", new HashMap<>(inicVars));
+				mainPlugin.getCodeExecuter().executeFunction(function,"", new HashMap<>(inicVars));
 				if(PluginCoder.isErrorFound())ErrorManager.errorInListener(eventName);
 			});
 		}

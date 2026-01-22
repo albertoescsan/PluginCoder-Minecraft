@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 public class ExecutionWriterGUI {
 
-    private PluginCoder plugin;
+    private PluginCoder mainPlugin;
     private Inventory gui;
     private int lastFunctionInstructionVars=-1;
     private List<String> renderedInstructions=new ArrayList<>();
@@ -29,7 +29,7 @@ public class ExecutionWriterGUI {
     private List<Inventory>previousInvs=new ArrayList<>();
     private int page=0;
     public ExecutionWriterGUI(PluginCoder plugin) {
-        this.plugin=plugin;
+        this.mainPlugin =plugin;
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> createInventory(), 2);
     }
     public Inventory getGui() {
@@ -38,7 +38,7 @@ public class ExecutionWriterGUI {
     public void createInventory(){
         gui= Bukkit.createInventory(null,54," ");
         PluginCoder.getCoderGUI().createUpperLineInventory(gui,true);
-        ItemStack instructionItem=new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.OAK_SIGN));
+        ItemStack instructionItem=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.OAK_SIGN));
         gui.setItem(4,instructionItem);
         String deleteTitle=PluginCoder.getCoderGUI().getGuiText("deleteProperty");
         ItemStack delete=new ItemStack(Material.LAVA_BUCKET);
@@ -56,7 +56,7 @@ public class ExecutionWriterGUI {
         for(int i=0;i<7;i++) gui.setItem(10+i,null);
         //actualizar variables si la instruccion es nueva
         updateVariables();methodExecutedTypes.clear();
-        String[] methods=instruction.trim().isEmpty()?new String[]{}:plugin.getCodeExecuter().getMethodsOfInstruction(instruction);
+        String[] methods=instruction.trim().isEmpty()?new String[]{}: mainPlugin.getCodeExecuter().getMethodsOfInstruction(instruction);
         if(methods.length>0){
             ItemStack variable=new ItemStack(Material.CHEST);
             ItemMeta meta=variable.getItemMeta();
@@ -66,16 +66,16 @@ public class ExecutionWriterGUI {
             //actualizar los tipos de variables y metodos
             String variableType=variableTypes.get(methods[0]);
             methodExecutedTypes.add(variableType);
-            methodTypes=plugin.getCodeUtils().getMethodsOfType(variableType);
+            methodTypes= mainPlugin.getCodeUtils().getMethodsOfType(variableType);
             for(int i=1;i<methods.length;i++){
                 String method=methods[i].replaceAll("^([^(]+)\\((.*)\\)$","$1");//nombre del metodo
                 if(method.length()!=methods[i].length())method+="()";
                 String methodType=methodTypes.get(method).get(0);
                 if(methodTypes.get(method).size()>1) methodType=getBestMethodType(methods[i],method,variableType);
                 methodExecutedTypes.add(methodType);
-                methodTypes=plugin.getCodeUtils().getMethodsOfType(methodType);
+                methodTypes= mainPlugin.getCodeUtils().getMethodsOfType(methodType);
                 variableType=methodType;
-                boolean finishMethod=plugin.getCodeUtils().isFinishMethod(methodType);
+                boolean finishMethod= mainPlugin.getCodeUtils().isFinishMethod(methodType);
                 ItemStack methodItem=new ItemStack(finishMethod?Material.DISPENSER:Material.HOPPER);
                 meta=methodItem.getItemMeta();
                 meta.setDisplayName((finishMethod?ChatColor.GRAY:ChatColor.DARK_GRAY)+methods[i]);
@@ -89,22 +89,22 @@ public class ExecutionWriterGUI {
 
     private String getBestMethodType(String methodText,String method,String variableType) {
         try {
-            variableType=plugin.getCodeUtils().clearContainerType(variableType);
+            variableType= mainPlugin.getCodeUtils().clearContainerType(variableType);
             List<Object> paramTypes=new ArrayList<>();
-            for(String param:plugin.getCodeExecuter().getStringParameters(methodText)){
-                String paramType=plugin.getCodeUtils().getTypeOfExecution(plugin.getSelectedPlugin(),param,variableTypes);
-                paramType=plugin.getCodeUtils().clearContainerType(paramType);
+            for(String param: mainPlugin.getCodeExecuter().getStringParameters(methodText)){
+                String paramType= mainPlugin.getCodeUtils().getTypeOfExecution(mainPlugin.getSelectedPlugin(),param,variableTypes);
+                paramType= mainPlugin.getCodeUtils().clearContainerType(paramType);
                 paramTypes.add(paramType);
             }
-            Method javaMethod=plugin.getCodeExecuter().getMethod(Class.forName(variableType),method,paramTypes,false);
+            Method javaMethod= mainPlugin.getCodeExecuter().getMethod(Class.forName(variableType),method,paramTypes,false);
             return javaMethod.getReturnType().getTypeName();
         }catch (Exception e){ return "";}
     }
 
     public String getTypeOfExecution(String execution){
         updateVariables();
-        String type=plugin.getCodeUtils().getTypeOfExecution(plugin.getSelectedPlugin(),execution,variableTypes);
-        return plugin.getCodeUtils().clearContainerType(type);
+        String type= mainPlugin.getCodeUtils().getTypeOfExecution(mainPlugin.getSelectedPlugin(),execution,variableTypes);
+        return mainPlugin.getCodeUtils().clearContainerType(type);
     }
     private void updateSelectBar(boolean renderMethods){
         //eliminar elementos anteriores
@@ -137,7 +137,7 @@ public class ExecutionWriterGUI {
     }
 
     private ItemStack getMethodItem(String element,String classType,String returnType,boolean renderMethods) {
-        boolean finishMethod=plugin.getCodeUtils().isFinishMethod(returnType);
+        boolean finishMethod= mainPlugin.getCodeUtils().isFinishMethod(returnType);
         ItemStack method=new ItemStack(renderMethods?(finishMethod?Material.DISPENSER:Material.HOPPER):Material.CHEST);
         ItemMeta meta=method.getItemMeta();
         meta.setDisplayName((renderMethods?(finishMethod?ChatColor.GRAY:ChatColor.DARK_GRAY):ChatColor.GOLD)+element);
@@ -159,25 +159,25 @@ public class ExecutionWriterGUI {
         gui.getItem(4).setItemMeta(meta);
     }
     public void updateVariables(){
-        if(plugin.getFunctionGUI().getFunctionsIndexes().size()==0){
-            variableTypes= InicVars.getInicVarTypes(plugin.getSelectedPlugin(),"");return;
+        if(PluginCoder.getCoderGUI().getFunctionGUI().getFunctionsIndexes().size()==0){
+            variableTypes= InicVars.getInicVarTypes(mainPlugin.getSelectedPlugin(),"");return;
         }
-        int functionIndex=plugin.getFunctionGUI().getFunctionsIndexes().get(plugin.getFunctionGUI().getFunctionsIndexes().size()-1);
+        int functionIndex= PluginCoder.getCoderGUI().getFunctionGUI().getFunctionsIndexes().get(PluginCoder.getCoderGUI().getFunctionGUI().getFunctionsIndexes().size()-1);
         if(functionIndex==lastFunctionInstructionVars)return;
-        plugin.getFunctionGUI().saveChanges(false);
+        PluginCoder.getCoderGUI().getFunctionGUI().saveChanges(false);
         lastFunctionInstructionVars=functionIndex;
-        String function=plugin.getFunctionGUI().getFunctions().get(0);
-        variableTypes=InicVars.getInicVarTypes(plugin.getSelectedPlugin(),function);
+        String function= PluginCoder.getCoderGUI().getFunctionGUI().getFunctions().get(0);
+        variableTypes=InicVars.getInicVarTypes(mainPlugin.getSelectedPlugin(),function);
         Map<String,Map<String,List<String>>> metodosPorTipo=new HashMap<>();
         updateVariableTypes(function,0,metodosPorTipo);
     }
     private void updateVariableTypes(String function,int funtionIndex,Map<String,Map<String,List<String>>> metodosPorTipo){
         int executeInstructionIndex=0;
-        if(plugin.getFunctionGUI().getFunctionsIndexes().size()==funtionIndex)return;
-        int instructionToUpdateIndex=plugin.getFunctionGUI().getFunctionsIndexes().get(funtionIndex);
-        for(String instruction:plugin.getCodeExecuter().getGUIInstructionsFromFunction(function)){
+        if(PluginCoder.getCoderGUI().getFunctionGUI().getFunctionsIndexes().size()==funtionIndex)return;
+        int instructionToUpdateIndex= PluginCoder.getCoderGUI().getFunctionGUI().getFunctionsIndexes().get(funtionIndex);
+        for(String instruction: mainPlugin.getCodeExecuter().getGUIInstructionsFromFunction(function)){
             //es la instruccion y esta en la misma subfuncion
-            if(plugin.getCodeExecuter().instructionIsFunction(instruction)){
+            if(mainPlugin.getCodeExecuter().instructionIsFunction(instruction)){
                 if(executeInstructionIndex!=instructionToUpdateIndex){
                     executeInstructionIndex++;
                     continue;
@@ -189,7 +189,7 @@ public class ExecutionWriterGUI {
                         Double.parseDouble(String.valueOf(iterator.charAt(0)));
                         variableTypes.put(forVar,double.class.getTypeName());
                     }catch (Exception e){
-                        String iteratorType=plugin.getCodeUtils().getTypeOfExecution(plugin.getSelectedPlugin(),iterator,variableTypes).replaceAll("^([^.]+)\\.(.+)$","$2");
+                        String iteratorType= mainPlugin.getCodeUtils().getTypeOfExecution(mainPlugin.getSelectedPlugin(),iterator,variableTypes).replaceAll("^([^.]+)\\.(.+)$","$2");
                         variableTypes.put(forVar,iteratorType);
                     }
                 }
@@ -199,15 +199,15 @@ public class ExecutionWriterGUI {
                 if(instruction.matches("^([^=]+)\\=(.+)$")){
                     String varName=instruction.replaceAll("^([^=]+)\\=(.+)$","$1");
                     String execution=instruction.replaceAll("^([^=]+)\\=(.+)$","$2");
-                    String[] methods=plugin.getCodeExecuter().getMethodsOfInstruction(execution);
+                    String[] methods= mainPlugin.getCodeExecuter().getMethodsOfInstruction(execution);
                     String varType=variableTypes.get(methods[0]);
                     if(varType==null){
                         String constructorName=execution.replaceAll("^([a-zA-Z]+)\\((.+)$","$1");
-                        Class objectClass=plugin.getConstructorTranslator().get(constructorName);
-                        PluginObject pluginObject=plugin.getSelectedPlugin().getObject(constructorName);
+                        Class objectClass= mainPlugin.getConstructorTranslator().get(constructorName);
+                        PluginObject pluginObject= mainPlugin.getSelectedPlugin().getObject(constructorName);
                         if(pluginObject!=null)varType="PluginObject."+pluginObject.getName();
                         else if(objectClass!=null)varType=objectClass.getTypeName();
-                        else varType=plugin.getCodeUtils().getTypeOfExecution(plugin.getSelectedPlugin(),execution,variableTypes);
+                        else varType= mainPlugin.getCodeUtils().getTypeOfExecution(mainPlugin.getSelectedPlugin(),execution,variableTypes);
                         /*
                         if(varType.equals("List.")||varType.equals("Set.")){
                             varType+=PredictType.predictTypeOfContainer(function,varName,varType.replaceAll("^([^.]+)\\.(.+)$","$1"),false,new ArrayList<>(variableTypes.keySet()));
@@ -220,7 +220,7 @@ public class ExecutionWriterGUI {
                         for(int i=1;i<methods.length;i++){
                             Map<String,List<String>> varExecuteMethods=metodosPorTipo.get(varType);
                             if(varExecuteMethods==null){
-                                varExecuteMethods=plugin.getCodeUtils().getMethodsOfType(varType);
+                                varExecuteMethods= mainPlugin.getCodeUtils().getMethodsOfType(varType);
                                 metodosPorTipo.put(varType,varExecuteMethods);
                             }
                             String method=methods[i];
@@ -240,7 +240,7 @@ public class ExecutionWriterGUI {
     }
 
     public void saveToExecutiongWritterGUI(String method,boolean closingInventoryWithoutReturning){
-        String[] methods=plugin.getCodeExecuter().getMethodsOfInstruction(renderedInstructions.get(renderedInstructions.size()-1));
+        String[] methods= mainPlugin.getCodeExecuter().getMethodsOfInstruction(renderedInstructions.get(renderedInstructions.size()-1));
         int index=paramSlots.remove(paramSlots.size()-1)-10;
         String newInstruction=methods[0];
         for(int i=1;i<methods.length;i++){
@@ -271,7 +271,7 @@ public class ExecutionWriterGUI {
             PluginCoder.getCoderGUI().getFunctionGUI().getGUI().get(instructionPageSlot[0]).setItem(instructionPageSlot[1],newInstructionItem);
             if(closingInventoryWithoutReturning)PluginCoder.getCoderGUI().getFunctionGUI().saveChanges(false);
         }
-        else if(previousInv.equals(plugin.getSetValueGUI().getGUI())){
+        else if(previousInv.equals(PluginCoder.getCoderGUI().getSetValueGUI().getGUI())){
             PluginCoder.getCoderGUI().getSetValueGUI().saveToSetGuiPage(newExecuteInstruction,closingInventoryWithoutReturning);
 
         }else if(previousInv.equals(PluginCoder.getCoderGUI().getMathGUI().getGUI())){
@@ -327,7 +327,7 @@ public class ExecutionWriterGUI {
         }
         else methodReturnType=variableTypes.get(method);
         methodExecutedTypes.add(methodReturnType);
-        methodTypes=plugin.getCodeUtils().getMethodsOfType(methodReturnType);
+        methodTypes= mainPlugin.getCodeUtils().getMethodsOfType(methodReturnType);
         updateSelectBar(true);
         for(int i=10;i<17;i++){
             if(gui.getItem(i)!=null)continue;
@@ -353,7 +353,7 @@ public class ExecutionWriterGUI {
         if(!deleted)gui.setItem(16,null);
         if(methodExecutedTypes.size()!=0){
             String methodReturnType=methodExecutedTypes.get(methodExecutedTypes.size()-1);
-            methodTypes=plugin.getCodeUtils().getMethodsOfType(methodReturnType);
+            methodTypes= mainPlugin.getCodeUtils().getMethodsOfType(methodReturnType);
             updateSelectBar(true);
         } else {
             methodTypes.clear();

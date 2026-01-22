@@ -38,7 +38,7 @@ public class PluginGuiListener implements Listener {
 	public void alClickearInventarioGui(InventoryClickEvent event){
 		if(!(event.getWhoClicked() instanceof Player))return;
 		if((event.getCurrentItem()==null||event.getCurrentItem().getType()==Material.AIR)
-		&&mainPlugin.getFunctionGUI().getMoveInstructionIndex()<0&&mainPlugin.getFunctionGUI().getCopyInstructionIndex()<0)return;
+		&&PluginCoder.getCoderGUI().getFunctionGUI().getMoveInstructionIndex()<0&&PluginCoder.getCoderGUI().getFunctionGUI().getCopyInstructionIndex()<0)return;
 		Player player = (Player) event.getWhoClicked();
 		if(event.getInventory().equals(mainPlugin.getCoderGUI().getPluginCoderGUI())){//inv principal
 			InicVars.functionType="";
@@ -61,14 +61,14 @@ public class PluginGuiListener implements Listener {
 				PluginCoder.getCoderGUI().buttonSound(player);
 			}else if(event.getSlot()==24) {
 				//eventos
-				player.openInventory(mainPlugin.getEventsGUI().getGUI().get(0));
+				player.openInventory(PluginCoder.getCoderGUI().getEventsGUI().getGUI().get(0));
 				PluginCoder.getCoderGUI().buttonSound(player);
 			}else if(event.getSlot()==38) {
 				//enable
-				mainPlugin.getFunctionGUI().setPreviousInventory(event.getInventory());
+				PluginCoder.getCoderGUI().getFunctionGUI().setPreviousInventory(event.getInventory());
 				String onEnableFunction=mainPlugin.getSelectedPlugin().getActivationContainer().get(0);
-				mainPlugin.getFunctionGUI().updateGUIWithNewFunction(onEnableFunction,mainPlugin.getSelectedPlugin().getActivationContainer());
-				player.openInventory(mainPlugin.getFunctionGUI().getGUI().get(0));
+				PluginCoder.getCoderGUI().getFunctionGUI().updateGUIWithNewFunction(onEnableFunction,mainPlugin.getSelectedPlugin().getActivationContainer());
+				player.openInventory(PluginCoder.getCoderGUI().getFunctionGUI().getGUI().get(0));
 				PluginCoder.getCoderGUI().buttonSound(player);
 			}else if(event.getSlot()==40) {
 				//plugin
@@ -77,10 +77,10 @@ public class PluginGuiListener implements Listener {
 				PluginCoder.getCoderGUI().buttonSound(player);
 			}else if(event.getSlot()==42) {
 				//disable
-				mainPlugin.getFunctionGUI().setPreviousInventory(event.getInventory());
+				PluginCoder.getCoderGUI().getFunctionGUI().setPreviousInventory(event.getInventory());
 				String onDisableFunction=mainPlugin.getSelectedPlugin().getDeactivationContainer().get(0);
-				mainPlugin.getFunctionGUI().updateGUIWithNewFunction(onDisableFunction,mainPlugin.getSelectedPlugin().getDeactivationContainer());
-				player.openInventory(mainPlugin.getFunctionGUI().getGUI().get(0));
+				PluginCoder.getCoderGUI().getFunctionGUI().updateGUIWithNewFunction(onDisableFunction,mainPlugin.getSelectedPlugin().getDeactivationContainer());
+				player.openInventory(PluginCoder.getCoderGUI().getFunctionGUI().getGUI().get(0));
 				PluginCoder.getCoderGUI().buttonSound(player);
 			}else if(event.getSlot()==4){
 				PluginCoder.getCoderGUI().buttonSound(player);
@@ -243,11 +243,11 @@ public class PluginGuiListener implements Listener {
 				}
 			}else if(event.getCurrentItem().getType().toString().equals("BOOK_AND_QUILL")||event.getCurrentItem().getType().toString().equals("WRITABLE_BOOK")){
 				if(PluginCoder.getCoderGUI().getCommandsGUI().isDeleteCommand())return;
-				mainPlugin.getFunctionGUI().setPreviousInventory(event.getInventory());
+				PluginCoder.getCoderGUI().getFunctionGUI().setPreviousInventory(event.getInventory());
 				PluginCoder.getCoderGUI().getCommandsGUI().updateCommandEdtitedIndexes(event.getInventory(),event.getSlot());
-				mainPlugin.getFunctionGUI().updateGUIWithNewFunction(0,mainPlugin.getSelectedPlugin().getCommands().get(commmandIndex).getFunctionContainer());
+				PluginCoder.getCoderGUI().getFunctionGUI().updateGUIWithNewFunction(0,mainPlugin.getSelectedPlugin().getCommands().get(commmandIndex).getFunctionContainer());
 				InicVars.functionType="command";
-				player.openInventory(mainPlugin.getFunctionGUI().getGUI().get(0));
+				player.openInventory(PluginCoder.getCoderGUI().getFunctionGUI().getGUI().get(0));
 				PluginCoder.getCoderGUI().buttonSound(player);
 			}else if(event.getSlot()==26){//añadir comando
 				PluginCoder.getCoderGUI().getCommandPromptGUI().updateGUI(null);
@@ -320,41 +320,41 @@ public class PluginGuiListener implements Listener {
 			}
 		}
 		//objetos gui
-		else if(mainPlugin.getObjectsGUI().getGUI().stream().anyMatch(inv->inv.equals(event.getInventory()))){
+		else if(PluginCoder.getCoderGUI().getObjectsGUI().getGUI().stream().anyMatch(inv->inv.equals(event.getInventory()))){
 			event.setCancelled(true);
 			if(event.getClickedInventory().getType()==InventoryType.PLAYER)return;
-			int index=mainPlugin.getObjectsGUI().getGUI().indexOf(event.getInventory())*28+event.getSlot()-
+			int index=PluginCoder.getCoderGUI().getObjectsGUI().getGUI().indexOf(event.getInventory())*28+event.getSlot()-
 					(10+2*(event.getSlot()/9-1));
 			if(event.getCurrentItem()!=null&&!(event.getSlot()%9==0||(event.getSlot()+1)%9==0||(event.getSlot()>0&&event.getSlot()<8)||
 					(event.getSlot()>45&&event.getSlot()<53))){
-				if(!mainPlugin.getObjectsGUI().isDeleteObject()){//abrir menú del objeto
+				if(!PluginCoder.getCoderGUI().getObjectsGUI().isDeleteObject()){//abrir menú del objeto
 					PluginCoder.getCoderGUI().getObjectGUI().updateGUI(mainPlugin.getSelectedPlugin().getObjects().get(index));
-					mainPlugin.getObjectsGUI().setLastPageOpened(mainPlugin.getObjectsGUI().getGUI().indexOf(event.getInventory()));
+					PluginCoder.getCoderGUI().getObjectsGUI().setLastPageOpened(PluginCoder.getCoderGUI().getObjectsGUI().getGUI().indexOf(event.getInventory()));
 					player.openInventory(PluginCoder.getCoderGUI().getObjectGUI().getGUI());
 				}else{
 					mainPlugin.getSelectedPlugin().getObjects().remove(index);
 					PluginCoder.getCoderGUI().getObjectConstructorsGUI().updateGUI(); //actualizar constructores de objeto
 					event.getInventory().setItem(event.getSlot(),null);
-					PluginCoder.getCoderGUI().updateInventoriesContent(mainPlugin.getObjectsGUI().getGUI());
-					if(!mainPlugin.getObjectsGUI().getGUI().contains(event.getInventory())){
-						player.openInventory(mainPlugin.getObjectsGUI().getGUI().get(mainPlugin.getObjectsGUI().getGUI().size()-1));
+					PluginCoder.getCoderGUI().updateInventoriesContent(PluginCoder.getCoderGUI().getObjectsGUI().getGUI());
+					if(!PluginCoder.getCoderGUI().getObjectsGUI().getGUI().contains(event.getInventory())){
+						player.openInventory(PluginCoder.getCoderGUI().getObjectsGUI().getGUI().get(PluginCoder.getCoderGUI().getObjectsGUI().getGUI().size()-1));
 					}else player.updateInventory();
 				}
 				PluginCoder.getCoderGUI().buttonSound(player);
 			}else{
 				if(event.getSlot()==8||event.getSlot()==0){
-					mainPlugin.getObjectsGUI().setDeleteObject(false);
+					PluginCoder.getCoderGUI().getObjectsGUI().setDeleteObject(false);
 					ItemStack deleteObject=event.getCurrentItem().clone();
 					if(event.getCurrentItem().getType()==Material.BUCKET)deleteObject.setType(Material.LAVA_BUCKET);
 					else deleteObject.setType(Material.BUCKET);
-					for(Inventory inventory:mainPlugin.getObjectsGUI().getGUI()){
+					for(Inventory inventory:PluginCoder.getCoderGUI().getObjectsGUI().getGUI()){
 						inventory.setItem(35,deleteObject);
 					}
 					player.openInventory(PluginCoder.getCoderGUI().getPluginCoderGUI());
 					PluginCoder.getCoderGUI().buttonSound(player);
 				}
 				else if(event.getSlot()==45||event.getSlot()==53){
-					List<Inventory> inventories=mainPlugin.getObjectsGUI().getGUI();
+					List<Inventory> inventories=PluginCoder.getCoderGUI().getObjectsGUI().getGUI();
 					int invIndex=inventories.indexOf(event.getInventory());
 					if(event.getSlot()==45){
 						if(invIndex!=0){
@@ -367,11 +367,11 @@ public class PluginGuiListener implements Listener {
 					PluginCoder.getCoderGUI().getObjectsGUI().setToWriteObjectName(player);
 					PluginCoder.getCoderGUI().buttonSound(player);
 				}else if(event.getSlot()==35){//eliminar objeto
-					mainPlugin.getObjectsGUI().setDeleteObject(!mainPlugin.getObjectsGUI().isDeleteObject());
+					PluginCoder.getCoderGUI().getObjectsGUI().setDeleteObject(!PluginCoder.getCoderGUI().getObjectsGUI().isDeleteObject());
 					ItemStack deleteObject=event.getCurrentItem().clone();
 					if(event.getCurrentItem().getType()==Material.BUCKET)deleteObject.setType(Material.LAVA_BUCKET);
 					else deleteObject.setType(Material.BUCKET);
-					for(Inventory inventory:mainPlugin.getObjectsGUI().getGUI()){
+					for(Inventory inventory:PluginCoder.getCoderGUI().getObjectsGUI().getGUI()){
 						inventory.setItem(35,deleteObject);
 					}
 					player.updateInventory();
@@ -384,7 +384,7 @@ public class PluginGuiListener implements Listener {
 			if(event.getClickedInventory().getType()==InventoryType.PLAYER)return;
 			if(event.getSlot()==0){
 				if(!PluginCoder.getCoderGUI().getObjectGUI().getObject().getName().equals("Plugin")){
-					player.openInventory(mainPlugin.getObjectsGUI().getGUI().get(mainPlugin.getObjectsGUI().getLastPageOpened()));
+					player.openInventory(PluginCoder.getCoderGUI().getObjectsGUI().getGUI().get(PluginCoder.getCoderGUI().getObjectsGUI().getLastPageOpened()));
 				}
 				else player.openInventory(PluginCoder.getCoderGUI().getPluginCoderGUI());
 				PluginCoder.getCoderGUI().getExecutionWriterGUI().setLastFunctionInstructionVars(-1);
@@ -432,7 +432,7 @@ public class PluginGuiListener implements Listener {
 					int renderedSlot=PluginCoder.getCoderGUI().getObjectGUI().getRenderedSlot();
 					int renderedPage=PluginCoder.getCoderGUI().getObjectGUI().getRenderedPage();
 					int index=(event.getSlot()<35?event.getSlot()-28:event.getSlot()-30)+renderedPage*14;
-					mainPlugin.getFunctionGUI().setPreviousInventory(event.getInventory());
+					PluginCoder.getCoderGUI().getFunctionGUI().setPreviousInventory(event.getInventory());
 					PluginCoder.getCoderGUI().getFunctionGUI().updateGUIWithNewFunction(index,renderedSlot==13?
 							object.getFunctions():object.getConstructors());
 					player.openInventory(PluginCoder.getCoderGUI().getFunctionGUI().getGUI().get(0));
@@ -452,25 +452,25 @@ public class PluginGuiListener implements Listener {
 				player.updateInventory();
 			}
 		}//eventos gui
-		else if(mainPlugin.getEventsGUI().getGUI().stream().anyMatch(inv->inv.equals(event.getInventory()))){
+		else if(PluginCoder.getCoderGUI().getEventsGUI().getGUI().stream().anyMatch(inv->inv.equals(event.getInventory()))){
 			event.setCancelled(true);
 			if(event.getClickedInventory().getType()==InventoryType.PLAYER)return;
 			if(!(event.getSlot()%9==0||(event.getSlot()+1)%9==0||(event.getSlot()>0&&event.getSlot()<8)||
 					(event.getSlot()>45&&event.getSlot()<53))){
-				int index=mainPlugin.getEventsGUI().getGUI().indexOf(event.getInventory())*28+event.getSlot()-
+				int index=PluginCoder.getCoderGUI().getEventsGUI().getGUI().indexOf(event.getInventory())*28+event.getSlot()-
 						(10+2*(event.getSlot()/9-1));
-				if(!mainPlugin.getEventsGUI().isDeleteEvent()){
-					mainPlugin.getFunctionGUI().setPreviousInventory(event.getInventory());
-					mainPlugin.getEventsGUI().setEventEditedIndex(event.getInventory(),event.getSlot());
-					mainPlugin.getFunctionGUI().updateGUIWithNewFunction(index,mainPlugin.getSelectedPlugin().getListener());
+				if(!PluginCoder.getCoderGUI().getEventsGUI().isDeleteEvent()){
+					PluginCoder.getCoderGUI().getFunctionGUI().setPreviousInventory(event.getInventory());
+					PluginCoder.getCoderGUI().getEventsGUI().setEventEditedIndex(event.getInventory(),event.getSlot());
+					PluginCoder.getCoderGUI().getFunctionGUI().updateGUIWithNewFunction(index,mainPlugin.getSelectedPlugin().getListener());
 					InicVars.functionType="event";
-					player.openInventory(mainPlugin.getFunctionGUI().getGUI().get(0));
+					player.openInventory(PluginCoder.getCoderGUI().getFunctionGUI().getGUI().get(0));
 				}else{
 					mainPlugin.getSelectedPlugin().getListener().remove(index);
 					event.getInventory().setItem(event.getSlot(),null);
-					PluginCoder.getCoderGUI().updateInventoriesContent(mainPlugin.getEventsGUI().getGUI());
-					if(!mainPlugin.getEventsGUI().getGUI().contains(event.getInventory())){
-						player.openInventory(mainPlugin.getEventsGUI().getGUI().get(mainPlugin.getEventsGUI().getGUI().size()-1));
+					PluginCoder.getCoderGUI().updateInventoriesContent(PluginCoder.getCoderGUI().getEventsGUI().getGUI());
+					if(!PluginCoder.getCoderGUI().getEventsGUI().getGUI().contains(event.getInventory())){
+						player.openInventory(PluginCoder.getCoderGUI().getEventsGUI().getGUI().get(PluginCoder.getCoderGUI().getEventsGUI().getGUI().size()-1));
 					}
 					else player.updateInventory();
 				}
@@ -478,11 +478,11 @@ public class PluginGuiListener implements Listener {
 			}else{
 				if(event.getSlot()==8||event.getSlot()==0){
 					player.openInventory(PluginCoder.getCoderGUI().getPluginCoderGUI());
-					mainPlugin.getEventsGUI().setDeleteEvent(false);
+					PluginCoder.getCoderGUI().getEventsGUI().setDeleteEvent(false);
 					PluginCoder.getCoderGUI().buttonSound(player);
 				}
 				else if(event.getSlot()==45||event.getSlot()==53){
-					List<Inventory> inventories=mainPlugin.getEventsGUI().getGUI();
+					List<Inventory> inventories=PluginCoder.getCoderGUI().getEventsGUI().getGUI();
 					int invIndex=inventories.indexOf(event.getInventory());
 					if(event.getSlot()==45){
 						if(invIndex!=0){
@@ -492,15 +492,15 @@ public class PluginGuiListener implements Listener {
 						player.openInventory(inventories.get(invIndex+1));PluginCoder.getCoderGUI().buttonSound(player);
 					}
 				}else if(event.getSlot()==26){//añadir evento
-					mainPlugin.getEventsGUI().setLastPageOpened(mainPlugin.getEventsGUI().getGUI().indexOf(event.getInventory()));
-					player.openInventory(mainPlugin.getEventsGUI().getEventsItemsGUI().get(0));
+					PluginCoder.getCoderGUI().getEventsGUI().setLastPageOpened(PluginCoder.getCoderGUI().getEventsGUI().getGUI().indexOf(event.getInventory()));
+					player.openInventory(PluginCoder.getCoderGUI().getEventsGUI().getEventsItemsGUI().get(0));
 					PluginCoder.getCoderGUI().buttonSound(player);
 				}else if(event.getSlot()==35){//eliminar evento
-					mainPlugin.getEventsGUI().setDeleteEvent(!mainPlugin.getEventsGUI().isDeleteEvent());
+					PluginCoder.getCoderGUI().getEventsGUI().setDeleteEvent(!PluginCoder.getCoderGUI().getEventsGUI().isDeleteEvent());
 					ItemStack deleteEvent=event.getCurrentItem().clone();
 					if(event.getCurrentItem().getType()==Material.BUCKET)deleteEvent.setType(Material.LAVA_BUCKET);
 					else deleteEvent.setType(Material.BUCKET);
-					for(Inventory inventory:mainPlugin.getEventsGUI().getGUI()){
+					for(Inventory inventory:PluginCoder.getCoderGUI().getEventsGUI().getGUI()){
 						inventory.setItem(35,deleteEvent);
 					}
 					player.updateInventory();
@@ -508,25 +508,25 @@ public class PluginGuiListener implements Listener {
 				}
 			}
 			//funciones gui
-		}else if(mainPlugin.getFunctionGUI().getGUI().stream().anyMatch(inv->inv.equals(event.getInventory()))){
+		}else if(PluginCoder.getCoderGUI().getFunctionGUI().getGUI().stream().anyMatch(inv->inv.equals(event.getInventory()))){
 			event.setCancelled(true);
 			if(event.getClickedInventory()==null)return;
 			if(event.getClickedInventory().getType()==InventoryType.PLAYER)return;
-			if(mainPlugin.getFunctionGUI().isRunningCode()&&event.getSlot()!=49)return;
-			int inventoryIndex=mainPlugin.getFunctionGUI().getGUI().indexOf(event.getInventory());
+			if(PluginCoder.getCoderGUI().getFunctionGUI().isRunningCode()&&event.getSlot()!=49)return;
+			int inventoryIndex=PluginCoder.getCoderGUI().getFunctionGUI().getGUI().indexOf(event.getInventory());
 			if(event.getSlot()%9==0||(event.getSlot()+1)%9==0||(event.getSlot()>0&&event.getSlot()<8)||
 					(event.getSlot()>45&&event.getSlot()<53)){
 				if(event.getSlot()==8){
 					ItemStack cursor=player.getItemOnCursor().clone();
-					mainPlugin.getFunctionGUI().restoreInstructionMovement(player);
+					PluginCoder.getCoderGUI().getFunctionGUI().restoreInstructionMovement(player);
 					PluginCoder.getCoderGUI().getFunctionGUI().returnHome(player,true);
 					player.getInventory().remove(cursor);
 					PluginCoder.getCoderGUI().buttonSound(player);
 				}else if(event.getSlot()==0){
-					mainPlugin.getFunctionGUI().setDeleteInstruction(false);
+					PluginCoder.getCoderGUI().getFunctionGUI().setDeleteInstruction(false);
 					ItemStack delete=event.getInventory().getItem(35).clone();
 					delete.setType(Material.BUCKET);event.getInventory().setItem(35,delete);
-					mainPlugin.getFunctionGUI().returnPage(player);
+					PluginCoder.getCoderGUI().getFunctionGUI().returnPage(player);
 					PluginCoder.getCoderGUI().buttonSound(player);
 				}else if(event.getSlot()==4&&!event.getCurrentItem().getType().toString().contains("GLASS_PANE")){
 					String instruction=ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).trim();
@@ -557,50 +557,50 @@ public class PluginGuiListener implements Listener {
 						player.openInventory(inventories.get(invIndex+1));PluginCoder.getCoderGUI().buttonSound(player);
 					}
 				}else if(event.getSlot()==26){//añadir instruccion
-					mainPlugin.getFunctionGUI().setLastPageOpened(mainPlugin.getFunctionGUI().getGUI().indexOf(event.getInventory()));
+					PluginCoder.getCoderGUI().getFunctionGUI().setLastPageOpened(PluginCoder.getCoderGUI().getFunctionGUI().getGUI().indexOf(event.getInventory()));
 					player.openInventory(PluginCoder.getCoderGUI().getInstructionsGUI().getGui());
 					PluginCoder.getCoderGUI().buttonSound(player);
 				}else if(event.getSlot()==35){//eliminar instruccion
-					if(mainPlugin.getFunctionGUI().getMoveInstructionIndex()>-2||mainPlugin.getFunctionGUI().getCopyInstructionIndex()>-2)return;
-					mainPlugin.getFunctionGUI().setDeleteInstruction(!mainPlugin.getFunctionGUI().isDeleteInstruction());
+					if(PluginCoder.getCoderGUI().getFunctionGUI().getMoveInstructionIndex()>-2||PluginCoder.getCoderGUI().getFunctionGUI().getCopyInstructionIndex()>-2)return;
+					PluginCoder.getCoderGUI().getFunctionGUI().setDeleteInstruction(!PluginCoder.getCoderGUI().getFunctionGUI().isDeleteInstruction());
 					ItemStack deleteInstruction=event.getCurrentItem().clone();
 					if(event.getCurrentItem().getType()==Material.BUCKET)deleteInstruction.setType(Material.LAVA_BUCKET);
 					else deleteInstruction.setType(Material.BUCKET);
-					for(Inventory inventory:mainPlugin.getFunctionGUI().getGUI()){
+					for(Inventory inventory:PluginCoder.getCoderGUI().getFunctionGUI().getGUI()){
 						inventory.setItem(35,deleteInstruction);
 					}
 					player.updateInventory();
 					PluginCoder.getCoderGUI().buttonSound(player);
 				}else if(event.getSlot()==18){//mover instruccion
-					if(mainPlugin.getFunctionGUI().isDeleteInstruction()||mainPlugin.getFunctionGUI().getCopyInstructionIndex()>-2)return;
-					if(mainPlugin.getFunctionGUI().getMoveInstructionIndex()!=-2){
-						if(mainPlugin.getFunctionGUI().getMoveInstructionIndex()>-1){
-							int instructionSlot=mainPlugin.getFunctionGUI().getMoveInstructionIndex()%28;
+					if(PluginCoder.getCoderGUI().getFunctionGUI().isDeleteInstruction()||PluginCoder.getCoderGUI().getFunctionGUI().getCopyInstructionIndex()>-2)return;
+					if(PluginCoder.getCoderGUI().getFunctionGUI().getMoveInstructionIndex()!=-2){
+						if(PluginCoder.getCoderGUI().getFunctionGUI().getMoveInstructionIndex()>-1){
+							int instructionSlot=PluginCoder.getCoderGUI().getFunctionGUI().getMoveInstructionIndex()%28;
 							instructionSlot=instructionSlot+(10+2*(instructionSlot/7));
-							mainPlugin.getFunctionGUI().insertInstructionItem(player.getItemOnCursor().clone(),inventoryIndex,instructionSlot);
+							PluginCoder.getCoderGUI().getFunctionGUI().insertInstructionItem(player.getItemOnCursor().clone(),inventoryIndex,instructionSlot);
 							player.updateInventory();player.setItemOnCursor(null);
 						}
-						mainPlugin.getFunctionGUI().setMoveInstructionIndex(-2);
-					}else mainPlugin.getFunctionGUI().setMoveInstructionIndex(-1);
+						PluginCoder.getCoderGUI().getFunctionGUI().setMoveInstructionIndex(-2);
+					}else PluginCoder.getCoderGUI().getFunctionGUI().setMoveInstructionIndex(-1);
 					PluginCoder.getCoderGUI().buttonSound(player);
 				}else if(event.getSlot()==27){//copiar instruccion
-					if(mainPlugin.getFunctionGUI().isDeleteInstruction()||mainPlugin.getFunctionGUI().getMoveInstructionIndex()>-2)return;
-					if(mainPlugin.getFunctionGUI().getCopyInstructionIndex()!=-2){
-						mainPlugin.getFunctionGUI().setCopyInstructionIndex(-2);
+					if(PluginCoder.getCoderGUI().getFunctionGUI().isDeleteInstruction()||PluginCoder.getCoderGUI().getFunctionGUI().getMoveInstructionIndex()>-2)return;
+					if(PluginCoder.getCoderGUI().getFunctionGUI().getCopyInstructionIndex()!=-2){
+						PluginCoder.getCoderGUI().getFunctionGUI().setCopyInstructionIndex(-2);
 						player.setItemOnCursor(null);
-					}else mainPlugin.getFunctionGUI().setCopyInstructionIndex(-1);
+					}else PluginCoder.getCoderGUI().getFunctionGUI().setCopyInstructionIndex(-1);
 					PluginCoder.getCoderGUI().buttonSound(player);
 				}else if(event.getSlot()==49){
 					if(event.getCurrentItem().getType().toString().contains("GLASS_PANE"))return;
 					if(!event.getCurrentItem().getType().toString().contains("SKULL_ITEM")&&!event.getCurrentItem().getType().toString().contains("PLAYER_HEAD")){
-						String lastInstruction=mainPlugin.getFunctionGUI().getLastInstruction();
+						String lastInstruction=PluginCoder.getCoderGUI().getFunctionGUI().getLastInstruction();
 						if(lastInstruction.equals("cancel")||lastInstruction.equals("continue")||lastInstruction.equals("stop"))return;
-						mainPlugin.getFunctionGUI().addInstruction("cancel");
+						PluginCoder.getCoderGUI().getFunctionGUI().addInstruction("cancel");
 						PluginCoder.getCoderGUI().buttonSound(player);
 						player.updateInventory();
 					}else{ //ejecutar funcion
-						if(!mainPlugin.getFunctionGUI().isRunningCode())mainPlugin.getFunctionGUI().executeCode(player);
-						else mainPlugin.getFunctionGUI().stopCodeExecution();
+						if(!PluginCoder.getCoderGUI().getFunctionGUI().isRunningCode())PluginCoder.getCoderGUI().getFunctionGUI().executeCode(player);
+						else PluginCoder.getCoderGUI().getFunctionGUI().stopCodeExecution();
 						player.updateInventory();
 						PluginCoder.getCoderGUI().buttonSound(player);
 					}
@@ -608,59 +608,59 @@ public class PluginGuiListener implements Listener {
 				//añadir instrucciones exclusivas de funcion
 				else if((event.getSlot()==47||event.getSlot()==51)&&!event.getCurrentItem().getType().toString().contains("GLASS_PANE")){
 					String instruction=ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).trim();
-					String lastInstruction=mainPlugin.getFunctionGUI().getLastInstruction();
+					String lastInstruction=PluginCoder.getCoderGUI().getFunctionGUI().getLastInstruction();
 					if((instruction.equalsIgnoreCase("continue")||instruction.equalsIgnoreCase("stop"))&&
 							(lastInstruction.equalsIgnoreCase("continue")||lastInstruction.equalsIgnoreCase("stop")))return;
-					mainPlugin.getFunctionGUI().addInstruction(instruction);
+					PluginCoder.getCoderGUI().getFunctionGUI().addInstruction(instruction);
 					PluginCoder.getCoderGUI().buttonSound(player);
 					player.updateInventory();
 				}
 			}else{
 				int instructionIndex=inventoryIndex*28+event.getSlot()-(10+2*(event.getSlot()/9-1));
-				if(mainPlugin.getFunctionGUI().isDeleteInstruction()){//borrar instruccion
-					mainPlugin.getFunctionGUI().deleteInstruction(instructionIndex);
+				if(PluginCoder.getCoderGUI().getFunctionGUI().isDeleteInstruction()){//borrar instruccion
+					PluginCoder.getCoderGUI().getFunctionGUI().deleteInstruction(instructionIndex);
 					event.getInventory().setItem(event.getSlot(),null);
-					PluginCoder.getCoderGUI().updateInventoriesContent(mainPlugin.getFunctionGUI().getGUI());
-					if(!mainPlugin.getFunctionGUI().getGUI().contains(event.getInventory())){
-						player.openInventory(mainPlugin.getFunctionGUI().getGUI().get(mainPlugin.getFunctionGUI().getGUI().size()-1));
+					PluginCoder.getCoderGUI().updateInventoriesContent(PluginCoder.getCoderGUI().getFunctionGUI().getGUI());
+					if(!PluginCoder.getCoderGUI().getFunctionGUI().getGUI().contains(event.getInventory())){
+						player.openInventory(PluginCoder.getCoderGUI().getFunctionGUI().getGUI().get(PluginCoder.getCoderGUI().getFunctionGUI().getGUI().size()-1));
 					}else player.updateInventory();
 					PluginCoder.getCoderGUI().buttonSound(player);
-				}else if(mainPlugin.getFunctionGUI().getMoveInstructionIndex()>-2){//mover instruccion
-					if(mainPlugin.getFunctionGUI().getMoveInstructionIndex()==-1){
-						mainPlugin.getFunctionGUI().setMoveInstructionIndex(instructionIndex);
+				}else if(PluginCoder.getCoderGUI().getFunctionGUI().getMoveInstructionIndex()>-2){//mover instruccion
+					if(PluginCoder.getCoderGUI().getFunctionGUI().getMoveInstructionIndex()==-1){
+						PluginCoder.getCoderGUI().getFunctionGUI().setMoveInstructionIndex(instructionIndex);
 						player.setItemOnCursor(event.getCurrentItem().clone());
 						event.getInventory().setItem(event.getSlot(),null);
-						PluginCoder.getCoderGUI().updateInventoriesContent(mainPlugin.getFunctionGUI().getGUI());
-						if(!mainPlugin.getFunctionGUI().getGUI().contains(event.getInventory())){
-							player.openInventory(mainPlugin.getFunctionGUI().getGUI().get(mainPlugin.getFunctionGUI().getGUI().size()-1));
+						PluginCoder.getCoderGUI().updateInventoriesContent(PluginCoder.getCoderGUI().getFunctionGUI().getGUI());
+						if(!PluginCoder.getCoderGUI().getFunctionGUI().getGUI().contains(event.getInventory())){
+							player.openInventory(PluginCoder.getCoderGUI().getFunctionGUI().getGUI().get(PluginCoder.getCoderGUI().getFunctionGUI().getGUI().size()-1));
 						}else player.updateInventory();
 					}else{
-						mainPlugin.getFunctionGUI().insertInstructionInFunction(mainPlugin.getFunctionGUI().getMoveInstructionIndex(),instructionIndex,true);
-						mainPlugin.getFunctionGUI().insertInstructionItem(player.getItemOnCursor().clone(),inventoryIndex,event.getSlot());
+						PluginCoder.getCoderGUI().getFunctionGUI().insertInstructionInFunction(PluginCoder.getCoderGUI().getFunctionGUI().getMoveInstructionIndex(),instructionIndex,true);
+						PluginCoder.getCoderGUI().getFunctionGUI().insertInstructionItem(player.getItemOnCursor().clone(),inventoryIndex,event.getSlot());
 						player.setItemOnCursor(null);player.updateInventory();
-						mainPlugin.getFunctionGUI().setMoveInstructionIndex(-2);
+						PluginCoder.getCoderGUI().getFunctionGUI().setMoveInstructionIndex(-2);
 					}
 					PluginCoder.getCoderGUI().buttonSound(player);
-				}else if(mainPlugin.getFunctionGUI().getCopyInstructionIndex()>-2){//copiar instruccion
-					if(mainPlugin.getFunctionGUI().getCopyInstructionIndex()==-1){
-						mainPlugin.getFunctionGUI().setCopyInstructionIndex(instructionIndex);
+				}else if(PluginCoder.getCoderGUI().getFunctionGUI().getCopyInstructionIndex()>-2){//copiar instruccion
+					if(PluginCoder.getCoderGUI().getFunctionGUI().getCopyInstructionIndex()==-1){
+						PluginCoder.getCoderGUI().getFunctionGUI().setCopyInstructionIndex(instructionIndex);
 						player.setItemOnCursor(event.getCurrentItem().clone());
 					}else{
-						mainPlugin.getFunctionGUI().insertInstructionInFunction(mainPlugin.getFunctionGUI().getCopyInstructionIndex(),instructionIndex,false);
-						mainPlugin.getFunctionGUI().insertInstructionItem(player.getItemOnCursor().clone(),inventoryIndex,event.getSlot());
+						PluginCoder.getCoderGUI().getFunctionGUI().insertInstructionInFunction(PluginCoder.getCoderGUI().getFunctionGUI().getCopyInstructionIndex(),instructionIndex,false);
+						PluginCoder.getCoderGUI().getFunctionGUI().insertInstructionItem(player.getItemOnCursor().clone(),inventoryIndex,event.getSlot());
 						player.setItemOnCursor(null);player.updateInventory();
-						mainPlugin.getFunctionGUI().setCopyInstructionIndex(-2);
+						PluginCoder.getCoderGUI().getFunctionGUI().setCopyInstructionIndex(-2);
 					}
 					PluginCoder.getCoderGUI().buttonSound(player);
 				}
 				else {
-					mainPlugin.getFunctionGUI().updateFunctionIndexes(event.getInventory(),event.getSlot());
+					PluginCoder.getCoderGUI().getFunctionGUI().updateFunctionIndexes(event.getInventory(),event.getSlot());
 					if(event.getCurrentItem().getType().equals(mainPlugin.getCodeUtils().getVersionedMaterial(Material.WRITABLE_BOOK))){
-						mainPlugin.getFunctionGUI().saveChanges(false);
-						mainPlugin.getFunctionGUI().updateGUIWithNewFunction(instructionIndex,mainPlugin.getFunctionGUI().getInitialFunctionContainer());
+						PluginCoder.getCoderGUI().getFunctionGUI().saveChanges(false);
+						PluginCoder.getCoderGUI().getFunctionGUI().updateGUIWithNewFunction(instructionIndex,PluginCoder.getCoderGUI().getFunctionGUI().getInitialFunctionContainer());
 						player.openInventory(PluginCoder.getCoderGUI().getFunctionGUI().getGUI().get(0));
 					}else{
-						mainPlugin.getFunctionGUI().setLastPageOpened(mainPlugin.getFunctionGUI().getGUI().indexOf(event.getInventory()));
+						PluginCoder.getCoderGUI().getFunctionGUI().setLastPageOpened(PluginCoder.getCoderGUI().getFunctionGUI().getGUI().indexOf(event.getInventory()));
 						String instruction=ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName());
 						if(instruction.matches("^return\\s+(.*)$")){
 							PluginCoder.getCoderGUI().getReturnGUI().updateGUI(instruction);
@@ -679,19 +679,19 @@ public class PluginGuiListener implements Listener {
 				}
 			}
 			//añadir evento gui
-		}else if(mainPlugin.getEventsGUI().getEventsItemsGUI().stream().anyMatch(inv->inv.equals(event.getInventory()))){
+		}else if(PluginCoder.getCoderGUI().getEventsGUI().getEventsItemsGUI().stream().anyMatch(inv->inv.equals(event.getInventory()))){
 			event.setCancelled(true);
 			if(event.getClickedInventory().getType()==InventoryType.PLAYER)return;
 			if(event.getSlot()%9==0||(event.getSlot()+1)%9==0||(event.getSlot()>0&&event.getSlot()<8)||
 					(event.getSlot()>45&&event.getSlot()<53)){
 				if(event.getSlot()==0){
-					player.openInventory(mainPlugin.getEventsGUI().getGUI().get(mainPlugin.getEventsGUI().getLastPageOpened()));
+					player.openInventory(PluginCoder.getCoderGUI().getEventsGUI().getGUI().get(PluginCoder.getCoderGUI().getEventsGUI().getLastPageOpened()));
 					PluginCoder.getCoderGUI().buttonSound(player);
 				}else if(event.getSlot()==8){
 					player.openInventory(PluginCoder.getCoderGUI().getPluginCoderGUI());
 					PluginCoder.getCoderGUI().buttonSound(player);
 				}else if(event.getSlot()==45||event.getSlot()==53){
-					List<Inventory> inventories=mainPlugin.getEventsGUI().getEventsItemsGUI();
+					List<Inventory> inventories=PluginCoder.getCoderGUI().getEventsGUI().getEventsItemsGUI();
 					int invIndex=inventories.indexOf(event.getInventory());
 					if(event.getSlot()==45){
 						if(invIndex!=0){
@@ -705,31 +705,31 @@ public class PluginGuiListener implements Listener {
 				String eventName=ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName());
 				String newEvent=eventName+"{}";
 				mainPlugin.getSelectedPlugin().getListener().add(newEvent);
-				mainPlugin.getEventsGUI().updateGUI();
+				PluginCoder.getCoderGUI().getEventsGUI().updateGUI();
 				PluginCoder.getCoderGUI().buttonSound(player);
-				player.openInventory(mainPlugin.getEventsGUI().getGUI().get(mainPlugin.getEventsGUI().getLastPageOpened()));
+				player.openInventory(PluginCoder.getCoderGUI().getEventsGUI().getGUI().get(PluginCoder.getCoderGUI().getEventsGUI().getLastPageOpened()));
 			}
 			//añadir instruccion gui
 		}else if(event.getInventory().equals(PluginCoder.getCoderGUI().getInstructionsGUI().getGui())){
 			event.setCancelled(true);
 			if(event.getClickedInventory().getType()==InventoryType.PLAYER)return;
 			if(event.getSlot()==0){
-				player.openInventory(mainPlugin.getFunctionGUI().getGUI().get(mainPlugin.getFunctionGUI().getLastPageOpened()));
+				player.openInventory(PluginCoder.getCoderGUI().getFunctionGUI().getGUI().get(PluginCoder.getCoderGUI().getFunctionGUI().getLastPageOpened()));
 				PluginCoder.getCoderGUI().buttonSound(player);
 			}
 			else if(event.getSlot()==8){
 				PluginCoder.getCoderGUI().returnHome(player,true);
 				PluginCoder.getCoderGUI().buttonSound(player);
 			}else if(event.getSlot()==10){
-				mainPlugin.getVariableGUI().setNewVar(true);
-				mainPlugin.getVariableGUI().setPlayerToEditVarName(player);
+				PluginCoder.getCoderGUI().getVariableGUI().setNewVar(true);
+				PluginCoder.getCoderGUI().getVariableGUI().setPlayerToEditVarName(player);
 				mainPlugin.getCoderGUI().buttonSound(player);
 			}else if(event.getSlot()==11){
-				if(mainPlugin.getFunctionGUI().addInstruction("")){
+				if(PluginCoder.getCoderGUI().getFunctionGUI().addInstruction("")){
 					PluginCoder.getCoderGUI().buttonSound(player);
-					Inventory inventory=mainPlugin.getFunctionGUI().getGUI().get(mainPlugin.getFunctionGUI().getGUI().size()-1);
-					int functionIndex=mainPlugin.getFunctionGUI().getNumOfInstructions()-1;
-					mainPlugin.getFunctionGUI().getFunctionsIndexes().add(functionIndex);
+					Inventory inventory=PluginCoder.getCoderGUI().getFunctionGUI().getGUI().get(PluginCoder.getCoderGUI().getFunctionGUI().getGUI().size()-1);
+					int functionIndex=PluginCoder.getCoderGUI().getFunctionGUI().getNumOfInstructions()-1;
+					PluginCoder.getCoderGUI().getFunctionGUI().getFunctionsIndexes().add(functionIndex);
 					PluginCoder.getCoderGUI().getExecutionWriterGUI().updateGUI("",inventory);
 					player.openInventory(PluginCoder.getCoderGUI().getExecutionWriterGUI().getGui());
 				}
@@ -741,27 +741,27 @@ public class PluginGuiListener implements Listener {
 				PluginCoder.getCoderGUI().buttonSound(player);
 				player.openInventory(PluginCoder.getCoderGUI().getInstructionsGUI().getLoopsGui());
 			}else if(event.getSlot()==14){
-				if(mainPlugin.getFunctionGUI().addInstruction("delay(){}")){
+				if(PluginCoder.getCoderGUI().getFunctionGUI().addInstruction("delay(){}")){
 					PluginCoder.getCoderGUI().buttonSound(player);
-					player.openInventory(mainPlugin.getFunctionGUI().getGUI().get(mainPlugin.getFunctionGUI().getGUI().size()-1));
+					player.openInventory(PluginCoder.getCoderGUI().getFunctionGUI().getGUI().get(PluginCoder.getCoderGUI().getFunctionGUI().getGUI().size()-1));
 				}
 			}
 			else if(event.getSlot()==15){
-				if(mainPlugin.getFunctionGUI().getFunctions().stream().anyMatch(f->f.matches("^repeat\\((.*)\\)\\{(.*)\\}$"))){
+				if(PluginCoder.getCoderGUI().getFunctionGUI().getFunctions().stream().anyMatch(f->f.matches("^repeat\\((.*)\\)\\{(.*)\\}$"))){
 					ErrorManager.setSender(player);
 					ErrorManager.repeatInsideOfRepeat("");
 					ErrorManager.setSender(Bukkit.getConsoleSender());
 					PluginCoder.getCoderGUI().errorSound(player);
 					return;
 				}
-				if(mainPlugin.getFunctionGUI().addInstruction("repeat(){}")){
+				if(PluginCoder.getCoderGUI().getFunctionGUI().addInstruction("repeat(){}")){
 					PluginCoder.getCoderGUI().buttonSound(player);
-					player.openInventory(mainPlugin.getFunctionGUI().getGUI().get(mainPlugin.getFunctionGUI().getGUI().size()-1));
+					player.openInventory(PluginCoder.getCoderGUI().getFunctionGUI().getGUI().get(PluginCoder.getCoderGUI().getFunctionGUI().getGUI().size()-1));
 				}
 			}else if(event.getSlot()==16){
-				if(mainPlugin.getFunctionGUI().addInstruction("return ")){
+				if(PluginCoder.getCoderGUI().getFunctionGUI().addInstruction("return ")){
 					PluginCoder.getCoderGUI().buttonSound(player);
-					player.openInventory(mainPlugin.getFunctionGUI().getGUI().get(mainPlugin.getFunctionGUI().getGUI().size()-1));
+					player.openInventory(PluginCoder.getCoderGUI().getFunctionGUI().getGUI().get(PluginCoder.getCoderGUI().getFunctionGUI().getGUI().size()-1));
 				}
 			}
 		}else if(event.getInventory().equals(PluginCoder.getCoderGUI().getInstructionsGUI().getConditionalsGui())){
@@ -775,10 +775,10 @@ public class PluginGuiListener implements Listener {
 				PluginCoder.getCoderGUI().returnHome(player,true);
 				PluginCoder.getCoderGUI().buttonSound(player);
 			}else if (event.getSlot()==11) {
-				if(mainPlugin.getFunctionGUI().addInstruction("if(){}"))PluginCoder.getCoderGUI().buttonSound(player);
-				player.openInventory(mainPlugin.getFunctionGUI().getGUI().get(mainPlugin.getFunctionGUI().getGUI().size()-1));
+				if(PluginCoder.getCoderGUI().getFunctionGUI().addInstruction("if(){}"))PluginCoder.getCoderGUI().buttonSound(player);
+				player.openInventory(PluginCoder.getCoderGUI().getFunctionGUI().getGUI().get(PluginCoder.getCoderGUI().getFunctionGUI().getGUI().size()-1));
 			}else if (event.getSlot()==13) {
-				String instruction=mainPlugin.getFunctionGUI().getLastInstruction();
+				String instruction=PluginCoder.getCoderGUI().getFunctionGUI().getLastInstruction();
 				if(!instruction.startsWith("if(")&&!instruction.startsWith("else if(")){
 					ErrorManager.setSender(player);
 					ErrorManager.elseWithoutIf("else if");
@@ -786,13 +786,13 @@ public class PluginGuiListener implements Listener {
 					ErrorManager.setSender(Bukkit.getConsoleSender());
 					return;
 				}
-				mainPlugin.getFunctionGUI().addInstruction("else if(){}");
-				if(mainPlugin.getFunctionGUI().addInstruction("else if(){}")){
+				PluginCoder.getCoderGUI().getFunctionGUI().addInstruction("else if(){}");
+				if(PluginCoder.getCoderGUI().getFunctionGUI().addInstruction("else if(){}")){
 					PluginCoder.getCoderGUI().buttonSound(player);
-					player.openInventory(mainPlugin.getFunctionGUI().getGUI().get(mainPlugin.getFunctionGUI().getGUI().size()-1));
+					player.openInventory(PluginCoder.getCoderGUI().getFunctionGUI().getGUI().get(PluginCoder.getCoderGUI().getFunctionGUI().getGUI().size()-1));
 				}
 			}else if (event.getSlot()==15) {
-				String instruction=mainPlugin.getFunctionGUI().getLastInstruction();
+				String instruction=PluginCoder.getCoderGUI().getFunctionGUI().getLastInstruction();
 				if(!instruction.startsWith("if(")&&!instruction.startsWith("else if(")){
 					ErrorManager.setSender(player);
 					ErrorManager.elseWithoutIf("");
@@ -800,9 +800,9 @@ public class PluginGuiListener implements Listener {
 					ErrorManager.setSender(Bukkit.getConsoleSender());
 					return;
 				}
-				if(mainPlugin.getFunctionGUI().addInstruction("else{}")){
+				if(PluginCoder.getCoderGUI().getFunctionGUI().addInstruction("else{}")){
 					PluginCoder.getCoderGUI().buttonSound(player);
-					player.openInventory(mainPlugin.getFunctionGUI().getGUI().get(mainPlugin.getFunctionGUI().getGUI().size()-1));
+					player.openInventory(PluginCoder.getCoderGUI().getFunctionGUI().getGUI().get(PluginCoder.getCoderGUI().getFunctionGUI().getGUI().size()-1));
 				}
 			}
 		}else if(event.getInventory().equals(PluginCoder.getCoderGUI().getInstructionsGUI().getLoopsGui())){
@@ -816,14 +816,14 @@ public class PluginGuiListener implements Listener {
 				PluginCoder.getCoderGUI().returnHome(player,true);
 				PluginCoder.getCoderGUI().buttonSound(player);
 			}else if(event.getSlot()==12){
-				if(mainPlugin.getFunctionGUI().addInstruction("for(){}")){
+				if(PluginCoder.getCoderGUI().getFunctionGUI().addInstruction("for(){}")){
 					PluginCoder.getCoderGUI().buttonSound(player);
-					player.openInventory(mainPlugin.getFunctionGUI().getGUI().get(mainPlugin.getFunctionGUI().getGUI().size()-1));
+					player.openInventory(PluginCoder.getCoderGUI().getFunctionGUI().getGUI().get(PluginCoder.getCoderGUI().getFunctionGUI().getGUI().size()-1));
 				}
 			}else if(event.getSlot()==14){
-				if(mainPlugin.getFunctionGUI().addInstruction("while(){}")){
+				if(PluginCoder.getCoderGUI().getFunctionGUI().addInstruction("while(){}")){
 					PluginCoder.getCoderGUI().buttonSound(player);
-					player.openInventory(mainPlugin.getFunctionGUI().getGUI().get(mainPlugin.getFunctionGUI().getGUI().size()-1));
+					player.openInventory(PluginCoder.getCoderGUI().getFunctionGUI().getGUI().get(PluginCoder.getCoderGUI().getFunctionGUI().getGUI().size()-1));
 				}
 			}
 		}
@@ -837,10 +837,10 @@ public class PluginGuiListener implements Listener {
 				PluginCoder.getCoderGUI().buttonSound(player);
 			}
 			else if(event.getSlot()==8){
-				mainPlugin.getVariableGUI().returnHome(player);
+				PluginCoder.getCoderGUI().getVariableGUI().returnHome(player);
 				PluginCoder.getCoderGUI().buttonSound(player);
 			}else if(event.getSlot()==20){
-				mainPlugin.getVariableGUI().setPlayerToEditVarName(player);
+				PluginCoder.getCoderGUI().getVariableGUI().setPlayerToEditVarName(player);
 				PluginCoder.getCoderGUI().buttonSound(player);
 			}else if(event.getSlot()==24){
 				String instruction=ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName());
@@ -855,25 +855,25 @@ public class PluginGuiListener implements Listener {
 			if(event.getCurrentItem()==null||event.getCurrentItem().getType()==Material.AIR)return;
 			if(event.getSlot()==0){
 				//retorna y guarda
-				mainPlugin.getExecutionWriterGUI().returnPage(player);
+				PluginCoder.getCoderGUI().getExecutionWriterGUI().returnPage(player);
 				PluginCoder.getCoderGUI().buttonSound(player);
 			}
 			else if(event.getSlot()==8){
-				mainPlugin.getExecutionWriterGUI().returnHome(player);
+				PluginCoder.getCoderGUI().getExecutionWriterGUI().returnHome(player);
 				PluginCoder.getCoderGUI().buttonSound(player);
 			}else if(event.getSlot()==22){
-				if(mainPlugin.getExecutionWriterGUI().deleteMethod()){
+				if(PluginCoder.getCoderGUI().getExecutionWriterGUI().deleteMethod()){
 					PluginCoder.getCoderGUI().buttonSound(player);
 					player.updateInventory();
 				}
 
 			}else if(event.getSlot()==45){
-				if(mainPlugin.getExecutionWriterGUI().previousPage()){
+				if(PluginCoder.getCoderGUI().getExecutionWriterGUI().previousPage()){
 					PluginCoder.getCoderGUI().buttonSound(player);
 					player.updateInventory();
 				}
 			}else if(event.getSlot()==53){
-				if(mainPlugin.getExecutionWriterGUI().nextPage()){
+				if(PluginCoder.getCoderGUI().getExecutionWriterGUI().nextPage()){
 					PluginCoder.getCoderGUI().buttonSound(player);
 					player.updateInventory();
 				}
@@ -881,14 +881,14 @@ public class PluginGuiListener implements Listener {
 				if(event.getSlot()>=10&&event.getSlot()<=16){
 					String method=ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName());
 					if(method.matches("^(.+)\\((.*)\\)$")){
-						mainPlugin.getExecutionWriterGUI().prepareToParametersGUI(event.getSlot());
-						String methodParentType=mainPlugin.getExecutionWriterGUI().getMethodExecutedTypes().get(event.getSlot()-11);
+						PluginCoder.getCoderGUI().getExecutionWriterGUI().prepareToParametersGUI(event.getSlot());
+						String methodParentType=PluginCoder.getCoderGUI().getExecutionWriterGUI().getMethodExecutedTypes().get(event.getSlot()-11);
 						PluginCoder.getCoderGUI().getParametersGUI().updateInventory(method,methodParentType, event.getClickedInventory());
 						player.openInventory(PluginCoder.getCoderGUI().getParametersGUI().getGUI());
 						PluginCoder.getCoderGUI().buttonSound(player);
 					}
 				}else if((event.getSlot()>=28&&event.getSlot()<=34)||(event.getSlot()>=37&&event.getSlot()<=43)){
-					if(mainPlugin.getExecutionWriterGUI().selectNewMethod(event.getCurrentItem())){
+					if(PluginCoder.getCoderGUI().getExecutionWriterGUI().selectNewMethod(event.getCurrentItem())){
 						PluginCoder.getCoderGUI().buttonSound(player);
 						player.updateInventory();
 					}
@@ -900,7 +900,7 @@ public class PluginGuiListener implements Listener {
 			if(event.getClickedInventory().getType()==InventoryType.PLAYER)return;
 			if(event.getSlot()==0){
 				PluginCoder.getCoderGUI().getReturnGUI().saveChanges(false);
-				player.openInventory(mainPlugin.getFunctionGUI().getGUI().get(mainPlugin.getFunctionGUI().getLastPageOpened()));
+				player.openInventory(PluginCoder.getCoderGUI().getFunctionGUI().getGUI().get(PluginCoder.getCoderGUI().getFunctionGUI().getLastPageOpened()));
 				PluginCoder.getCoderGUI().buttonSound(player);
 			}
 			else if(event.getSlot()==8){
@@ -922,7 +922,7 @@ public class PluginGuiListener implements Listener {
 				PluginCoder.getCoderGUI().getSetValueGUI().returnPage(player);
 				PluginCoder.getCoderGUI().buttonSound(player);
 			}else if(event.getSlot()==8){
-				mainPlugin.getSetValueGUI().returnHome(player);
+				PluginCoder.getCoderGUI().getSetValueGUI().returnHome(player);
 				PluginCoder.getCoderGUI().buttonSound(player);
 			}else if(event.getSlot()==4){
 				if(ChatColor.stripColor(event.getInventory().getItem(22).getItemMeta().getDisplayName()).trim().isEmpty())return;
@@ -952,9 +952,9 @@ public class PluginGuiListener implements Listener {
 				}else ErrorManager.notConditionalInstruction();
 			}else if(event.getSlot()==41){
 				//comprobar si se puede cargar la instruccion en el ExecutionWriterGUI
-				if(instruction.isEmpty()||mainPlugin.getExecutionWriterGUI().getTypeOfExecution(instruction)!=null){
-					mainPlugin.getExecutionWriterGUI().updateGUI(instruction, event.getInventory());
-					player.openInventory(mainPlugin.getExecutionWriterGUI().getGui());
+				if(instruction.isEmpty()||PluginCoder.getCoderGUI().getExecutionWriterGUI().getTypeOfExecution(instruction)!=null){
+					PluginCoder.getCoderGUI().getExecutionWriterGUI().updateGUI(instruction, event.getInventory());
+					player.openInventory(PluginCoder.getCoderGUI().getExecutionWriterGUI().getGui());
 					PluginCoder.getCoderGUI().buttonSound(player);
 				}else ErrorManager.notExecutableSequence();
 			}else if(event.getSlot()==42){//cargar o mostrar seleccion de constructores
@@ -981,8 +981,8 @@ public class PluginGuiListener implements Listener {
 				PluginCoder.getCoderGUI().getMathGUI().getIsNewNumber().add(false);
 				if(!instruction.matches("^\\d+(\\.\\d+)?$")){
 					PluginCoder.getCoderGUI().getMathGUI().prepareToNextGUI();
-					mainPlugin.getExecutionWriterGUI().updateGUI(instruction, event.getInventory());
-					player.openInventory(mainPlugin.getExecutionWriterGUI().getGui());
+					PluginCoder.getCoderGUI().getExecutionWriterGUI().updateGUI(instruction, event.getInventory());
+					player.openInventory(PluginCoder.getCoderGUI().getExecutionWriterGUI().getGui());
 				}else{
 					PluginCoder.getCoderGUI().getNumberGUI().updateGUI(instruction);
 					player.openInventory(PluginCoder.getCoderGUI().getNumberGUI().getGUI());
@@ -1014,8 +1014,8 @@ public class PluginGuiListener implements Listener {
 				if(!PluginCoder.getCoderGUI().getMathGUI().checkNewContent("instruction"))return;
 				PluginCoder.getCoderGUI().getMathGUI().getIsNewNumber().add(true);
 				PluginCoder.getCoderGUI().getMathGUI().prepareToNextGUI();
-				mainPlugin.getExecutionWriterGUI().updateGUI("", event.getInventory());
-				player.openInventory(mainPlugin.getExecutionWriterGUI().getGui());
+				PluginCoder.getCoderGUI().getExecutionWriterGUI().updateGUI("", event.getInventory());
+				player.openInventory(PluginCoder.getCoderGUI().getExecutionWriterGUI().getGui());
 				PluginCoder.getCoderGUI().buttonSound(player);
 			}else if(event.getSlot()==22){
 				if(PluginCoder.getCoderGUI().getMathGUI().getMathContents().size()>0){
@@ -1097,8 +1097,8 @@ public class PluginGuiListener implements Listener {
 				}else{
 					//load execution gui
 					PluginCoder.getCoderGUI().getConditionsGUI().prepareToNextGUI();
-					mainPlugin.getExecutionWriterGUI().updateGUI(instruction, event.getInventory());
-					player.openInventory(mainPlugin.getExecutionWriterGUI().getGui());
+					PluginCoder.getCoderGUI().getExecutionWriterGUI().updateGUI(instruction, event.getInventory());
+					player.openInventory(PluginCoder.getCoderGUI().getExecutionWriterGUI().getGui());
 				}
 				PluginCoder.getCoderGUI().buttonSound(player);
 			}else if(event.getSlot()>36&&event.getSlot()<44){
@@ -1148,8 +1148,8 @@ public class PluginGuiListener implements Listener {
 				if(!PluginCoder.getCoderGUI().getConditionsGUI().checkNewContent("instruction"))return;
 				PluginCoder.getCoderGUI().getConditionsGUI().getIsNewElement().add(true);
 				PluginCoder.getCoderGUI().getConditionsGUI().prepareToNextGUI();
-				mainPlugin.getExecutionWriterGUI().updateGUI("", event.getInventory());
-				player.openInventory(mainPlugin.getExecutionWriterGUI().getGui());
+				PluginCoder.getCoderGUI().getExecutionWriterGUI().updateGUI("", event.getInventory());
+				player.openInventory(PluginCoder.getCoderGUI().getExecutionWriterGUI().getGui());
 				PluginCoder.getCoderGUI().buttonSound(player);
 			}else if(event.getSlot()==33){
 				//check object type
@@ -1224,10 +1224,10 @@ public class PluginGuiListener implements Listener {
 				}else ErrorManager.notNumberInstruction();
 			}else if(event.getSlot()==33){
 				//executionWritter gui
-				if(instruction.isEmpty()||mainPlugin.getExecutionWriterGUI().getTypeOfExecution(instruction)!=null){
+				if(instruction.isEmpty()||PluginCoder.getCoderGUI().getExecutionWriterGUI().getTypeOfExecution(instruction)!=null){
 					PluginCoder.getCoderGUI().getEqualityGUI().prepareToNextGUI();
-					mainPlugin.getExecutionWriterGUI().updateGUI(instruction, event.getInventory());
-					player.openInventory(mainPlugin.getExecutionWriterGUI().getGui());
+					PluginCoder.getCoderGUI().getExecutionWriterGUI().updateGUI(instruction, event.getInventory());
+					player.openInventory(PluginCoder.getCoderGUI().getExecutionWriterGUI().getGui());
 					PluginCoder.getCoderGUI().buttonSound(player);
 				}else ErrorManager.notExecutableSequence();
 			}else if(event.getSlot()==39||event.getSlot()==40||event.getSlot()==41){
@@ -1292,10 +1292,10 @@ public class PluginGuiListener implements Listener {
 					if(mainPlugin.getColorTranslator().keySet().contains(instruction)){
 						PluginCoder.getCoderGUI().getTextGUI().cancelColorTask();
 						player.openInventory(PluginCoder.getCoderGUI().getTextColorGUI().getGUI());
-					}else if(mainPlugin.getCodeExecuter().isExecution(instruction,mainPlugin.getExecutionWriterGUI().getVariables())){
+					}else if(mainPlugin.getCodeExecuter().isExecution(instruction,PluginCoder.getCoderGUI().getExecutionWriterGUI().getVariables())){
 						PluginCoder.getCoderGUI().getTextGUI().prepareToNextGUI();
-						mainPlugin.getExecutionWriterGUI().updateGUI(instruction,event.getClickedInventory());
-						player.openInventory(mainPlugin.getExecutionWriterGUI().getGui());
+						PluginCoder.getCoderGUI().getExecutionWriterGUI().updateGUI(instruction,event.getClickedInventory());
+						player.openInventory(PluginCoder.getCoderGUI().getExecutionWriterGUI().getGui());
 					}else{
 						PluginCoder.getCoderGUI().getTextGUI().setAddingText(true);
 						player.sendMessage(ChatColor.YELLOW+PluginCoder.getCoderGUI().getGuiText("writeText"));
@@ -1331,8 +1331,8 @@ public class PluginGuiListener implements Listener {
 			}else if(event.getSlot()==33){
 				PluginCoder.getCoderGUI().getTextGUI().getIsNewText().add(true);
 				PluginCoder.getCoderGUI().getTextGUI().prepareToNextGUI();
-				mainPlugin.getExecutionWriterGUI().updateGUI("",event.getClickedInventory());
-				player.openInventory(mainPlugin.getExecutionWriterGUI().getGui());
+				PluginCoder.getCoderGUI().getExecutionWriterGUI().updateGUI("",event.getClickedInventory());
+				player.openInventory(PluginCoder.getCoderGUI().getExecutionWriterGUI().getGui());
 				PluginCoder.getCoderGUI().buttonSound(player);
 			}else if(event.getSlot()==39){
 				PluginCoder.getCoderGUI().getTextGUI().addNewContent("(");
@@ -1428,8 +1428,8 @@ public class PluginGuiListener implements Listener {
 				PluginCoder.getCoderGUI().buttonSound(player);
 			}else if(event.getSlot()==48&&event.getCurrentItem().getType()==Material.CHEST){
 				PluginCoder.getCoderGUI().getParametersGUI().prepareToNextGUI(-1);
-				mainPlugin.getExecutionWriterGUI().updateGUI("", event.getClickedInventory());
-				player.openInventory(mainPlugin.getExecutionWriterGUI().getGui());
+				PluginCoder.getCoderGUI().getExecutionWriterGUI().updateGUI("", event.getClickedInventory());
+				player.openInventory(PluginCoder.getCoderGUI().getExecutionWriterGUI().getGui());
 				PluginCoder.getCoderGUI().buttonSound(player);
 			}else if(event.getSlot()==50&&(event.getCurrentItem().getType().toString().equals("CRAFTING_TABLE")||
 					event.getCurrentItem().getType().toString().equals("WORKBENCH"))){
@@ -1692,25 +1692,25 @@ public class PluginGuiListener implements Listener {
 	public void alClickearInventarioGui(InventoryDragEvent event){
 		if(!(event.getWhoClicked()instanceof Player))return;
 		Player player= (Player) event.getWhoClicked();
-		if(!mainPlugin.getFunctionGUI().getGUI().contains(event.getInventory()))return;
+		if(!PluginCoder.getCoderGUI().getFunctionGUI().getGUI().contains(event.getInventory()))return;
 		event.setCancelled(true);
 		int slot=event.getInventorySlots().stream().findFirst().orElse(-1);
 		if(slot>=44)return;
 		ItemStack cursor=event.getOldCursor();
-		int inventoryIndex=mainPlugin.getFunctionGUI().getGUI().indexOf(event.getInventory());
+		int inventoryIndex=PluginCoder.getCoderGUI().getFunctionGUI().getGUI().indexOf(event.getInventory());
 		int instructionIndex=inventoryIndex*28+slot-(10+2*(slot/9-1));
 		Bukkit.getScheduler().scheduleSyncDelayedTask(mainPlugin,()->{
-			if(mainPlugin.getFunctionGUI().getMoveInstructionIndex()>=0){
-				mainPlugin.getFunctionGUI().insertInstructionInFunction(mainPlugin.getFunctionGUI().getMoveInstructionIndex(),instructionIndex,true);
-				mainPlugin.getFunctionGUI().insertInstructionItem(cursor,inventoryIndex,slot);
+			if(PluginCoder.getCoderGUI().getFunctionGUI().getMoveInstructionIndex()>=0){
+				PluginCoder.getCoderGUI().getFunctionGUI().insertInstructionInFunction(PluginCoder.getCoderGUI().getFunctionGUI().getMoveInstructionIndex(),instructionIndex,true);
+				PluginCoder.getCoderGUI().getFunctionGUI().insertInstructionItem(cursor,inventoryIndex,slot);
 				player.setItemOnCursor(null);player.updateInventory();
-				mainPlugin.getFunctionGUI().setMoveInstructionIndex(-2);
+				PluginCoder.getCoderGUI().getFunctionGUI().setMoveInstructionIndex(-2);
 				PluginCoder.getCoderGUI().buttonSound(player);
-			}else if(mainPlugin.getFunctionGUI().getCopyInstructionIndex()>=0){
-				mainPlugin.getFunctionGUI().insertInstructionInFunction(mainPlugin.getFunctionGUI().getCopyInstructionIndex(),instructionIndex,false);
-				mainPlugin.getFunctionGUI().insertInstructionItem(cursor,inventoryIndex,slot);
+			}else if(PluginCoder.getCoderGUI().getFunctionGUI().getCopyInstructionIndex()>=0){
+				PluginCoder.getCoderGUI().getFunctionGUI().insertInstructionInFunction(PluginCoder.getCoderGUI().getFunctionGUI().getCopyInstructionIndex(),instructionIndex,false);
+				PluginCoder.getCoderGUI().getFunctionGUI().insertInstructionItem(cursor,inventoryIndex,slot);
 				player.setItemOnCursor(null);player.updateInventory();
-				mainPlugin.getFunctionGUI().setCopyInstructionIndex(-2);
+				PluginCoder.getCoderGUI().getFunctionGUI().setCopyInstructionIndex(-2);
 				PluginCoder.getCoderGUI().buttonSound(player);
 			}
 		},1);
@@ -1730,29 +1730,29 @@ public class PluginGuiListener implements Listener {
 		Player p=event.getPlayer();
 		ErrorManager.setSender(p);
 		//editar nombre de variable
-		if(mainPlugin.getVariableGUI().isEditingVarName()){
-			mainPlugin.getVariableGUI().setEditingVarName(false);
+		if(PluginCoder.getCoderGUI().getVariableGUI().isEditingVarName()){
+			PluginCoder.getCoderGUI().getVariableGUI().setEditingVarName(false);
 			event.setCancelled(true);
 			String newVarName=event.getMessage();
 			boolean error=!ErrorManager.checkTextVariable(newVarName,"",mainPlugin)||newVarName.isEmpty();
 			if(PluginCoder.getCoderGUI().getVariableGUI().isNewVar()){
 				PluginCoder.getCoderGUI().getVariableGUI().setNewVar(false);
 				if(!error){
-					if(mainPlugin.getFunctionGUI().addInstruction(newVarName+"=null"))Bukkit.getScheduler().scheduleSyncDelayedTask(mainPlugin, () ->
-							p.openInventory(mainPlugin.getFunctionGUI().getGUI().get(mainPlugin.getFunctionGUI().getGUI().size()-1)), 1);
+					if(PluginCoder.getCoderGUI().getFunctionGUI().addInstruction(newVarName+"=null"))Bukkit.getScheduler().scheduleSyncDelayedTask(mainPlugin, () ->
+							p.openInventory(PluginCoder.getCoderGUI().getFunctionGUI().getGUI().get(PluginCoder.getCoderGUI().getFunctionGUI().getGUI().size()-1)), 1);
 					return;
 				}
 				Bukkit.getScheduler().scheduleSyncDelayedTask(mainPlugin, () ->
 						p.openInventory(PluginCoder.getCoderGUI().getInstructionsGUI().getGui()), 1);
 			}else{
 				if(!error){
-					String oldVarName=mainPlugin.getVariableGUI().getVarInstruction().replaceAll("^(.+)\\=(.*)$","$1");
+					String oldVarName=PluginCoder.getCoderGUI().getVariableGUI().getVarInstruction().replaceAll("^(.+)\\=(.*)$","$1");
 					if(!newVarName.equals(oldVarName)){
 						ItemStack varNameItem=new ItemStack(mainPlugin.getVersionNumber()<14?Material.getMaterial("SIGN"):Material.OAK_SIGN);
 						ItemMeta meta=varNameItem.getItemMeta();
 						meta.setDisplayName(ChatColor.GOLD+newVarName);
 						varNameItem.setItemMeta(meta);
-						mainPlugin.getVariableGUI().getGui().setItem(20,varNameItem);
+						PluginCoder.getCoderGUI().getVariableGUI().getGui().setItem(20,varNameItem);
 					}
 				}
 				Bukkit.getScheduler().scheduleSyncDelayedTask(mainPlugin, () ->

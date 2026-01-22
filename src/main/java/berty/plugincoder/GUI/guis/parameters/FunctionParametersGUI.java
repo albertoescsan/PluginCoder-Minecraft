@@ -13,25 +13,25 @@ import java.util.List;
 
 public class FunctionParametersGUI {
 
-    private PluginCoder plugin;
+    private PluginCoder mainPlugin;
     private Inventory gui;
 
     private boolean isAddingParam=false;
     private int editingParamSlot=0;
 
     public FunctionParametersGUI(PluginCoder plugin){
-        this.plugin=plugin;
+        this.mainPlugin =plugin;
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> createInventory(), 2);
     }
     private void createInventory(){
         gui=Bukkit.createInventory(null,27,"");
         PluginCoder.getCoderGUI().createInventoryBase(gui,false);
-        ItemStack instructionItem=new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.OAK_SIGN));
+        ItemStack instructionItem=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.OAK_SIGN));
         gui.setItem(4,instructionItem);
         updateInventoryLanguage();
     }
     private void updateInventoryLanguage(){
-        ItemStack addParam=new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP));
+        ItemStack addParam=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP));
         ItemMeta meta=addParam.getItemMeta();
         meta.setDisplayName(ChatColor.YELLOW+PluginCoder.getCoderGUI().getGuiText("addParameter"));
         addParam.setItemMeta(meta);
@@ -42,7 +42,7 @@ public class FunctionParametersGUI {
         gui.setItem(21,addParam);gui.setItem(23,removeParam);
     }
     public void updateInventory(String function) {
-        List<String> params=plugin.getCodeExecuter().getStringParameters(function);
+        List<String> params= mainPlugin.getCodeExecuter().getStringParameters(function);
         for(int i=0;i<7;i++){
             gui.setItem(10+i,null);
             if(i>=params.size())continue;
@@ -76,7 +76,7 @@ public class FunctionParametersGUI {
     }
     public void returnPage(Player p) {
         saveChanges(false);
-        p.openInventory(plugin.getFunctionGUI().getGUI().get(plugin.getFunctionGUI().getLastPageOpened()));
+        p.openInventory(PluginCoder.getCoderGUI().getFunctionGUI().getGUI().get(PluginCoder.getCoderGUI().getFunctionGUI().getLastPageOpened()));
     }
 
     public void returnHome(Player p) {

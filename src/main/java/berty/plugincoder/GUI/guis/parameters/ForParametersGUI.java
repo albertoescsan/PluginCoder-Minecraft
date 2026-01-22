@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 public class ForParametersGUI {
 
-    private PluginCoder plugin;
+    private PluginCoder mainPlugin;
     private Inventory gui;
     private int selectedSlot;
     private boolean iterableVarSelected;
@@ -24,15 +24,15 @@ public class ForParametersGUI {
     private List<ItemStack> iterableItems=new ArrayList<>();
     private String oldIteratorName;
     public ForParametersGUI(PluginCoder plugin){
-        this.plugin=plugin;
+        this.mainPlugin =plugin;
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> createInventory(), 2);
     }
     private void createInventory(){
         gui=Bukkit.createInventory(null,54," ");
         PluginCoder.getCoderGUI().createUpperLineInventory(gui,false);
-        ItemStack instructionItem=new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.OAK_SIGN));
+        ItemStack instructionItem=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.OAK_SIGN));
         gui.setItem(4,instructionItem);
-        ItemStack negro=plugin.getVersionNumber()<13?
+        ItemStack negro= mainPlugin.getVersionNumber()<13?
                 new ItemStack(Material.getMaterial("STAINED_GLASS_PANE"),1,(short)15):new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
         ItemMeta meta=negro.getItemMeta();
         meta.setDisplayName(ChatColor.WHITE+"");
@@ -52,11 +52,11 @@ public class ForParametersGUI {
         }
         PluginCoder.getCoderGUI().getExecutionWriterGUI().updateVariables();
         String[] params=instruction.replaceAll("^for\\s*\\((.*)\\)$","$1").split(":");
-        ItemStack varItem=new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.MAP));
+        ItemStack varItem=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.MAP));
         ItemMeta meta=varItem.getItemMeta();
         if(params.length>=1&&!params[0].isEmpty()){
             meta.setDisplayName(ChatColor.WHITE+params[0]);
-            varItem.setType(plugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP));
+            varItem.setType(mainPlugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP));
             oldIteratorName=params[0];
         }else{
             meta.setDisplayName(ChatColor.WHITE+"");
@@ -64,20 +64,20 @@ public class ForParametersGUI {
         }
         varItem.setItemMeta(meta);
         gui.setItem(11,varItem);
-        ItemStack iterableItem=new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.MAP));
+        ItemStack iterableItem=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.MAP));
         meta=iterableItem.getItemMeta();
         if(params.length>=2){
             meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',"&f"+PluginCoder.getCoderGUI().putTextColor(params[1])));
-            iterableItem.setType(plugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP));
+            iterableItem.setType(mainPlugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP));
             if(params[1].contains("->")||params[1].contains("<-"))iterableVarSelected=true;
         }else meta.setDisplayName(ChatColor.WHITE+"");
         iterableItem.setItemMeta(meta);
         gui.setItem(13,iterableItem);
-        ItemStack iteratorItem=new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.MAP));
+        ItemStack iteratorItem=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.MAP));
         meta=iteratorItem.getItemMeta();
         if(params.length>=3){
             meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',"&f"+PluginCoder.getCoderGUI().putTextColor(params[2])));
-            iterableItem.setType(plugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP));
+            iterableItem.setType(mainPlugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP));
         }else{
             meta.setDisplayName(ChatColor.WHITE+"");
         }
@@ -87,11 +87,11 @@ public class ForParametersGUI {
         updateInstructionSign();
     }
     public void saveToForParametersGUI(String instruction,boolean closingInventoryWithoutReturning) {
-        ItemStack instructionItem=new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.MAP));
+        ItemStack instructionItem=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.MAP));
         ItemMeta meta=instructionItem.getItemMeta();
         if(!instruction.isEmpty()){
             meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',"&f"+PluginCoder.getCoderGUI().putTextColor(instruction)));
-            instructionItem.setType(plugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP));
+            instructionItem.setType(mainPlugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP));
         }else meta.setDisplayName(ChatColor.WHITE+"");
         instructionItem.setItemMeta(meta);
         gui.setItem(selectedSlot,instructionItem);
@@ -116,12 +116,12 @@ public class ForParametersGUI {
     }
     public void saveChanges(boolean closingInventoryWithoutReturning) {
         String instruction=ChatColor.stripColor(gui.getItem(4).getItemMeta().getDisplayName()).trim();
-        plugin.getFunctionGUI().saveToFunctionGUI(instruction,closingInventoryWithoutReturning);
+        PluginCoder.getCoderGUI().getFunctionGUI().saveToFunctionGUI(instruction,closingInventoryWithoutReturning);
     }
 
     public void returnPage(Player p) {
         saveChanges(false);
-       p.openInventory(plugin.getFunctionGUI().getGUI().get( plugin.getFunctionGUI().getLastPageOpened()));
+       p.openInventory(PluginCoder.getCoderGUI().getFunctionGUI().getGUI().get( PluginCoder.getCoderGUI().getFunctionGUI().getLastPageOpened()));
     }
 
     public void returnHome(Player p) {
@@ -151,7 +151,7 @@ public class ForParametersGUI {
            iterablePage=0;
            gui.setItem(45,gui.getItem(46));
            gui.setItem(53,gui.getItem(46));
-           ItemStack negro=plugin.getVersionNumber()<13?
+           ItemStack negro= mainPlugin.getVersionNumber()<13?
                    new ItemStack(Material.getMaterial("STAINED_GLASS_PANE"),1,(short)15):new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
            ItemMeta meta=negro.getItemMeta();
            meta.setDisplayName(ChatColor.WHITE+"");
@@ -174,7 +174,7 @@ public class ForParametersGUI {
                iterable="";arrow=PluginCoder.getCoderGUI().getNextItem();
            }
            for(int i=0;i<2;i++){
-               ItemStack num=new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP));
+               ItemStack num=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP));
                meta=num.getItemMeta();
                if(!iterable.isEmpty()){
                    meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',"&f"+PluginCoder.getCoderGUI().putTextColor(rangeNums[i])));
@@ -201,10 +201,10 @@ public class ForParametersGUI {
        }
         gui.setItem(45,PluginCoder.getCoderGUI().getBackItem());
         gui.setItem(53,PluginCoder.getCoderGUI().getNextItem());
-        Map<String,List<String>> reverseTranslation=plugin.getCodeUtils().getReverseTranslation();
+        Map<String,List<String>> reverseTranslation= mainPlugin.getCodeUtils().getReverseTranslation();
         Set<String> iterables=new HashSet<>();
-        for(String variable:plugin.getExecutionWriterGUI().getVariables()){
-            String varType=plugin.getCodeUtils().clearContainerType(plugin.getExecutionWriterGUI().getVariableTypes().get(variable));
+        for(String variable: PluginCoder.getCoderGUI().getExecutionWriterGUI().getVariables()){
+            String varType= mainPlugin.getCodeUtils().clearContainerType(PluginCoder.getCoderGUI().getExecutionWriterGUI().getVariableTypes().get(variable));
             try{
                 Class varClass=Class.forName(varType);
                 if(!(Iterable.class.isAssignableFrom(varClass)||varClass.isArray())){
@@ -215,7 +215,7 @@ public class ForParametersGUI {
         iterableVarSelected=true;
         List<ItemStack> iterableItems=new ArrayList<>();
         for(String iterable:iterables.stream().sorted().collect(Collectors.toList())){
-            ItemStack iterableItem=new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP));
+            ItemStack iterableItem=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP));
             ItemMeta meta=iterableItem.getItemMeta();
             meta.setDisplayName(ChatColor.WHITE+iterable);
             iterableItem.setItemMeta(meta);
@@ -244,10 +244,10 @@ public class ForParametersGUI {
     private void searchIterableVars(String variable, String varType, int iterations, Set<String> iterables,
                                     Map<String,List<String>> reverseTranslation) throws ClassNotFoundException {
         if(iterations==2)return;
-        if(plugin.getCodeUtils().isFinishMethod(varType))return;
+        if(mainPlugin.getCodeUtils().isFinishMethod(varType))return;
         Arrays.stream(Class.forName(varType).getMethods()).forEach(method -> {
             if(reverseTranslation.get(method.getName())==null)return;
-            String methodName=plugin.getCodeUtils().getMethodName(method,reverseTranslation.get(method.getName()));
+            String methodName= mainPlugin.getCodeUtils().getMethodName(method,reverseTranslation.get(method.getName()));
             if(methodName==null)return;
             if(varType.equals(method.getReturnType().getTypeName()))return;
             //TODO cambiar y poner el tipo del parámetro

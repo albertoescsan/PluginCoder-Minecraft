@@ -41,7 +41,7 @@ public class FunctionGUI {
         functionGUI.clear();
         initialFunctionContainer=functionContainer;
         //para que las variables se actualicen solo la primera vez que se carguen
-        mainPlugin.getExecutionWriterGUI().setLastFunctionInstructionVars(-1);
+        PluginCoder.getCoderGUI().getExecutionWriterGUI().setLastFunctionInstructionVars(-1);
         List<String> containerClone= functions.size()>0?mainPlugin.getCodeExecuter()
                 .getGUIInstructionsFromFunction(functions.get(functions.size()-1)):new ArrayList<>(functionContainer);
         String function=containerClone.get(index);
@@ -197,7 +197,7 @@ public class FunctionGUI {
             functions.set(index,updatedFunction);
         }
         initialFunctionContainer.set(originalFunctionIndex,functions.get(0));
-        //if(initialFunctionContainer.equals(mainPlugin.getSelectedPlugin().getListener()))mainPlugin.getEventsGUI().updateLastEventEdited();
+        //if(initialFunctionContainer.equals(mainPlugin.getSelectedPlugin().getListener()))PluginCoder.getCoderGUI().getEventsGUI().updateLastEventEdited();
         if(isReturning){
             functions.remove(functions.size()-1);
             if(functionsIndexes.size()>0)functionsIndexes.remove(functionsIndexes.size()-1);
@@ -360,8 +360,8 @@ public class FunctionGUI {
     }
 
     private void updateGUIFunctions() {
-        if(mainPlugin.getEventsGUI().getGUI().stream().anyMatch(inv->previousInventory.equals(inv))){
-            mainPlugin.getEventsGUI().updateLastEventEdited();
+        if(PluginCoder.getCoderGUI().getEventsGUI().getGUI().stream().anyMatch(inv->previousInventory.equals(inv))){
+            PluginCoder.getCoderGUI().getEventsGUI().updateLastEventEdited();
         }else if(PluginCoder.getCoderGUI().getCommandsGUI().getGUI().stream().anyMatch(inv->previousInventory.equals(inv))){
             PluginCoder.getCoderGUI().getCommandsGUI().updateCommand();
         }else if(previousInventory.equals(PluginCoder.getCoderGUI().getObjectGUI().getGUI())){
@@ -369,8 +369,8 @@ public class FunctionGUI {
         }
     }
     private void openPreviousInv(Player p) {
-        if(mainPlugin.getEventsGUI().getGUI().stream().anyMatch(inv->previousInventory.equals(inv))){
-           p.openInventory(mainPlugin.getEventsGUI().getGUI().get(mainPlugin.getEventsGUI().getEventEditedIndex()/28));
+        if(PluginCoder.getCoderGUI().getEventsGUI().getGUI().stream().anyMatch(inv->previousInventory.equals(inv))){
+           p.openInventory(PluginCoder.getCoderGUI().getEventsGUI().getGUI().get(PluginCoder.getCoderGUI().getEventsGUI().getEventEditedIndex()/28));
         }else if(PluginCoder.getCoderGUI().getCommandsGUI().getGUI().stream().anyMatch(inv->previousInventory.equals(inv))){
              PluginCoder.getCoderGUI().getCommandsGUI().openCommandPage(p);
         }else if(previousInventory.equals(PluginCoder.getCoderGUI().getObjectGUI().getGUI())){
@@ -434,7 +434,7 @@ public class FunctionGUI {
         functionGUI.get(inventoryIndex).setItem(instructionSlot,instructionItem);
     }
     public void restoreInstructionMovement(Player player){
-        if(mainPlugin.getFunctionGUI().getMoveInstructionIndex()>-1){
+        if(PluginCoder.getCoderGUI().getFunctionGUI().getMoveInstructionIndex()>-1){
             int instructionSlot=moveInstructionIndex%28;
             instructionSlot=instructionSlot+(10+2*(instructionSlot/7));
             insertInstructionItem(player.getItemOnCursor(),functionGUI.indexOf(player.getOpenInventory().getTopInventory()),instructionSlot);
