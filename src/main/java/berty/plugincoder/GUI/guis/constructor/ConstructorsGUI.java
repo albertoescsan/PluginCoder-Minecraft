@@ -52,7 +52,7 @@ public class ConstructorsGUI {
         gui.setItem(10,inv);
         ItemStack itemStack=new ItemStack(Material.DIAMOND);
         meta= itemStack.getItemMeta();
-        meta.setDisplayName(ChatColor.AQUA+"ItemStack");
+        meta.setDisplayName(ChatColor.AQUA+"ItemStack");//TODO traducir
         itemStack.setItemMeta(meta);
         gui.setItem(11,itemStack);
         ItemStack location=new ItemStack(Material.COMPASS);

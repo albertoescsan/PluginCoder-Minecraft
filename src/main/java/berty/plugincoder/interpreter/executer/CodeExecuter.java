@@ -265,6 +265,17 @@ public class CodeExecuter {
 			}
 		}else{
 			if(!(methods[0].matches("^([a-zA-Z0-9_]+)$")&&methods.length>1))return instruction;
+			List<String> methodList=new ArrayList<>(Arrays.asList(methods));methodList.remove(0);
+			PluginObjectInstance plugin= (PluginObjectInstance) variables.get("plugin");
+			if(methodList.stream().anyMatch(method->{
+				String methodName=method.replaceAll("^([^(]+)\\((.+)\\)$","$1");
+				if(methodName.length()!=method.length())methodName+="()";
+				if(mainPlugin.getMethod(methodName)!=null)return false;
+				if(plugin.getBaseObject().getPlugin().getObjects().stream().anyMatch(object->
+					object.getDeclaredFunctions().stream().anyMatch(function->function.trim().startsWith(method.trim()))
+				))return false;
+				return true;
+			}))return instruction;
 			ErrorManager.varNotExists(methods[0],instruction);
 			return Void.class;
 		}
@@ -300,8 +311,7 @@ public class CodeExecuter {
 				}else{ //objeto existente en java
 					String methodName=methods[index].replaceAll("^([^(]+)\\((.+)\\)$","$1");
 					List<String> paramsString=getStringParameters(methods[index]);
-					if(methodName.length()==methods[index].length())paramsString.clear();
-					else if(mainPlugin.getMethodTranslator().containsKey(methodName+"()"))methodName+="()";
+					if(methodName.length()!=methods[index].length())methodName+="()";
 					List<Object> parametros=getParameters(paramsString,originalInstruction,variables);
 					Object resultado;
 					Method metodo=getMethod(clase, methodName,parametros,true);
@@ -314,9 +324,7 @@ public class CodeExecuter {
 					variable=resultado;
 				}
 				executedCode+="."+methods[index];
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			}catch (Exception e) {e.printStackTrace();}
 		}
 		return variable;
 		

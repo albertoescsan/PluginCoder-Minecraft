@@ -10,23 +10,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1fedac6f-f050-4100-bda6-5b53d5223be2" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/berty/plugincoder/GUI/guis/CoderGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/berty/plugincoder/GUI/guis/CoderGUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/berty/plugincoder/GUI/guis/commands/CommandsGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/berty/plugincoder/GUI/guis/commands/CommandsGUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/berty/plugincoder/GUI/guis/conditions/ConditionsGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/berty/plugincoder/GUI/guis/conditions/ConditionsGUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/berty/plugincoder/GUI/guis/event/EventsGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/berty/plugincoder/GUI/guis/event/EventsGUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/berty/plugincoder/GUI/guis/function/ExecutionWriterGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/berty/plugincoder/GUI/guis/function/ExecutionWriterGUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/berty/plugincoder/GUI/guis/function/FunctionGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/berty/plugincoder/GUI/guis/function/FunctionGUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/berty/plugincoder/GUI/guis/math/MathGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/berty/plugincoder/GUI/guis/math/MathGUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/berty/plugincoder/GUI/guis/parameters/ParametersGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/berty/plugincoder/GUI/guis/parameters/ParametersGUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/berty/plugincoder/GUI/listener/PluginGuiListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/berty/plugincoder/GUI/listener/PluginGuiListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/berty/plugincoder/GUI/listener/PluginGuiSavingListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/berty/plugincoder/GUI/listener/PluginGuiSavingListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/berty/plugincoder/GUI/guis/constructor/ConstructorsGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/berty/plugincoder/GUI/guis/constructor/ConstructorsGUI.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/berty/plugincoder/interpreter/executer/CodeExecuter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/berty/plugincoder/interpreter/executer/CodeExecuter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/berty/plugincoder/interpreter/listener/PluginListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/berty/plugincoder/interpreter/listener/PluginListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/berty/plugincoder/main/PluginCoder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/berty/plugincoder/main/PluginCoder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/berty/plugincoder/utils/CodeUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/berty/plugincoder/utils/CodeUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/berty/plugincoder/interpreter/loops/PluginFor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/berty/plugincoder/interpreter/loops/PluginFor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/berty/plugincoder/interpreter/tasks/PluginRepeat.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/berty/plugincoder/interpreter/tasks/PluginRepeat.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/messages/errorTranslations.csv" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/messages/errorTranslations.csv" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

@@ -20,52 +20,47 @@ public class PluginRepeat {
 		this.plugin=plugin;
 	}
 	public Object executeRepeat(String instruction,String originalInstruction,Map<String,Object> variables) {
-		double secondsDelay=0;
-		double secondsRepeat=0;
+		Double secondsDelay=0d,secondsRepeat;
 		String paramsString=plugin.getReader().getParamsInFunction(instruction,"");
 		if(paramsString.isEmpty()) {
 			ErrorManager.emptyNumberInRepeat(originalInstruction);
 			return Void.class;
 		}
 		String[] params=paramsString.split(",");
-		Object resultado=plugin.getCodeExecuter().executeInstruction(params[0], originalInstruction, variables);
-		if(resultado==null) {
-			ErrorManager.nullVariable(params[0], originalInstruction);return Void.class;
-		}
-		try {
-			secondsRepeat=Double.parseDouble(resultado.toString());
-		}catch (Exception e) {
-			ErrorManager.isNotNumber(params[0], originalInstruction);
-			return Void.class;
-		}
+		secondsRepeat=getRepeatNumber(params[0],originalInstruction,variables);
+		if(secondsRepeat==null)return Void.class;
 		if(params.length==2) {
-			secondsDelay=Double.parseDouble(resultado.toString());
-			try {
-				Object resultado2=plugin.getCodeExecuter().executeInstruction(params[1], originalInstruction, variables);
-				if(resultado2==null) {
-					ErrorManager.nullVariable(params[1], originalInstruction);return Void.class;
-				}
-				secondsRepeat=Double.parseDouble(resultado2.toString());
-			}catch (Exception e) {
-				ErrorManager.isNotNumber(params[1], originalInstruction);
-				return Void.class;
-			}
+			secondsDelay=secondsRepeat;
+			secondsRepeat=getRepeatNumber(params[1],originalInstruction,variables);
+			if(secondsRepeat==null)return Void.class;
 		}
 		List<Integer> tasksClone=new ArrayList<>(taskIDs);
+		Map<String,Object> repeatVars=new HashMap<>(variables);
 		taskIDs.add(Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(plugin,()-> {
-			int taskID=taskIDs.stream().filter(t->!tasksClone.contains(t)).findFirst().get();
-			Map<String,Object> repeatVars=new HashMap<>(variables);
-			variables.put("task"+taskID,taskID);
-			plugin.getCodeExecuter().executeFunction(instruction, originalInstruction, variables);
-			new HashMap<>(variables).keySet().stream().filter(k->!repeatVars.containsKey(k)).forEach(k->variables.remove(k));
+			int taskID=taskIDs.stream().filter(id->!tasksClone.contains(id)).findFirst().get();
+			Map<String,Object> repeatVarsClone=new HashMap<>(repeatVars);
+			repeatVarsClone.put("task"+taskID,taskID);
+			plugin.getCodeExecuter().executeFunction(instruction, originalInstruction,repeatVarsClone);
 			if(PluginCoder.isErrorFound()) {
 				ErrorManager.errorFoundInRepeat();
 				Bukkit.getScheduler().cancelTask(taskID);
 				taskIDs.remove((Object)taskID);
 			}
-		},(long)secondsDelay*20,(long)secondsRepeat*20));
+		},(long)(secondsDelay*20),(long)(secondsRepeat*20)));
 
-		return taskIDs.stream().filter(t->!tasksClone.contains(t)).findFirst().get();
+		return taskIDs.stream().filter(taskID->!tasksClone.contains(taskID)).findFirst().get();
+	}
+	private Double getRepeatNumber(String value,String originalInstruction,Map<String,Object> variables){
+		try {
+			Object secondsDelayValue=plugin.getCodeExecuter().executeInstruction(value, originalInstruction, variables);
+			if(secondsDelayValue==null) {
+				ErrorManager.nullVariable(value, originalInstruction);return null;
+			}
+			return Double.parseDouble(secondsDelayValue.toString());
+		}catch (Exception e) {
+			ErrorManager.isNotNumber(value, originalInstruction);
+			return null;
+		}
 	}
 	public void executeCancelTask(String instruction,String originalInstruction, Map<String, Object> variables) {
 		//ver si el cancel tiene parametro
@@ -92,9 +87,7 @@ public class PluginRepeat {
 				int taskID=Integer.parseInt(tasks.get(0).replace("task", ""));
 				Bukkit.getScheduler().cancelTask(taskID);
 				taskIDs.remove((Object)taskID);
-			}else {
-				ErrorManager.cancelWithoutRepeat(originalInstruction);
-			}
+			}else ErrorManager.cancelWithoutRepeat(originalInstruction);
 		}else {
 			try {
 				Object resultado=plugin.getCodeExecuter().executeFunction(instruction, originalInstruction, variables);
