@@ -115,7 +115,7 @@ public class ObjectGUI {
         meta.setDisplayName(ChatColor.YELLOW+property);
         if(equality!=null&&!equality.isEmpty()){
             List<String> lore=new ArrayList<>();
-            lore.add(ChatColor.translateAlternateColorCodes('&',"&f"+PluginCoder.getCoderGUI().putTextColor(equality)));
+            lore.add("§f"+PluginCoder.getCoderGUI().putTextColor(equality));
             meta.setLore(lore);
         }
         propertyItem.setItemMeta(meta);

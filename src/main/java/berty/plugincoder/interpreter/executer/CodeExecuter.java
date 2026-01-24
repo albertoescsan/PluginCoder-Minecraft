@@ -313,15 +313,13 @@ public class CodeExecuter {
 					List<String> paramsString=getStringParameters(methods[index]);
 					if(methodName.length()!=methods[index].length())methodName+="()";
 					List<Object> parametros=getParameters(paramsString,originalInstruction,variables);
-					Object resultado;
 					Method metodo=getMethod(clase, methodName,parametros,true);
 					if(metodo==null) {
 						ErrorManager.methodNotFound(methodName,originalInstruction,executedCode);
 						return Void.class;
 					}
-					if(!customMethods.contains(methodName))resultado=executeMethod(variable,metodo,parametros,methodName,executedCode+"."+methods[index],originalInstruction);
-					else resultado=executeCustomMethod(variable,metodo,parametros,methodName,executedCode+"."+methods[index],originalInstruction);
-					variable=resultado;
+					if(!customMethods.contains(methodName))variable=executeMethod(variable,metodo,parametros,methodName,executedCode+"."+methods[index],originalInstruction);
+					else variable=executeCustomMethod(variable,metodo,parametros,methodName,executedCode+"."+methods[index],originalInstruction);
 				}
 				executedCode+="."+methods[index];
 			}catch (Exception e) {e.printStackTrace();}
@@ -379,51 +377,43 @@ public class CodeExecuter {
 		return resultado;
 	}
 	public Object executeString(String instruction, String originalInstruction, Map<String, Object> variables) {
-		String string="";
-		String codeString="";
+		String text="";
+		String textToProcess="";
 		int parentesisCount=0;
 		for(Character c:instruction.toCharArray()) {
 			if(c.equals('('))parentesisCount++;
 			else if(c.equals(')'))parentesisCount--;
-			else if(c.equals('+')&&parentesisCount==0) {
-				if(mainPlugin.getColorTranslator().get(codeString)!=null)codeString= mainPlugin.getColorTranslator().get(codeString);
-				string=getStringFromTextVar(codeString,string,instruction,variables);
-				if(string==null) {
-					return Void.class;
-				}
-				codeString="";
-				continue;
+			else if(!c.equals('+')||parentesisCount!=0) {
+				textToProcess+=String.valueOf(c);continue;
 			}
-			codeString+=String.valueOf(c);
+			if(mainPlugin.getColorTranslator().get(textToProcess)!=null)textToProcess= mainPlugin.getColorTranslator().get(textToProcess);
+			text=getStringFromTextVar(textToProcess,text,instruction,variables);
+			if(text==null)return Void.class;
+			textToProcess="";
 		}
-		string=getStringFromTextVar(codeString,string,originalInstruction,variables);
-		if(string==null||PluginCoder.isErrorFound()) {
-			return Void.class;
-		}
-		return ChatColor.translateAlternateColorCodes('&', string);
+		text=getStringFromTextVar(textToProcess,text,originalInstruction,variables);
+		if(text==null||PluginCoder.isErrorFound())return Void.class;
+		return text;
 	}
-	private String getStringFromTextVar(String codeString,String string,String originalInstruction, Map<String, Object> variables) {
+	private String getStringFromTextVar(String textToProcess,String text,String originalInstruction, Map<String, Object> variables) {
 		String parsedString="";
-		for(Character c:codeString.toCharArray()){
-			if(c.equals('(')){
+		for(Character character:textToProcess.toCharArray()){
+			if(character.equals('(')){
 				String execution=parsedString.replaceAll("([^.(\\s]+)\\.(.*)$","$1.$2");
 				if(!isExecution(execution,variables.keySet()))continue;
-			}else if(c.equals(')')){
+			}else if(character.equals(')')){
 				String execution=parsedString.replaceAll("([^.(]+)\\.([^.\\s]*)\\((.*)$","$1.$2($3)");
 				if(!isExecution(execution,variables.keySet()))continue;
 			}
-			parsedString+=c;
+			parsedString+=character;
 		}
-		codeString=parsedString;
-		Object resultado=this.executeInstruction(codeString, originalInstruction, variables);
-		if(resultado==null||resultado.getClass().equals(Void.class)) {
-			ErrorManager.isNotString(codeString,originalInstruction);
+		textToProcess=parsedString;
+		Object textResult=this.executeInstruction(textToProcess, originalInstruction, variables);
+		if(textResult==null||textResult.getClass().equals(Void.class)) {
+			ErrorManager.isNotString(textToProcess,originalInstruction);
 			return null;
-		}else {
-			String s=resultado.toString();
-			string+=s;
 		}
-		return string;
+		return text+textResult;
 	}
 	public Method getMethod(Class<?>clase, String methodName, List<Object> params,boolean isExecutingCode) {
 		checkCustomClasses(methodName,params,isExecutingCode);
@@ -470,33 +460,34 @@ public class CodeExecuter {
 		}
 		return true;
 	}
-	private boolean validateGenericParams(Class paramClass,List<Object> params,boolean isExecutingCode,int i){
+	private boolean validateGenericParams(Class paramClass,List<Object> params,boolean isExecutingCode,int index){
 		try{
 			if(paramClass.getTypeName().equals(Object.class.getTypeName()))return true;
 			paramClass=CodeUtils.primitiveToWrapper(paramClass);
-			Object param=params.get(i);
+			Object param=params.get(index);
 			if(param==null)return !typeIsMath(paramClass.getTypeName())&&!paramClass.getTypeName().equals(boolean.class.getTypeName());
 			String paramType=isExecutingCode?param.getClass().getTypeName():param.toString();
-			Class entryParamClass= CodeUtils.primitiveToWrapper(Class.forName(paramType));
+			Class primitiveClass= CodeUtils.getPrimitiveType(paramType);
+			Class entryParamClass= CodeUtils.primitiveToWrapper(primitiveClass==null?Class.forName(paramType):primitiveClass);
 			//pasar de un numero a otro cuando sea necesario
 			if(Number.class.isAssignableFrom(paramClass)&&Number.class.isAssignableFrom(entryParamClass)&&isExecutingCode){
 				try{
 					Method valueOf = paramClass.getMethod("valueOf", String.class);
 					Object newNumber=valueOf.invoke(null,param.toString());
-					params.set(i,newNumber);entryParamClass=paramClass;
+					params.set(index,newNumber);entryParamClass=paramClass;
 				}catch (Exception e){}
 			}
 			if(paramClass.isEnum()&&entryParamClass.getTypeName().equals(String.class.getTypeName())){
 				if(!isExecutingCode)return true;
 				try{
 					Object enumValue=paramClass.getMethod("valueOf", String.class).invoke(null, param.toString());
-					params.set(i,enumValue);
+					params.set(index,enumValue);
 				}catch (Exception e){return false;}
 			}
-			else if(paramClass.getTypeName().equals(entryParamClass.getTypeName()))return true;
-			else if(paramClass.isAssignableFrom(entryParamClass))return true;
+			if(paramClass.getTypeName().equals(entryParamClass.getTypeName()))return true;
+			if(paramClass.isAssignableFrom(entryParamClass))return true;
 			return false;
-		}catch (Exception e){return false;}
+		}catch (Exception e){e.printStackTrace();return false;}
 	}
 	private void checkCustomClasses(String method,List<Object> parametros,boolean isExecutingCode){
 		if(method.equals("scoreboard()")){

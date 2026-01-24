@@ -209,7 +209,7 @@ public class ConditionsGUI {
             operationItem=!operation.isEmpty()?(new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP)))
                     :(new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.MAP)));
             ItemMeta meta=operationItem.getItemMeta();
-            meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',"&f"+PluginCoder.getCoderGUI().putTextColor(operation)));
+            meta.setDisplayName("§f"+PluginCoder.getCoderGUI().putTextColor(operation));
             operationItem.setItemMeta(meta);
             return operationItem;
         }

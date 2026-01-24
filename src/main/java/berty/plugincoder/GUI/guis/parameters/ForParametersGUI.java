@@ -67,7 +67,7 @@ public class ForParametersGUI {
         ItemStack iterableItem=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.MAP));
         meta=iterableItem.getItemMeta();
         if(params.length>=2){
-            meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',"&f"+PluginCoder.getCoderGUI().putTextColor(params[1])));
+            meta.setDisplayName("§f"+PluginCoder.getCoderGUI().putTextColor(params[1]));
             iterableItem.setType(mainPlugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP));
             if(params[1].contains("->")||params[1].contains("<-"))iterableVarSelected=true;
         }else meta.setDisplayName(ChatColor.WHITE+"");
@@ -76,7 +76,7 @@ public class ForParametersGUI {
         ItemStack iteratorItem=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.MAP));
         meta=iteratorItem.getItemMeta();
         if(params.length>=3){
-            meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',"&f"+PluginCoder.getCoderGUI().putTextColor(params[2])));
+            meta.setDisplayName("§f"+PluginCoder.getCoderGUI().putTextColor(params[2]));
             iterableItem.setType(mainPlugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP));
         }else{
             meta.setDisplayName(ChatColor.WHITE+"");
@@ -90,7 +90,7 @@ public class ForParametersGUI {
         ItemStack instructionItem=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.MAP));
         ItemMeta meta=instructionItem.getItemMeta();
         if(!instruction.isEmpty()){
-            meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',"&f"+PluginCoder.getCoderGUI().putTextColor(instruction)));
+            meta.setDisplayName("§f"+PluginCoder.getCoderGUI().putTextColor(instruction));
             instructionItem.setType(mainPlugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP));
         }else meta.setDisplayName(ChatColor.WHITE+"");
         instructionItem.setItemMeta(meta);
@@ -101,8 +101,7 @@ public class ForParametersGUI {
             rangeNums[(selectedSlot-29)/4]=instruction;
             ItemStack iterableItem=gui.getItem(13);
             meta=iterableItem.getItemMeta();
-            meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',PluginCoder.getCoderGUI()
-                    .putTextColor(rangeNums[0]+arrow+rangeNums[1])));
+            meta.setDisplayName(PluginCoder.getCoderGUI().putTextColor(rangeNums[0]+arrow+rangeNums[1]));
             iterableItem.setItemMeta(meta);
         }else if(selectedSlot==11){
             List<String> functions=PluginCoder.getCoderGUI().getFunctionGUI().getFunctions();
@@ -137,7 +136,7 @@ public class ForParametersGUI {
        if(iterator.isEmpty()||ChatColor.stripColor(iterator).equals("1")){
            meta.setDisplayName(ChatColor.WHITE+"for("+varName+":"+iterable+")");
        }else{
-           iterator=ChatColor.translateAlternateColorCodes('&',"&f"+PluginCoder.getCoderGUI().putTextColor(iterator));
+           iterator="§f"+PluginCoder.getCoderGUI().putTextColor(iterator);
            meta.setDisplayName(ChatColor.WHITE+"for("+varName+":"+iterable+":"+iterator+")");
        }
        sign.setItemMeta(meta);
@@ -177,7 +176,7 @@ public class ForParametersGUI {
                ItemStack num=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP));
                meta=num.getItemMeta();
                if(!iterable.isEmpty()){
-                   meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',"&f"+PluginCoder.getCoderGUI().putTextColor(rangeNums[i])));
+                   meta.setDisplayName("§f"+PluginCoder.getCoderGUI().putTextColor(rangeNums[i]));
                }else{
                    meta.setDisplayName(ChatColor.WHITE+"0");
                }

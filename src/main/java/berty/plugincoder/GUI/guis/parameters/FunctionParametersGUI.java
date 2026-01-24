@@ -51,7 +51,7 @@ public class FunctionParametersGUI {
         }
         ItemStack sign=gui.getItem(4);
         ItemMeta meta=sign.getItemMeta();
-        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',"&f"+PluginCoder.getCoderGUI().putTextColor(function)));
+        meta.setDisplayName("§f"+PluginCoder.getCoderGUI().putTextColor(function));
         sign.setItemMeta(meta);
     }
     public void updateFunctionSign(){
@@ -65,8 +65,7 @@ public class FunctionParametersGUI {
             params+=ChatColor.stripColor(paramItem.getItemMeta().getDisplayName()).trim()+",";
         }
         String functionHead=params.isEmpty()?functionName:functionName+"("+params.substring(0,params.length()-1)+")";
-        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',"&f"+
-                PluginCoder.getCoderGUI().putTextColor(functionHead)));
+        meta.setDisplayName("§f"+PluginCoder.getCoderGUI().putTextColor(functionHead));
         sign.setItemMeta(meta);
     }
     public void saveChanges(boolean closingInventoryWithoutReturning) {

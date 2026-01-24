@@ -123,7 +123,7 @@ public class DictConstructorGUI {
         dictInstruction+="}";
        ItemStack sign=new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.OAK_SIGN));
        ItemMeta meta=sign.getItemMeta();
-       meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',"&f"+PluginCoder.getCoderGUI().putTextColor(dictInstruction)));
+       meta.setDisplayName("§f"+PluginCoder.getCoderGUI().putTextColor(dictInstruction));
        sign.setItemMeta(meta);
        gui.setItem(4,sign);
 

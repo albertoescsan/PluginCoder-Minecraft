@@ -75,7 +75,7 @@ public class VariableGUI {
         ItemStack executeItem=!exectute.isEmpty()?(new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP)))
                 :(new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.MAP)));
         meta=executeItem.getItemMeta();
-        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',"&f"+PluginCoder.getCoderGUI().putTextColor(exectute)));
+        meta.setDisplayName("§f"+PluginCoder.getCoderGUI().putTextColor(exectute));
         executeItem.setItemMeta(meta);
         gui.setItem(20,varNameItem);gui.setItem(24,executeItem);
     }

@@ -11,7 +11,6 @@ import berty.plugincoder.main.PluginCoder;
 import berty.plugincoder.GUI.InicVars;
 import berty.plugincoder.predictor.PredictType;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -231,11 +230,13 @@ public class PluginJavaTranslator {
             if(property.equals("name")&&object.equals(object.getPlugin().getMainObject()))continue;
             String propertyType=checkCointainerType(varTypes.get(property),typesImported);
             String equality=object.getPropertyEqualities().get(property);
+            content+="\nprivate "+propertyType+" "+property;
             if(equality!=null){
                 equality=getInstructionTranslation(object.getPlugin(),equality,varTypes,typesImported);
                 equality=equality.replaceAll("^(.*)plugin(.*)$","$1JavaPlugin.getPlugin(Plugin.class)$2");
-                content+="\nprivate "+propertyType+" "+property+"="+equality+";";
-            }else content+="\nprivate "+propertyType+" "+property+";";
+                content+="="+equality;
+            }
+            content+=";";
         }
         //traducir constructores
         if(!object.getName().equalsIgnoreCase("plugin"))
@@ -307,125 +308,131 @@ public class PluginJavaTranslator {
         for(String instruction:mainPlugin.getCodeExecuter().getGUIInstructionsFromFunction(function)){
             instruction=instruction.trim();
             if(!mainPlugin.getCodeExecuter().instructionIsFunction(instruction)){
-                if(instruction.matches("^([^({=]+)=(.+)$")){//instruccion variable
-                    String varName=instruction.replaceAll("^([^({=]+)=(.+)$","$1");
-                    String varValue=instruction.replaceAll("^([^({=]+)=(.+)$","$2");
-                    String varType=variableTypes.get(varValue);
-                    boolean newVar=!variableTypes.containsKey(varName);
-                    if(varType==null)varType=mainPlugin.getCodeUtils().getTypeOfExecution(plugin,varValue,variableTypes);
-                    String container="";
-                    String typeName=getTypeName(varType,typesImported);
-                    if(varType.startsWith("List.")){
-                        container="List";
-                        importType(typesImported,List.class.getTypeName());
-                        varType=varType.replaceAll("^List\\.(.*)$","$1");
-                        if(varType.isEmpty())varType=PredictType.predictTypeOfContainer(plugin,function,varName,container,false,new HashSet<>(variableTypes.keySet()));
-                        typeName=getTypeName(varType,typesImported);
-
-                    }else if(varType.startsWith("Set.")){
-                        container="Set";
-                        importType(typesImported,Set.class.getTypeName());
-                        varType=varType.replaceAll("^Set\\.(.*)$","$1");
-                        if(varType.isEmpty())varType=PredictType.predictTypeOfContainer(plugin,function,varName,container,false,new HashSet<>(variableTypes.keySet()));
-                        typeName=getTypeName(varType,typesImported);
-
-                    }else if(varType.startsWith("Map.")){
-                        container="Map";
-                        importType(typesImported,Map.class.getTypeName());
-                        varType=varType.replaceAll("^Map\\.(.*)$","$1");
-                        if(varType.isEmpty()){
-                            String keyType=PredictType.predictTypeOfContainer(plugin,function,varName,container,true,new HashSet<>(variableTypes.keySet()));
-                            String valueype=PredictType.predictTypeOfContainer(plugin,function,varName,container,false,new HashSet<>(variableTypes.keySet()));
-                            varType=keyType+"-"+valueype;
-                        }
-                        String[] mapSeparatedTypes=varType.split("-");
-                        typeName= getTypeName(mapSeparatedTypes[0],typesImported)+","+getTypeName(mapSeparatedTypes[1],typesImported);
-                    }
-                    for(String typeToImport:varType.split("-")) importType(typesImported,typeToImport);
-                    String varValueTranslated=getInstructionTranslation(plugin,varValue,variableTypes,typesImported);
-                    content+="\n"+(container.isEmpty()?(newVar?typeName+" ":""):container+"<"+typeName+"> ")+varName+"="+varValueTranslated+";";
-                    if(newVar){
-                        if(container.isEmpty()) variableTypes.put(varName,varType);
-                        else  variableTypes.put(varName,container+"."+varType);
-                    }else if(insideRepeat){
-                        varType=variableTypes.get(varName);
-                        typeName=getTypeName(varType,typesImported);
-                        repeatVariables.add("private "+typeName+" "+varName);
-                    }
-                }else{//instruccion ejecutable
+                if(!instruction.matches("^([^({=]+)=(.+)$")){
+                    //instruccion ejecutable
                     if(instruction.startsWith("return ")){
                         content+="\nreturn "+getInstructionTranslation(plugin,instruction.replace("return ",""),variableTypes,typesImported)+";";
-                    }else content+="\n"+getInstructionTranslation(plugin,instruction,variableTypes,typesImported)+";";
+                        continue;
+                    }
+                    content+="\n"+getInstructionTranslation(plugin,instruction,variableTypes,typesImported)+";";
+                    continue;
                 }
-            }else{
-                Map<String,String> instructionVariableTypes=new HashMap<>(variableTypes);
-                if(instruction.matches("^\\s*if\\s*\\((.*)$")||instruction.matches("^\\s*else\\s*if\\s*\\((.*)$")){
-                    String condition=instruction.replaceAll("^\\s*(else )?\\s*if\\s*\\(([^{}]*)\\)\\s*\\{(.+)$","$2");
-                    condition=getInstructionTranslation(plugin,condition,variableTypes,typesImported);
-                    content+="\n"+(instruction.startsWith("else ")?"else if(":"if(")+condition+"){"+
-                            getFunctionTranslation(plugin,instruction,instructionVariableTypes,typesImported)+"\n}";
-                }else if(instruction.matches("^\\s*else\\s*\\{(.+)$")){
-                    content+="\nelse{"+getFunctionTranslation(plugin,instruction,instructionVariableTypes,typesImported)+"\n}";
-                }else if(instruction.matches("\\s*for\\s*\\((.*)$")){
-                    boolean isNumFor=true;
-                    String forVar=instruction.replaceAll("^for\\(([^{:]+):([^{]+)\\)\\s*\\{(.+)$","$1");
-                    if(instruction.matches("^\\s*for\\s*\\(([^{:]+):([^{]+)->([^{:]+)(:([^{]+))?\\)\\s*\\{(.+)$")){
-                        //number for increment
-                        content+=translateNumberedForFunction(plugin,instruction,forVar,"->",instructionVariableTypes,typesImported);
-                    }else if(instruction.matches("^\\s*for\\s*\\(([^{:]+)\\:([^{]+)<-([^{]+)\\)\\s*\\{(.+)$")){
-                        //number for decrement
-                        content+=translateNumberedForFunction(plugin,instruction,forVar,"<-",instructionVariableTypes,typesImported);
-                    }else{
-                        //iterator for
-                        isNumFor=false;
-                        String iterable=instruction.replaceAll("^\\s*for\\s*\\(([^{:]+)\\:([^{]+)\\)\\s*\\{(.+)$","$2");
-                        String forVarType=mainPlugin.getCodeUtils().getTypeOfExecution(plugin,iterable,variableTypes).replaceAll("^([^.]+)\\.(.+)$","$2");
-                        String forVarTypeName=getTypeName(forVarType,typesImported);
-                        iterable=getInstructionTranslation(plugin,iterable,variableTypes,typesImported);
-                        if(forVarTypeName.equals("Integer"))forVarTypeName="int";
-                        else if(forVarTypeName.equals("Double"))forVarTypeName="double";
-                        else if(forVarTypeName.equals("Boolean"))forVarTypeName="boolean";
-                        instructionVariableTypes.put(forVar,forVarType);
-                        content+="\nfor("+forVarTypeName+" "+forVar+":"+iterable+"){";
-                        importType(typesImported,forVarType);
+                //instruccion variable
+                String varName=instruction.replaceAll("^([^({=]+)=(.+)$","$1");
+                String varValue=instruction.replaceAll("^([^({=]+)=(.+)$","$2");
+                String varType=variableTypes.get(varValue);
+                boolean newVar=!variableTypes.containsKey(varName);
+                if(varType==null)varType=mainPlugin.getCodeUtils().getTypeOfExecution(plugin,varValue,variableTypes);
+                String container="";
+                String typeName=getTypeName(varType,typesImported);
+                if(varType.startsWith("List.")){
+                    container="List";
+                    importType(typesImported,List.class.getTypeName());
+                    varType=varType.replaceAll("^List\\.(.*)$","$1");
+                    if(varType.isEmpty())varType=PredictType.predictTypeOfContainer(plugin,function,varName,container,false,new HashSet<>(variableTypes.keySet()));
+                    typeName=getTypeName(varType,typesImported);
+
+                }else if(varType.startsWith("Set.")){
+                    container="Set";
+                    importType(typesImported,Set.class.getTypeName());
+                    varType=varType.replaceAll("^Set\\.(.*)$","$1");
+                    if(varType.isEmpty())varType=PredictType.predictTypeOfContainer(plugin,function,varName,container,false,new HashSet<>(variableTypes.keySet()));
+                    typeName=getTypeName(varType,typesImported);
+
+                }else if(varType.startsWith("Map.")){
+                    container="Map";
+                    importType(typesImported,Map.class.getTypeName());
+                    varType=varType.replaceAll("^Map\\.(.*)$","$1");
+                    if(varType.isEmpty()){
+                        String keyType=PredictType.predictTypeOfContainer(plugin,function,varName,container,true,new HashSet<>(variableTypes.keySet()));
+                        String valueype=PredictType.predictTypeOfContainer(plugin,function,varName,container,false,new HashSet<>(variableTypes.keySet()));
+                        varType=keyType+"-"+valueype;
                     }
-                    if(isNumFor)forNumVars.add(forVar);
-                    content+=getFunctionTranslation(plugin,instruction,instructionVariableTypes,typesImported)+"\n}";
-                    forNumVars.remove(forVar);
-                }else if(instruction.matches("\\s*while\\s*\\((.*)$")){
-                    String condition=instruction.replaceAll("^\\s*while\\s*\\(([^)]*)\\)\\s*\\{(.+)$","$1");
-                    condition=getInstructionTranslation(plugin,condition,variableTypes,typesImported);
-                    content+="\nwhile("+condition+"){\n"+
-                            getFunctionTranslation(plugin,instruction,instructionVariableTypes,typesImported)+"\n}";
-                }else if(instruction.matches("^\\s*delay\\s*\\((.*)$")||instruction.matches("^\\s*repeat\\s*\\((.*)$")){
-                    String taskContent="";
-                    Optional<String> forNumVarOpt=forNumVars.stream().filter(v->variableTypes.containsKey(v)).findFirst();
-                    if(forNumVarOpt.isPresent()){
-                        String oldVarName=forNumVarOpt.get();
-                        finalVars.add(oldVarName);
-                        taskContent=getFunctionTranslation(plugin,instruction,instructionVariableTypes,typesImported);
-                        finalVars.remove(oldVarName);
-                        String newVarName="final"+forNumVarOpt.get().toUpperCase();
-                        content+="\nfinal "+variableTypes.get(oldVarName)+" "+newVarName+"="+oldVarName+";";
-                    }
-                    if(instruction.trim().startsWith("delay")){
-                        String seconds=instruction.replaceAll("^delay\\(([^{]+)\\)\\s*\\{(.*)}$","$1");
-                        content+="\nBukkit.getScheduler().scheduleSyncDelayedTask("+(isCreatingMainClass?"this":"plugin")+", ()-> {";
-                        content+=taskContent.isEmpty()?getFunctionTranslation(plugin,instruction,instructionVariableTypes,typesImported):taskContent;
-                        content+="\n},(long)(("+seconds+")*20));";
-                        importType(typesImported,Bukkit.class.getTypeName());
-                    }else{
-                        insideRepeat=true;
-                        List<String> secondParams=mainPlugin.getCodeExecuter()
-                                .getStringParameters(instruction.replaceAll("^([^{]+)\\{(.*)}$","$1"));
-                        content+="\nnew BukkitRunnable() {\npublic void run() {";
-                        content+=getFunctionTranslation(plugin,instruction,instructionVariableTypes,typesImported);
-                        content+="\n}}.runTaskTimer("+(isCreatingMainClass?"this":"plugin")+","
-                                +(secondParams.size()==1?"0":"(long)(("+secondParams.get(0)+")*20)")+",(long)(("+secondParams.get(secondParams.size()-1)+")*20));";
-                        importType(typesImported,BukkitRunnable.class.getTypeName());
-                        insideRepeat=false;
-                    }
+                    String[] mapSeparatedTypes=varType.split("-");
+                    typeName= getTypeName(mapSeparatedTypes[0],typesImported)+","+getTypeName(mapSeparatedTypes[1],typesImported);
                 }
+                for(String typeToImport:varType.split("-")) importType(typesImported,typeToImport);
+                String varValueTranslated=getInstructionTranslation(plugin,varValue,variableTypes,typesImported);
+                content+="\n"+(container.isEmpty()?(newVar?typeName+" ":""):container+"<"+typeName+"> ")+varName+"="+varValueTranslated+";";
+                if(newVar){
+                    if(container.isEmpty()) variableTypes.put(varName,varType);
+                    else  variableTypes.put(varName,container+"."+varType);
+                }else if(insideRepeat){
+                    varType=variableTypes.get(varName);
+                    typeName=getTypeName(varType,typesImported);
+                    repeatVariables.add("private "+typeName+" "+varName);
+                }
+                continue;
+            }
+            //la instrucción es una función
+            Map<String,String> instructionVariableTypes=new HashMap<>(variableTypes);
+            if(instruction.matches("^\\s*if\\s*\\((.*)$")||instruction.matches("^\\s*else\\s*if\\s*\\((.*)$")){
+                String condition=instruction.replaceAll("^\\s*(else )?\\s*if\\s*\\(([^{}]*)\\)\\s*\\{(.+)$","$2");
+                condition=getInstructionTranslation(plugin,condition,variableTypes,typesImported);
+                content+="\n"+(instruction.startsWith("else ")?"else if(":"if(")+condition+"){"+
+                        getFunctionTranslation(plugin,instruction,instructionVariableTypes,typesImported)+"\n}";
+            }else if(instruction.matches("^\\s*else\\s*\\{(.+)$")){
+                content+="\nelse{"+getFunctionTranslation(plugin,instruction,instructionVariableTypes,typesImported)+"\n}";
+            }else if(instruction.matches("\\s*for\\s*\\((.*)$")){
+                boolean isNumFor=true;
+                String forVar=instruction.replaceAll("^for\\(([^{:]+):([^{]+)\\)\\s*\\{(.+)$","$1");
+                if(instruction.matches("^\\s*for\\s*\\(([^{:]+):([^{]+)->([^{:]+)(:([^{]+))?\\)\\s*\\{(.+)$")){
+                    //number for increment
+                    content+=translateNumberedForFunction(plugin,instruction,forVar,"->",instructionVariableTypes,typesImported);
+                }else if(instruction.matches("^\\s*for\\s*\\(([^{:]+)\\:([^{]+)<-([^{]+)\\)\\s*\\{(.+)$")){
+                    //number for decrement
+                    content+=translateNumberedForFunction(plugin,instruction,forVar,"<-",instructionVariableTypes,typesImported);
+                }else{
+                    //iterator for
+                    isNumFor=false;
+                    String iterable=instruction.replaceAll("^\\s*for\\s*\\(([^{:]+)\\:([^{]+)\\)\\s*\\{(.+)$","$2");
+                    String forVarType=mainPlugin.getCodeUtils().getTypeOfExecution(plugin,iterable,variableTypes).replaceAll("^([^.]+)\\.(.+)$","$2");
+                    String forVarTypeName=getTypeName(forVarType,typesImported);
+                    iterable=getInstructionTranslation(plugin,iterable,variableTypes,typesImported);
+                    if(forVarTypeName.equals("Integer"))forVarTypeName="int";
+                    else if(forVarTypeName.equals("Double"))forVarTypeName="double";
+                    else if(forVarTypeName.equals("Boolean"))forVarTypeName="boolean";
+                    instructionVariableTypes.put(forVar,forVarType);
+                    content+="\nfor("+forVarTypeName+" "+forVar+":"+iterable+"){";
+                    importType(typesImported,forVarType);
+                }
+                if(isNumFor)forNumVars.add(forVar);
+                content+=getFunctionTranslation(plugin,instruction,instructionVariableTypes,typesImported)+"\n}";
+                forNumVars.remove(forVar);
+            }else if(instruction.matches("\\s*while\\s*\\((.*)$")){
+                String condition=instruction.replaceAll("^\\s*while\\s*\\(([^)]*)\\)\\s*\\{(.+)$","$1");
+                condition=getInstructionTranslation(plugin,condition,variableTypes,typesImported);
+                content+="\nwhile("+condition+"){\n"+
+                        getFunctionTranslation(plugin,instruction,instructionVariableTypes,typesImported)+"\n}";
+            }else if(instruction.matches("^\\s*delay\\s*\\((.*)$")||instruction.matches("^\\s*repeat\\s*\\((.*)$")){
+                String taskContent="";
+                Optional<String> forNumVarOpt=forNumVars.stream().filter(v->variableTypes.containsKey(v)).findFirst();
+                if(forNumVarOpt.isPresent()){
+                    String oldVarName=forNumVarOpt.get();
+                    finalVars.add(oldVarName);
+                    taskContent=getFunctionTranslation(plugin,instruction,instructionVariableTypes,typesImported);
+                    finalVars.remove(oldVarName);
+                    String newVarName="final"+forNumVarOpt.get().toUpperCase();
+                    content+="\nfinal "+variableTypes.get(oldVarName)+" "+newVarName+"="+oldVarName+";";
+                }
+                if(instruction.trim().startsWith("delay")){
+                    String seconds=instruction.replaceAll("^delay\\(([^{]+)\\)\\s*\\{(.*)}$","$1");
+                    content+="\nBukkit.getScheduler().scheduleSyncDelayedTask("+(isCreatingMainClass?"this":"plugin")+", ()-> {";
+                    content+=taskContent.isEmpty()?getFunctionTranslation(plugin,instruction,instructionVariableTypes,typesImported):taskContent;
+                    content+="\n},(long)(("+seconds+")*20));";
+                    importType(typesImported,Bukkit.class.getTypeName());
+                    continue;
+                }
+                //repeat
+                insideRepeat=true;
+                List<String> secondParams=mainPlugin.getCodeExecuter()
+                        .getStringParameters(instruction.replaceAll("^([^{]+)\\{(.*)}$","$1"));
+                content+="\nnew BukkitRunnable() {\npublic void run() {";
+                content+=getFunctionTranslation(plugin,instruction,instructionVariableTypes,typesImported);
+                content+="\n}}.runTaskTimer("+(isCreatingMainClass?"this":"plugin")+","
+                        +(secondParams.size()==1?"0":"(long)(("+secondParams.get(0)+")*20)")+",(long)(("+secondParams.get(secondParams.size()-1)+")*20));";
+                importType(typesImported,BukkitRunnable.class.getTypeName());
+                insideRepeat=false;
             }
         }
         return content;
@@ -445,32 +452,22 @@ public class PluginJavaTranslator {
         vars.putAll(mainPlugin.getPluginVars(plugin));
         String instructionType= mainPlugin.getCodeExecuter().getVarInstructionType(instruction,vars);
         if(instructionType.equals("String")){
-            boolean hasColor=false;
             for(String color:mainPlugin.getColorTranslator().keySet()){
-                if(!instruction.contains(color+"+")||instruction.contains("_"+color+"+"))continue;hasColor=true;
+                if(!instruction.matches("^(.*)"+color+"(\\s*\\+)(.*)$"))continue;
                 String colorTranslation=mainPlugin.getColorTranslator().get(color);
-                instruction=instruction.replace(color+"+","\""+colorTranslation+"\"+");
+                instruction=instruction.replaceAll("^(.*)(?<!_)"+color+"(\\s*\\+)(.*)$","$1"+colorTranslation+"$2$3");
             }
             for(String text:mainPlugin.getCodeExecuter().getElements(instruction,new String[]{"+","(",")"})){
-                if(text.startsWith("\"&"))continue;
-                String translatedText=getInstructionTranslation(plugin,text,variableTypes,typesImported);
-                String[] methods=mainPlugin.getCodeExecuter().getMethodsOfInstruction(text);
-                if(!variableTypes.containsKey(methods[0])){
-                    instruction.replace(text,"\""+translatedText+"\"");
-                }else instruction.replace(text,translatedText);
-                instruction=instruction.replace(text,translatedText);
+                if(text.matches("^\\s*\"§"))continue;
+                instruction=instruction.replace(text,getInstructionTranslation(plugin,text,variableTypes,typesImported));
             }
-            if(hasColor) {
-                varValueTranslated="ChatColor.translateAlternateColorCodes('&',"+instruction+")";
-                importType(typesImported,ChatColor.class.getTypeName());
-            }
-            else varValueTranslated=instruction;
+            return instruction;
         }else if(instructionType.equals("Math")){
             for(String number:mainPlugin.getCodeExecuter().getElements(instruction,new String[]{"+","-","*","/","%","(",")"})){
                 String translatedNumber=getInstructionTranslation(plugin,number,variableTypes,typesImported);
                 instruction=instruction.replace(number,translatedNumber);
             }
-            varValueTranslated=instruction;
+            return instruction;
         }else if(instructionType.equals("Boolean")){
             String[] booleans=mainPlugin.getCodeExecuter().getElements(instruction,new String[]{" and "," or ","(",")"});
             for(String bool:booleans){
@@ -508,23 +505,21 @@ public class PluginJavaTranslator {
             }
             instruction=instruction.replace(" and ","&&");
             instruction=instruction.replace(" or ","||");
-            varValueTranslated=instruction;
+            return instruction;
         }else if(instruction.startsWith("[")&&instruction.endsWith("]")){
+            importType(typesImported,ArrayList.class.getTypeName());
             String translatedElements="";
             for(String listElement:mainPlugin.getCodeExecuter().getStringParameters("("+instruction.substring(1,instruction.length()-1)+")")){
                 translatedElements+=getInstructionTranslation(plugin,listElement,variableTypes,typesImported)+",";
             }
-            if(translatedElements.isEmpty())varValueTranslated="new ArrayList<>()";
-            else {
-                translatedElements=translatedElements.substring(0,translatedElements.length()-1);
-                String listType= mainPlugin.getCodeUtils().getTypeOfExecution(plugin,instruction,variableTypes);
-                String typeName=getTypeName(listType.replace("List.",""),typesImported);
-                varValueTranslated="Arrays.asList(new "+typeName+"[]{"+translatedElements+"})";
-                importType(typesImported,Arrays.class.getTypeName());
-            }
-            importType(typesImported,ArrayList.class.getTypeName());
-
+            if(translatedElements.isEmpty())return "new ArrayList<>()";
+            translatedElements=translatedElements.substring(0,translatedElements.length()-1);
+            String listType= mainPlugin.getCodeUtils().getTypeOfExecution(plugin,instruction,variableTypes);
+            String typeName=getTypeName(listType.replace("List.",""),typesImported);
+            importType(typesImported,Arrays.class.getTypeName());
+            return "Arrays.asList(new "+typeName+"[]{"+translatedElements+"})";
         }else if(instruction.startsWith("{")&&instruction.endsWith("}")){
+            importType(typesImported,HashMap.class.getTypeName());
             String translatedElements="";
             for(String keyValue:mainPlugin.getCodeExecuter().getStringParameters("("+instruction.substring(1,instruction.length()-1)+")")){
                 String[] keyValueContainer=mainPlugin.getCodeUtils().getElementsBySeparator(keyValue,':');
@@ -532,165 +527,146 @@ public class PluginJavaTranslator {
                 String translatedValue=getInstructionTranslation(plugin,keyValueContainer[1],variableTypes,typesImported);
                 translatedElements+="put("+translatedKey+","+translatedValue+");";
             }
-            if(translatedElements.isEmpty())varValueTranslated="new HashMap<>()";
-            else{
-                String mapTypes= mainPlugin.getCodeUtils().getTypeOfExecution(plugin,instruction,variableTypes);
-                String[] typesName=mapTypes.replace("Map.","").split("-");
-                String keyTypeName= getTypeName(typesName[0],typesImported);
-                String valueTypeName= getTypeName(typesName[1],typesImported);
-                varValueTranslated="new HashMap<"+keyTypeName+","+valueTypeName+">() {{"+translatedElements+"}}";
-            }
-            importType(typesImported,HashMap.class.getTypeName());
-
-        }else{
-            //Comprobar si es constructor
-            String constructorName=instruction.replaceAll("^([^(]+)\\((.+)$","$1");
-            Class constructorClass=mainPlugin.getConstructorTranslator().get(constructorName);
-            String constructorParams="";
-            if(constructorClass!=null){
-                List<String> params=mainPlugin.getCodeExecuter().getStringParameters(instruction);
-                if(constructorClass.equals(Inventory.class)){
-                    for(int i=params.size()-1;i>=0;i--){
-                        constructorParams+=getInstructionTranslation(plugin,params.get(i),variableTypes,typesImported)+",";
-                    }
-                    if(!constructorParams.isEmpty())constructorParams=constructorParams.substring(0,constructorParams.length()-1);
-                    varValueTranslated="Bukkit.createInventory(null,9*"+constructorParams+")";
-                    importType(typesImported,Bukkit.class.getTypeName());
-                }else{// traduccion de constructor generica
-                    List<Object> paramTypes=new ArrayList<>();
-                    for(int i=0;i<params.size();i++){
-                        String type= mainPlugin.getCodeUtils().clearContainerType(mainPlugin.getCodeUtils().getTypeOfExecution(plugin,params.get(i),variableTypes));
-                        paramTypes.add(type);
-                        constructorParams+=getInstructionTranslation(plugin,params.get(i),variableTypes,typesImported)+",";
-                    }
-                    if(!constructorParams.isEmpty())constructorParams=constructorParams.substring(0,constructorParams.length()-1);
-                    Constructor constructor=null;
-                    for(Constructor c:constructorClass.getConstructors()){
-                        if(c.getParameterTypes().length!=paramTypes.size())continue;
-                        if(mainPlugin.getCodeExecuter().validateParams(c.getParameterTypes(),paramTypes,false)){constructor=c;break;}
-                    }
-                    if(constructor!=null){
-                        for(int paramIndex=0;paramIndex<constructor.getParameterTypes().length;paramIndex++){
-                            Class constParamType=constructor.getParameterTypes()[paramIndex];
-                            if(!constParamType.isEnum())continue;
-                            String param=params.get(paramIndex);
-                            if(variableTypes.get(param)!=null &&variableTypes.get(param).equals(String.class.getTypeName())){
-                                String translatedParam=getTypeName(constParamType.getTypeName(),typesImported)+".valueOf("+param+")";
-                                constructorParams=constructorParams.replace(param,translatedParam);
-                            }else{
-                                String translatedParam=getTypeName(constParamType.getTypeName(),typesImported)+"."+param;
-                                constructorParams=constructorParams.replace("\""+param+"\"",translatedParam);
-                            }
-                            importType(typesImported,constParamType.getTypeName());
-                        }
-                    }
-                    varValueTranslated="new "+getTypeName(constructorClass.getTypeName(),typesImported)+"("+constructorParams+")";
-                    //comprobar clases internas de PluginCoder para añadirlas al código
-                    if(constructorClass.getTypeName().equals(Scoreboard.class.getTypeName()))ScoreboardFile.createFile(plugin);
+            if(translatedElements.isEmpty())return "new HashMap<>()";
+            String mapTypes= mainPlugin.getCodeUtils().getTypeOfExecution(plugin,instruction,variableTypes);
+            String[] typesName=mapTypes.replace("Map.","").split("-");
+            String keyTypeName= getTypeName(typesName[0],typesImported);
+            String valueTypeName= getTypeName(typesName[1],typesImported);
+            return "new HashMap<"+keyTypeName+","+valueTypeName+">() {{"+translatedElements+"}}";
+        }
+        //Comprobar si es constructor
+        String constructorName=instruction.replaceAll("^([^(]+)\\((.+)$","$1");
+        Class constructorClass=mainPlugin.getConstructorTranslator().get(constructorName);
+        String constructorParams="";
+        if(constructorClass!=null){
+            List<String> params=mainPlugin.getCodeExecuter().getStringParameters(instruction);
+            if(constructorClass.equals(Inventory.class)){
+                for(int i=params.size()-1;i>=0;i--){
+                    constructorParams+=getInstructionTranslation(plugin,params.get(i),variableTypes,typesImported)+",";
                 }
+                if(!constructorParams.isEmpty())constructorParams=constructorParams.substring(0,constructorParams.length()-1);
+                varValueTranslated="Bukkit.createInventory(null,9*"+constructorParams+")";
+                importType(typesImported,Bukkit.class.getTypeName());
                 importType(typesImported,constructorClass.getTypeName());
                 return varValueTranslated;
-            }else{//comprobar constructor de objeto
-                PluginObject object=plugin.getObject(constructorName);
-                if(object!=null){
-                    List<String> params=mainPlugin.getCodeExecuter().getStringParameters(instruction);
-                    for(int i=0;i<params.size();i++)constructorParams+=getInstructionTranslation(plugin,params.get(i),variableTypes,typesImported)+",";
-                    if(!constructorParams.isEmpty())constructorParams=constructorParams.substring(0,constructorParams.length()-1);
-                    varValueTranslated="new "+object.getName()+"("+constructorParams+")";
-                    importType(typesImported,"PluginObject."+object.getName());
-                    return varValueTranslated;
-                }
             }
-            //comprobar que no sea un numero
-            try {
-                Double.parseDouble(instruction);
-                return instruction;
-            }catch (Exception e){}
-            String[] methods=mainPlugin.getCodeExecuter().getMethodsOfInstruction(instruction);
-            if(variableTypes.containsKey(methods[0])){
-                if(variableTypes.get(methods[0])!=null&&variableTypes.get(methods[0]).equals(Bukkit.getServer().getClass().getTypeName())){
-                    varValueTranslated="Bukkit.getServer()";
-                    importType(typesImported,Bukkit.class.getTypeName());
-                }else {
-                    if(finalVars.contains(methods[0]))varValueTranslated="final"+methods[0].toUpperCase();
-                    else varValueTranslated=methods[0];
-                }
-            }else{
-                if(instruction.equals("null")||instruction.equals("true")||instruction.equals("false"))varValueTranslated=instruction;
-                else varValueTranslated="\""+instruction+"\"";
-                return varValueTranslated;
+            // traduccion de constructor generica
+            List<Object> paramTypes=new ArrayList<>();
+            for(int i=0;i<params.size();i++){
+                String type= mainPlugin.getCodeUtils().clearContainerType(mainPlugin.getCodeUtils().getTypeOfExecution(plugin,params.get(i),variableTypes));
+                paramTypes.add(type);
+                constructorParams+=getInstructionTranslation(plugin,params.get(i),variableTypes,typesImported)+",";
             }
-            String executionType= mainPlugin.getCodeUtils().clearContainerType(variableTypes.get(methods[0]));
-            List<String> executionTypes=Arrays.asList(executionType);
-            for(int i=1;i<methods.length;i++){
-                Map<String,List<String>> methodTypes=mainPlugin.getCodeUtils().getMethodsOfType(executionType);
-                String methodName=methods[i].replaceAll("^([^(]+)\\((.+)\\)$","$1");
-                String params="";
-                List<Object> paramTypes=new ArrayList<>();
-                List<String> paramsList=mainPlugin.getCodeExecuter().getStringParameters(methods[i]);
-                if(methodName.length()!=methods[i].length()){
-                    methodName+="()";
-                    for(String param:paramsList){
-                        String type= mainPlugin.getCodeUtils().clearContainerType(mainPlugin.getCodeUtils().getTypeOfExecution(plugin,param,variableTypes));
-                        paramTypes.add(type);
-                        params+=getInstructionTranslation(plugin,param,variableTypes,typesImported)+",";
-                    }
-                    params=params.substring(0,params.length()-1);//quitarle la última coma
-                }
-                Method javaMethod=mainPlugin.getCodeUtils().getJavaMethod(executionTypes,methodName,paramTypes);
-                //ver si es un metodo custom y si es así adaptarlo, como teleport o message
-                if(javaMethod!=null){
-                    if(javaMethod.getName().equalsIgnoreCase("sendMessage")&&!paramTypes.get(0).equals(String.class.getTypeName())){
-                        if(!params.startsWith("\"")&&!params.startsWith("ChatColor."))params="String.valueOf("+params+")";
-                    }else if(javaMethod.getName().equalsIgnoreCase("teleport")&&!paramTypes.get(0).equals(Location.class.getTypeName())){
-                        if(mainPlugin.getCodeExecuter().getStringParameters("("+params+")").size()!=3)params="new Location("+params+")";
-                        else params="new Location("+varValueTranslated+".getWorld(),"+params+")";
-                        importType(typesImported,Location.class.getTypeName());
-                    }else{
-                        for(int paramIndex=0;paramIndex<paramsList.size();paramIndex++){
-                            Class methodParamType=javaMethod.getParameterTypes()[paramIndex];
-                            if(!methodParamType.isEnum())continue;
-                            String param=paramsList.get(paramIndex);
-                            if(variableTypes.get(param)!=null &&variableTypes.get(param).equals(String.class.getTypeName())){
-                                String translatedParam=getTypeName(methodParamType.getTypeName(),typesImported)+".valueOf("+param+")";
-                                params=params.replace(param,translatedParam);
-                            }
-                            else {
-                                String translatedParam=getTypeName(methodParamType.getTypeName(),typesImported)+"."+param;
-                                params=params.replace("\""+param+"\"",translatedParam);
-                            }
-                            importType(typesImported,methodParamType.getTypeName());
-                        }
-                    }
-                    executionType=mainPlugin.getCodeUtils().checkCustomType(javaMethod.getReturnType().getTypeName());
-                    //comprobar si la clase corresponde a una clase interna de PluginCoder
-                    if(executionType.equals(Scoreboard.class.getTypeName())){ //player.getScoreboard()
-                        varValueTranslated="Scoreboard.getScoreboard("+varValueTranslated+"."+javaMethod.getName()+"("+params+"))";
-                        ScoreboardFile.createFile(plugin);
-                        importType(typesImported,"objects.Scoreboard");
-                    }else if(javaMethod.getName().equals("setScoreboard")){//player.setScoreboard(scoreboard)
-                        varValueTranslated+="."+javaMethod.getName()+"("+params+".getBukkitScoreboard())";
-                        ScoreboardFile.createFile(plugin);
-                    }else varValueTranslated+="."+javaMethod.getName()+"("+params+")";
-
-                }else{//metodo de objeto
-                    String methodRawName=methodName.replace("()","");
-                    PluginObject object=plugin.getObject(executionType.replace("PluginObject.",""));
-                    if(object!=null&&object.getProperties().contains(methodRawName)){
-                        methodRawName=String.valueOf(methodRawName.charAt(0)).toUpperCase()
-                                +methodRawName.substring(1,methodRawName.length());
-                        if(params.isEmpty())methodRawName="get"+methodRawName;
-                        else methodRawName="set"+methodRawName;
-                    }
-                    varValueTranslated+="."+methodRawName+"("+params+")";
-                    executionType=methodTypes.get(methodName).get(0);
-                }
-                executionTypes=methodTypes.get(methodName);
+            if(!constructorParams.isEmpty())constructorParams=constructorParams.substring(0,constructorParams.length()-1);
+            Constructor constructor=null;
+            for(Constructor constr:constructorClass.getConstructors()){
+                if(constr.getParameterTypes().length!=paramTypes.size())continue;
+                if(mainPlugin.getCodeExecuter().validateParams(constr.getParameterTypes(),paramTypes,false)){constructor=constr;break;}
             }
+            if(constructor!=null)constructorParams=parseEnumValues(constructorParams,constructor.getParameterTypes(),params,variableTypes,typesImported);
+            varValueTranslated="new "+getTypeName(constructorClass.getTypeName(),typesImported)+"("+constructorParams+")";
+            //comprobar clases internas de PluginCoder para añadirlas al código
+            if(constructorClass.getTypeName().equals(Scoreboard.class.getTypeName()))ScoreboardFile.createFile(plugin);
+            importType(typesImported,constructorClass.getTypeName());
+            return varValueTranslated;
+        }
+        //comprobar constructor de objeto
+        PluginObject object=plugin.getObject(constructorName);
+        if(object!=null){
+            List<String> params=mainPlugin.getCodeExecuter().getStringParameters(instruction);
+            for(int i=0;i<params.size();i++)constructorParams+=getInstructionTranslation(plugin,params.get(i),variableTypes,typesImported)+",";
+            if(!constructorParams.isEmpty())constructorParams=constructorParams.substring(0,constructorParams.length()-1);
+            varValueTranslated="new "+object.getName()+"("+constructorParams+")";
+            importType(typesImported,"PluginObject."+object.getName());
+            return varValueTranslated;
+        }
+        //comprobar que no sea un numero
+        try {
+            Double.parseDouble(instruction);
+            return instruction;
+        }catch (Exception e){}
+        String[] methods=mainPlugin.getCodeExecuter().getMethodsOfInstruction(instruction);
+        if(!variableTypes.containsKey(methods[0])){
+            if(instruction.equals("null")||instruction.equals("true")||instruction.equals("false"))varValueTranslated=instruction;
+            else varValueTranslated="\""+instruction+"\"";
+            return varValueTranslated;
+        }
+        //variable contenida en variableTypes
+        if(variableTypes.get(methods[0])!=null&&variableTypes.get(methods[0]).equals(Bukkit.getServer().getClass().getTypeName())){
+            varValueTranslated="Bukkit.getServer()";
+            importType(typesImported,Bukkit.class.getTypeName());
+        }else {
+            if(finalVars.contains(methods[0]))varValueTranslated="final"+methods[0].toUpperCase();
+            else varValueTranslated=methods[0];
+        }
+        String executionType= mainPlugin.getCodeUtils().clearContainerType(variableTypes.get(methods[0]));
+        List<String> executionTypes=Arrays.asList(executionType);
+        for(int i=1;i<methods.length;i++){
+            Map<String,List<String>> methodTypes=mainPlugin.getCodeUtils().getMethodsOfType(executionType);
+            String methodName=methods[i].replaceAll("^([^(]+)\\((.+)\\)$","$1");
+            String params="";
+            List<Object> paramTypes=new ArrayList<>();
+            List<String> paramsList=mainPlugin.getCodeExecuter().getStringParameters(methods[i]);
+            if(methodName.length()!=methods[i].length()){
+                methodName+="()";
+                for(String param:paramsList){
+                    String type= mainPlugin.getCodeUtils().clearContainerType(mainPlugin.getCodeUtils().getTypeOfExecution(plugin,param,variableTypes));
+                    paramTypes.add(type);
+                    params+=getInstructionTranslation(plugin,param,variableTypes,typesImported)+",";
+                }
+                params=params.substring(0,params.length()-1);//quitarle la última coma
+            }
+            Method javaMethod=mainPlugin.getCodeUtils().getJavaMethod(executionTypes,methodName,paramTypes);
+            executionTypes=methodTypes.get(methodName);
+            //ver si es un metodo custom y si es así adaptarlo, como teleport o message
+            if(javaMethod!=null){
+                if(javaMethod.getName().equalsIgnoreCase("sendMessage")&&!paramTypes.get(0).equals(String.class.getTypeName())){
+                    if(!params.startsWith("\""))params="String.valueOf("+params+")";
+                }else if(javaMethod.getName().equalsIgnoreCase("teleport")&&!paramTypes.get(0).equals(Location.class.getTypeName())){
+                    if(mainPlugin.getCodeExecuter().getStringParameters("("+params+")").size()!=3)params="new Location("+params+")";
+                    else params="new Location("+varValueTranslated+".getWorld(),"+params+")";
+                    importType(typesImported,Location.class.getTypeName());
+                }else params=parseEnumValues(params,javaMethod.getParameterTypes(),paramsList,variableTypes,typesImported);
+                executionType=mainPlugin.getCodeUtils().checkCustomType(javaMethod.getReturnType().getTypeName());
+                //comprobar si la clase corresponde a una clase interna de PluginCoder
+                if(executionType.equals(Scoreboard.class.getTypeName())){ //player.getScoreboard()
+                    varValueTranslated="Scoreboard.getScoreboard("+varValueTranslated+"."+javaMethod.getName()+"("+params+"))";
+                    ScoreboardFile.createFile(plugin);
+                    importType(typesImported,"objects.Scoreboard");
+                }else if(javaMethod.getName().equals("setScoreboard")){//player.setScoreboard(scoreboard)
+                    varValueTranslated+="."+javaMethod.getName()+"("+params+".getBukkitScoreboard())";
+                    ScoreboardFile.createFile(plugin);
+                }else varValueTranslated+="."+javaMethod.getName()+"("+params+")";
+                continue;
+            }
+            //metodo de objeto
+            String methodRawName=methodName.replace("()","");
+            object=plugin.getObject(executionType.replace("PluginObject.",""));
+            if(object!=null&&object.getProperties().contains(methodRawName)){
+                methodRawName=String.valueOf(methodRawName.charAt(0)).toUpperCase()
+                        +methodRawName.substring(1,methodRawName.length());
+                if(params.isEmpty())methodRawName="get"+methodRawName;
+                else methodRawName="set"+methodRawName;
+            }
+            varValueTranslated+="."+methodRawName+"("+params+")";
+            executionType=methodTypes.get(methodName).get(0);
         }
         return varValueTranslated;
     }
-
+    private static String parseEnumValues(String value, Class[] parameterClasses, List<String> paramNames, Map<String, String> variableTypes, Set<String> typesImported){
+        for(int paramIndex=0;paramIndex<parameterClasses.length;paramIndex++){
+            Class constParamType=parameterClasses[paramIndex];
+            if(!constParamType.isEnum())continue;
+            String paramVarName=paramNames.get(paramIndex);
+            String enumValue=paramVarName;
+            if(String.class.getTypeName().equals(variableTypes.get(paramVarName)))enumValue="valueOf("+paramVarName+")";
+            else paramVarName="\""+paramVarName+"\"";
+            String translatedParam=getTypeName(constParamType.getTypeName(),typesImported)+"."+enumValue;
+            value=value.replace(paramVarName,translatedParam);
+            importType(typesImported,constParamType.getTypeName());
+        }
+        return value;
+    }
     private static String translateNumberedForFunction(Plugin plugin,String forFunction,String forVar,String flecha, Map<String, String> variableTypes,Set<String> typesImported){
         String num1=forFunction.replaceAll("^for\\(([^{:]+):([^{]+)"+flecha+"([^{:]+)(:([^{]+))?\\)\\{(.+)$","$2");
         String num2=forFunction.replaceAll("^for\\(([^{:]+):([^{]+)"+flecha+"([^{:]+)(:([^{]+))?\\)\\{(.+)$","$3");
@@ -733,9 +709,7 @@ public class PluginJavaTranslator {
             forContent="\n"+num1Type+" forStartVar="+num1+";"+num2Type+" forEndVar="+num2+";\n"+incType+" forIncVar="+increment+";int forIncSign=1;" +
                     "\nif(forStartVar>forEndVar)forIncSign=-1;\nif(forIncVar<0)forIncSign*=-1;\nforIncVar*=forIncSign;" +
                     "\nfor("+forVarType+" "+forVar+"=forStartVar;forIncVar>=0?"+forVar+"<=forEndVar:"+forVar+">=forEndVar;"+forVar+"+=forIncVar){";
-        }else{
-            forContent+="\nfor("+forVarType+" "+forVar+"="+num1+";"+forVar+operator+num2+";"+forVar+"+="+increment+"){";
-        }
+        }else forContent+="\nfor("+forVarType+" "+forVar+"="+num1+";"+forVar+operator+num2+";"+forVar+"+="+increment+"){";
         variableTypes.put(forVar,forVarType.equals("int")?int.class.getTypeName():double.class.getTypeName());
         return forContent;
     }

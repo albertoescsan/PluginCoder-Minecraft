@@ -209,7 +209,7 @@ public class TextGUI {
         if(!text.endsWith("(")&&!text.isEmpty())text=text.substring(0,text.length()-1);
         ItemStack commandItem=gui.getItem(4);
         ItemMeta meta=commandItem.getItemMeta();
-        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',"&f"+PluginCoder.getCoderGUI().putTextColor(text)));
+        meta.setDisplayName("§f"+PluginCoder.getCoderGUI().putTextColor(text));
         commandItem.setItemMeta(meta);
         gui.setItem(4,commandItem);
     }

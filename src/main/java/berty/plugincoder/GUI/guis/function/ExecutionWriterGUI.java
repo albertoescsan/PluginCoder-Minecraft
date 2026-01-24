@@ -155,7 +155,7 @@ public class ExecutionWriterGUI {
         }
         execution=PluginCoder.getCoderGUI().putTextColor(execution.isEmpty()?"":execution.substring(0,execution.length()-1));
         ItemMeta meta=gui.getItem(4).getItemMeta();
-        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',"&f"+execution));
+        meta.setDisplayName("§f"+execution);
         gui.getItem(4).setItemMeta(meta);
     }
     public void updateVariables(){

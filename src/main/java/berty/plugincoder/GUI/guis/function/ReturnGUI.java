@@ -21,7 +21,7 @@ public class ReturnGUI {
     }
     public void createInventory(){
         String returnTitle = PluginCoder.getCoderGUI().getGuiText("returnValue");
-        gui= Bukkit.createInventory(null,45, ChatColor.translateAlternateColorCodes('&',"&f&l"+returnTitle.toUpperCase()));
+        gui= Bukkit.createInventory(null,45, "§f§l"+returnTitle.toUpperCase());
         PluginCoder.getCoderGUI().createCenteredItemInventory(gui);
     }
     public void updateGUI(String instruction){
@@ -30,7 +30,7 @@ public class ReturnGUI {
         ItemStack executeItem=!instruction.isEmpty()?(new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP)))
                 :(new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.MAP)));
         ItemMeta meta=executeItem.getItemMeta();
-        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',"&f"+PluginCoder.getCoderGUI().putTextColor(valueInstruction)));
+        meta.setDisplayName("§f"+PluginCoder.getCoderGUI().putTextColor(valueInstruction));
         executeItem.setItemMeta(meta);
         gui.setItem(22,executeItem);
     }

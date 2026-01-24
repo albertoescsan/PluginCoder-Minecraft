@@ -68,7 +68,7 @@ public class ListConstructorGUI {
     public ItemStack getListElementItem(String element){
         ItemStack elementItem=new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP));
         ItemMeta meta= elementItem.getItemMeta();
-        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',PluginCoder.getCoderGUI().putTextColor(element)));
+        meta.setDisplayName(PluginCoder.getCoderGUI().putTextColor(element));
         elementItem.setItemMeta(meta);
         return elementItem;
     }
@@ -110,7 +110,7 @@ public class ListConstructorGUI {
        listInstruction+="]";
        ItemStack sign=new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.OAK_SIGN));
        ItemMeta meta=sign.getItemMeta();
-       meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',"&f"+PluginCoder.getCoderGUI().putTextColor(listInstruction)));
+       meta.setDisplayName("§f"+PluginCoder.getCoderGUI().putTextColor(listInstruction));
        sign.setItemMeta(meta);
        gui.setItem(4,sign);
 

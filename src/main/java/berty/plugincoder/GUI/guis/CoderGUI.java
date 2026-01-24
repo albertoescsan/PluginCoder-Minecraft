@@ -135,7 +135,7 @@ public class CoderGUI {
 
 	}
 	public void createMainInventory() {
-		pluginCoderGUI=Bukkit.createInventory(null, 45,ChatColor.translateAlternateColorCodes('&', "&f&lPLUGINCODER"));
+		pluginCoderGUI=Bukkit.createInventory(null, 45,"§f§lPLUGINCODER");
 		fillWithWhiteBorder(pluginCoderGUI);
 		ItemStack plugins=new ItemStack(Material.BOOKSHELF);
 		ItemMeta meta=plugins.getItemMeta();
@@ -190,7 +190,7 @@ public class CoderGUI {
 	}
 	public void createLanguageInventory(){
 		String languageTitle=getGuiText("languageTitle").toUpperCase();
-		languages=Bukkit.createInventory(null,27,ChatColor.translateAlternateColorCodes('&',"&f&l"+languageTitle));
+		languages=Bukkit.createInventory(null,27,"§f§l"+languageTitle);
 		ItemStack spanish=getPlayerHead("http://textures.minecraft.net/texture/c2d730b6dda16b584783b63d082a80049b5fa70228aba4ae884c2c1fc0c3a8bc");
 		ItemMeta meta=spanish.getItemMeta();
 		meta.setDisplayName(ChatColor.DARK_RED+"Español");
@@ -345,32 +345,32 @@ public class CoderGUI {
 	public void errorSound(Player p) {
 		p.playSound(p.getLocation(), mainPlugin.getVersionNumber()<9?Sound.valueOf("ANVIL_LAND"):Sound.BLOCK_ANVIL_LAND, 4, (float) 0);
 	}
-	public String putTextColor(String s){
+	public String putTextColor(String text){
 		for(String color: mainPlugin.getColorTranslator().keySet()){
 			if(color.equals("BOLD")||color.equals("ITALIC")||color.equals("UNDERLINE")||color.equals("STRIKE")){
-				s=s.replaceAll("^"+color+"\\+","&f"+ mainPlugin.getColorTranslator().get(color)+color+"&f+");
-				s=s.replaceAll("([+,(=])"+color+"\\+","$1&f"+ mainPlugin.getColorTranslator().get(color)+color+"&f+");
+				text=text.replaceAll("^"+color+"\\+","§f"+ mainPlugin.getColorTranslator().get(color)+color+"§f+");
+				text=text.replaceAll("([+,(=])"+color+"\\+","$1§f"+ mainPlugin.getColorTranslator().get(color)+color+"§f+");
 			}else if(color.equals("RESET")){
-				s=s.replaceAll("^"+color+"\\+","&f"+color+"&f+");
-				s=s.replaceAll("([+,(=])"+color+"\\+","$1&f"+color+"&f+");
+				text=text.replaceAll("^"+color+"\\+","§f"+color+"§f+");
+				text=text.replaceAll("([+,(=])"+color+"\\+","§1§f"+color+"§f+");
 			}else{
-				s=s.replaceAll("^"+color+"\\+", mainPlugin.getColorTranslator().get(color)+color+"&f+");
-				s=s.replaceAll("([+,(=])"+color+"\\+","$1"+ mainPlugin.getColorTranslator().get(color)+color+"&f+");
+				text=text.replaceAll("^"+color+"\\+", mainPlugin.getColorTranslator().get(color)+color+"§f+");
+				text=text.replaceAll("([+,(=])"+color+"\\+","$1"+ mainPlugin.getColorTranslator().get(color)+color+"§f+");
 			}
 		}
-		s=getColoredValueText(s,"true","&a");
-		s=getColoredValueText(s,"false","&c");
-		s=getColoredValueText(s,"null","&4");
-		return s;
+		text=getColoredValueText(text,"true","§a");
+		text=getColoredValueText(text,"false","§c");
+		text=getColoredValueText(text,"null","§4");
+		return text;
 	}
 	private String getColoredValueText(String text,String value,String color){
-		text=text.replaceAll("="+value+"$","="+color+value+"&f");
-		text=text.replaceAll("^"+value+"$",color+value+"&f");
+		text=text.replaceAll("="+value+"$","="+color+value+"§f");
+		text=text.replaceAll("^"+value+"$",color+value+"§f");
 		while (text.matches("^(.*)([,(])"+value+"([,)])(.*)$")){
-			text=text.replaceAll("([,(])"+value+"([,)])","$1"+color+value+"&f$2");
+			text=text.replaceAll("([,(])"+value+"([,)])","$1"+color+value+"§f$2");
 		}
 		while (text.matches("^(.*):"+value+"([,)}])(.*)$")){
-			text=text.replaceAll("^(.*):"+value+"([,)}])","$1:"+color+value+"&f$2");
+			text=text.replaceAll("^(.*):"+value+"([,)}])","$1:"+color+value+"§f$2");
 		}
 		return text;
 	}
@@ -467,15 +467,14 @@ public class CoderGUI {
 		for(String instruction: mainPlugin.getCodeExecuter().getGUIInstructionsFromFunction(function)){
 			if(instruction.matches("^([^{]+)\\{(.*)}$")&&!instruction.matches("^([A-Za-z0-9_]+)\\s*=(.*)$")){
 				String functionTitle=instruction.replaceAll("^([^{]+)\\{(.*)}$","$1{");
-				functionTitle=ChatColor.translateAlternateColorCodes('&',"&f"+PluginCoder.getCoderGUI().putTextColor(functionTitle));
+				functionTitle="§f"+PluginCoder.getCoderGUI().putTextColor(functionTitle);
 				instructions.add(functionTitle);
 				for(String subInstruction:getDisplayLore(instruction)){
 					instructions.add(subInstruction);
 				}
 				instructions.add(ChatColor.WHITE+"}");
 			}else{
-				instruction=PluginCoder.getCoderGUI().putTextColor(instruction);
-				instruction=ChatColor.translateAlternateColorCodes('&',"&f"+instruction);
+				instruction="§f"+PluginCoder.getCoderGUI().putTextColor(instruction);
 				instructions.add(ChatColor.WHITE+instruction);
 			}
 			if(instructions.size()>=15){
@@ -542,7 +541,7 @@ public class CoderGUI {
 		}
 		ItemStack instructionItem=gui.getItem(4);
 		ItemMeta meta=instructionItem.getItemMeta();
-		meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',"&f"+putTextColor(operationText)));
+		meta.setDisplayName("§f"+putTextColor(operationText));
 		instructionItem.setItemMeta(meta);
 		gui.setItem(4,instructionItem);
 	}

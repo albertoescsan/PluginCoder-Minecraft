@@ -68,14 +68,14 @@ public class ConstructorsGUI {
         ItemStack list=gui.getItem(47);
         ItemMeta meta=list.getItemMeta();
         List<String> lore=new ArrayList<>();
-        if(instruction.startsWith("[")&&instruction.endsWith("]"))lore.add(ChatColor.WHITE+ChatColor.translateAlternateColorCodes('&',"&f"+PluginCoder.getCoderGUI().putTextColor(instruction)));
+        if(instruction.startsWith("[")&&instruction.endsWith("]"))lore.add("§f"+PluginCoder.getCoderGUI().putTextColor(instruction));
         else lore.add(ChatColor.WHITE+"[]");
         meta.setLore(new ArrayList<>(lore));
         list.setItemMeta(meta);
         ItemStack dict=gui.getItem(51);
         meta=dict.getItemMeta();
         lore=new ArrayList<>();
-        if(instruction.startsWith("{")&&instruction.endsWith("}"))lore.add(ChatColor.WHITE+ChatColor.translateAlternateColorCodes('&',"&f"+PluginCoder.getCoderGUI().putTextColor(instruction)));
+        if(instruction.startsWith("{")&&instruction.endsWith("}"))lore.add("§f"+PluginCoder.getCoderGUI().putTextColor(instruction));
         else lore.add(ChatColor.WHITE+"{}");
         meta.setLore(new ArrayList<>(lore));
         dict.setItemMeta(meta);
@@ -83,7 +83,7 @@ public class ConstructorsGUI {
     public void updateInstructionSign(String instruction){
         ItemStack instructionItem=gui.getItem(4);
         ItemMeta meta=instructionItem.getItemMeta();
-        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',"&f"+PluginCoder.getCoderGUI().putTextColor(instruction)));
+        meta.setDisplayName("§f"+PluginCoder.getCoderGUI().putTextColor(instruction));
         String parametersEditText = PluginCoder.getCoderGUI().getGuiText("clickEditParams");
         if (classConstructorHasParams(instruction)) {
             List<String> lore=new ArrayList<>();

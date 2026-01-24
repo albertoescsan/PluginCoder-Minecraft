@@ -131,8 +131,7 @@ public class ParametersGUI {
             if(methodsOrConstructors.size()>1)updateOptions(containerName+"()");
         }
         ItemMeta meta=gui.getItem(4).getItemMeta();
-        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',
-                "&f"+PluginCoder.getCoderGUI().putTextColor(paramContainer)));
+        meta.setDisplayName("§f"+PluginCoder.getCoderGUI().putTextColor(paramContainer));
         gui.getItem(4).setItemMeta(meta);
         updateInstructionSign();
     }
@@ -210,8 +209,7 @@ public class ParametersGUI {
         }
         boolean nullParam=false;
         if(parameters.size()>index&&!parameters.get(index).trim().isEmpty()){
-            meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',"&f"+
-                    PluginCoder.getCoderGUI().putTextColor(parameters.get(index))));
+            meta.setDisplayName("§f"+PluginCoder.getCoderGUI().putTextColor(parameters.get(index)));
         }else nullParam=true;
         if(nullParam){
             String param=ChatColor.DARK_RED+"null";
@@ -424,8 +422,7 @@ public class ParametersGUI {
         ItemStack paramItem=gui.getItem(paramSelectedIndex);
         if(param.isEmpty())param="null";
         ItemMeta meta=paramItem.getItemMeta();
-        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',"&f"+PluginCoder
-                .getCoderGUI().putTextColor(param)));
+        meta.setDisplayName("§f"+PluginCoder.getCoderGUI().putTextColor(param));
         paramItem.setItemMeta(meta);
         updateInstructionSign();
     }

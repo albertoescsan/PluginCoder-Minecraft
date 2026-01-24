@@ -6,6 +6,8 @@ import berty.plugincoder.interpreter.objects.PluginObject;
 import berty.plugincoder.interpreter.plugin.Plugin;
 import berty.plugincoder.predictor.PredictType;
 import berty.plugincoder.main.PluginCoder;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
 import java.lang.reflect.Method;
@@ -207,15 +209,14 @@ public class CodeUtils {
         return varType;
     }
     public Method getJavaMethod(List<String>executionTypes,String method,List<Object> paramTypes){
-        Method foundMethod=null;
         try{
             for(String type:executionTypes){
                 Class executionClass=Class.forName(type);
                 Method javaMethod=pluginCoder.getCodeExecuter().getMethod(executionClass,method,paramTypes,false);
-                if(javaMethod!=null){foundMethod=javaMethod;break;}
+                if(javaMethod!=null)return javaMethod;
             }
         }catch (Exception e){}
-        return foundMethod;
+        return null;
     }
     public String[] getElementsBySeparator(String instruction,char separator){
         String newInstruction="";
@@ -284,5 +285,18 @@ public class CodeUtils {
         if (clazz == double.class)  return Double.class;
         if (clazz == void.class)    return Void.class;
         return clazz;
+    }
+    public static Class<?> getPrimitiveType(String typeName) {
+        if (typeName == null) return null;
+        if (typeName.equals("boolean")) return boolean.class;
+        if (typeName.equals("byte"))    return byte.class;
+        if (typeName.equals("short"))   return short.class;
+        if (typeName.equals("int"))     return int.class;
+        if (typeName.equals("long"))    return long.class;
+        if (typeName.equals("float"))   return float.class;
+        if (typeName.equals("double"))  return double.class;
+        if (typeName.equals("char"))    return char.class;
+        if (typeName.equals("void"))    return void.class;
+        return null;
     }
 }

@@ -110,11 +110,11 @@ public class EqualityGUI {
         if(operator.isEmpty())operator="=";
         ItemStack element1Item=new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP));
         ItemMeta meta=element1Item.getItemMeta();
-        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',"&f"+PluginCoder.getCoderGUI().putTextColor(element1)));
+        meta.setDisplayName("§f"+PluginCoder.getCoderGUI().putTextColor(element1));
         element1Item.setItemMeta(meta);
         ItemStack element2Item=new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP));
         meta=element2Item.getItemMeta();
-        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',"&f"+PluginCoder.getCoderGUI().putTextColor(element2)));
+        meta.setDisplayName("§f"+PluginCoder.getCoderGUI().putTextColor(element2));
         element2Item.setItemMeta(meta);
         gui.setItem(11,element1Item);gui.setItem(15,element2Item);
         if(operator.length()==2){
@@ -171,7 +171,7 @@ public class EqualityGUI {
         if(instruction.trim().isEmpty())instruction="null";
         ItemStack instructionItem=new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP));
         ItemMeta meta=instructionItem.getItemMeta();
-        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',"&f"+PluginCoder.getCoderGUI().putTextColor(instruction)));
+        meta.setDisplayName("§f"+PluginCoder.getCoderGUI().putTextColor(instruction));
         meta.addEnchant(Enchantment.values()[0],1,false);
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -193,7 +193,7 @@ public class EqualityGUI {
             operator=ChatColor.stripColor(subOperator.getItemMeta().getDisplayName()).trim()+operator;
         }
         ItemMeta meta=instructionItem.getItemMeta();
-        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',"&f"+PluginCoder.getCoderGUI().putTextColor(element1+operator+element2)));
+        meta.setDisplayName("§f"+PluginCoder.getCoderGUI().putTextColor(element1+operator+element2));
         instructionItem.setItemMeta(meta);
         gui.setItem(4,instructionItem);
         if(operator.equals("<")||operator.equals(">")){

@@ -65,7 +65,7 @@ public class SetValueGUI {
         previousInvs.add(inventory);
         ItemStack instructionItem=new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP));
         ItemMeta meta=instructionItem.getItemMeta();
-        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',"&f"+PluginCoder.getCoderGUI().putTextColor(instruction)));
+        meta.setDisplayName("§f"+PluginCoder.getCoderGUI().putTextColor(instruction));
         instructionItem.setItemMeta(meta);
         gui.setItem(22,instructionItem);
     }
@@ -87,7 +87,7 @@ public class SetValueGUI {
             ItemStack executeItem=!newInstruction.isEmpty()?(new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP)))
                     :(new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.MAP)));
             ItemMeta meta=executeItem.getItemMeta();
-            meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',"&f"+PluginCoder.getCoderGUI().putTextColor(newInstruction)));
+            meta.setDisplayName("§f"+PluginCoder.getCoderGUI().putTextColor(newInstruction));
             executeItem.setItemMeta(meta);
             PluginCoder.getCoderGUI().getVariableGUI().getGui().setItem(24,executeItem);
             if(closingInventoryWithoutReturning)PluginCoder.getCoderGUI().getVariableGUI().saveChanges(true);
@@ -116,7 +116,7 @@ public class SetValueGUI {
         if(newInstruction.trim().isEmpty())newInstruction="null";
         ItemStack executeItem=new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP));
         ItemMeta meta=executeItem.getItemMeta();
-        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',"&f"+PluginCoder.getCoderGUI().putTextColor(newInstruction)));
+        meta.setDisplayName("§f"+PluginCoder.getCoderGUI().putTextColor(newInstruction));
         executeItem.setItemMeta(meta);
         gui.setItem(22,executeItem);
         if(closingInventoryWithoutReturning)saveChanges(true);

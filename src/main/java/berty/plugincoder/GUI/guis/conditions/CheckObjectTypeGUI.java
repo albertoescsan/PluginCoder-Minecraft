@@ -159,7 +159,7 @@ public class CheckObjectTypeGUI {
         updateGUIWithPreviousInstruction();
         ItemStack instructionItem=new ItemStack(Material.CHEST);
         ItemMeta meta=instructionItem.getItemMeta();
-        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',"&6"+PluginCoder.getCoderGUI().putTextColor(newInstruction)));
+        meta.setDisplayName("§6"+PluginCoder.getCoderGUI().putTextColor(newInstruction));
         instructionItem.setItemMeta(meta);
         gui.setItem(10,instructionItem);
         updateInstructionItem();

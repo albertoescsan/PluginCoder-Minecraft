@@ -123,13 +123,13 @@ public class FunctionGUI {
         ItemStack parameters=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.OAK_SIGN));
         meta=parameters.getItemMeta();
         String parametersEditText = PluginCoder.getCoderGUI().getGuiText("clickEditParams");
-        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',"&f"+PluginCoder.getCoderGUI().putTextColor(functionName)));
+        meta.setDisplayName("§f"+PluginCoder.getCoderGUI().putTextColor(functionName));
         List<String> lore=new ArrayList<>();
         lore.add(ChatColor.YELLOW+parametersEditText);
         meta.setLore(lore);
         parameters.setItemMeta(meta);
         String functionNameTitle=functionName.replaceAll("^([^(]+)\\((.*)\\)$","$1").toUpperCase();
-        functionGUI.add(Bukkit.createInventory(null,54, ChatColor.translateAlternateColorCodes('&',"&f&l"+functionNameTitle)));
+        functionGUI.add(Bukkit.createInventory(null,54, "§f§l"+functionNameTitle));
         PluginCoder.getCoderGUI().createInventoryBase(functionGUI.get(invIndex),true);
         functionGUI.get(invIndex).setItem(26,add);
         functionGUI.get(invIndex).setItem(35,delete);
@@ -246,7 +246,7 @@ public class FunctionGUI {
         }else {
             instructionItem=!instruction.trim().isEmpty()?(new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP)))
                     :(new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.MAP)));
-            instruction=ChatColor.translateAlternateColorCodes('&',"&f"+PluginCoder.getCoderGUI().putTextColor(instruction));
+            instruction="§f"+PluginCoder.getCoderGUI().putTextColor(instruction);
             ItemMeta meta=instructionItem.getItemMeta();
             meta.setDisplayName(instruction);
             instructionItem.setItemMeta(meta);
@@ -328,7 +328,7 @@ public class FunctionGUI {
     public void saveToFunctionGUI(String instruction,boolean closingInventoryWithoutReturning){
         ItemStack functionSign=functionGUI.get(0).getItem(4).clone();
         ItemMeta meta=functionSign.getItemMeta();
-        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',"&f"+PluginCoder.getCoderGUI().putTextColor(instruction)));
+        meta.setDisplayName("§f"+PluginCoder.getCoderGUI().putTextColor(instruction));
         functionSign.setItemMeta(meta);
         for(int i=0;i<functionGUI.size();i++) functionGUI.get(i).setItem(4,functionSign);
         if(closingInventoryWithoutReturning){
