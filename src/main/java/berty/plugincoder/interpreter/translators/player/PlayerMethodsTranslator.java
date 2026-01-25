@@ -51,6 +51,8 @@ public class PlayerMethodsTranslator {
         gamemodeP.getTranslatedMethodClasses().put("setGameMode",playerClass);
         PluginMethod location=new PluginMethod("location");
         location.getTranslatedMethodClasses().put("getLocation",Arrays.asList(Player.class.getTypeName(), Entity.class.getTypeName(), LivingEntity.class.getTypeName()));
+        PluginMethod damage=new PluginMethod("damage()");
+        damage.getTranslatedMethodClasses().put("damage",Arrays.asList(Player.class.getTypeName(), LivingEntity.class.getTypeName()));
         PluginMethod teleport=new PluginMethod("teleport()");
         teleport.getTranslatedMethodClasses().put("teleport",playerClass);
         PluginMethod world=new PluginMethod("world");

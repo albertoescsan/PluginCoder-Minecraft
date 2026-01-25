@@ -591,7 +591,6 @@ public class PluginJavaTranslator {
             else varValueTranslated="\""+instruction+"\"";
             return varValueTranslated;
         }
-        //variable contenida en variableTypes
         if(variableTypes.get(methods[0])!=null&&variableTypes.get(methods[0]).equals(Bukkit.getServer().getClass().getTypeName())){
             varValueTranslated="Bukkit.getServer()";
             importType(typesImported,Bukkit.class.getTypeName());

@@ -6,7 +6,6 @@ import berty.plugincoder.interpreter.classes.minigame.team.Teams;
 public class GameTemplate {
     private Scoreboard scoreboard=new Scoreboard("");
     private Teams teams;
-
     private int minPlayers=2;
     private int maxPlayers=2;
 

@@ -31,5 +31,10 @@ public class GameEventsMethodsTranslator {
         time.getTranslatedMethodClasses().put("getTime",Arrays.asList(GameStartingEvent.class.getTypeName(),GameFinishEvent.class.getTypeName()));
         PluginMethod timeP=new PluginMethod("time()");
         timeP.getTranslatedMethodClasses().put("setTime",Arrays.asList(GameStartingEvent.class.getTypeName(),GameFinishEvent.class.getTypeName()));
+
+        PluginMethod fireworks=new PluginMethod("fireworks");
+        fireworks.getTranslatedMethodClasses().put("isFireworks",Arrays.asList(GameFinishEvent.class.getTypeName()));
+        PluginMethod fireworksP=new PluginMethod("fireworks()");
+        fireworksP.getTranslatedMethodClasses().put("setFireworks",Arrays.asList(GameFinishEvent.class.getTypeName()));
     }
 }

@@ -51,9 +51,7 @@ public class PluginListener implements Listener {
 		this.executeListener(event, "onPlayerMove");
 	}
 	@EventHandler
-	public void onPlayerTeleport(PlayerTeleportEvent event) {
-		this.executeListener(event, "onPlayerTeleport");
-	}
+	public void onPlayerTeleport(PlayerTeleportEvent event) {this.executeListener(event, "onPlayerTeleport");}
 	@EventHandler
 	public void onPlayerChat(PlayerChatEvent event) {this.executeListener(event, "onPlayerChat");}
 	@EventHandler

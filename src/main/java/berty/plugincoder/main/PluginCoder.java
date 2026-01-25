@@ -153,16 +153,10 @@ public class PluginCoder extends JavaPlugin{
 		return plugin;
 	}
 	public Plugin getPlugin(String name){
-		for(Plugin plugin:plugins){
-			if(plugin.getName().equalsIgnoreCase(name))return plugin;
-		}
-		return null;
+		return plugins.stream().filter(plugin->plugin.getName().equalsIgnoreCase(name)).findFirst().orElse(null);
 	}
 	public PluginMethod getMethod(String name){
-		for(PluginMethod method:methods){
-			if(method.getName().equalsIgnoreCase(name))return method;
-		}
-		return null;
+		return methods.stream().filter(method->method.getName().equalsIgnoreCase(name)).findFirst().orElse(null);
 	}
 	public Map<String,Object> getPluginVars(Plugin plugin){
 		Map<String,Object> pluginVars=new HashMap<>();
@@ -184,9 +178,7 @@ public class PluginCoder extends JavaPlugin{
 	}
 	public Map<String, List<String>> getMethodTranslator() {
 		Map<String, List<String>> methodTranslator=new HashMap<>();
-		for(PluginMethod method:methods){
-			methodTranslator.put(method.getName(),new ArrayList<>(method.getTranslatedMethodClasses().keySet()));
-		}
+		methods.forEach(method->methodTranslator.put(method.getName(),new ArrayList<>(method.getTranslatedMethodClasses().keySet())));
 		return methodTranslator;
 	}
 	public List<Plugin> getPlugins() {
