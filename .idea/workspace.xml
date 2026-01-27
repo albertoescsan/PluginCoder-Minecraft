@@ -11,12 +11,14 @@
   <component name="ChangeListManager">
     <list default="true" id="1fedac6f-f050-4100-bda6-5b53d5223be2" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/berty/plugincoder/compiler/PluginJavaTranslator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/berty/plugincoder/compiler/PluginJavaTranslator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/berty/plugincoder/interpreter/classes/minigame/game/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/berty/plugincoder/interpreter/classes/minigame/game/Game.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/berty/plugincoder/interpreter/classes/minigame/game/GameState.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/berty/plugincoder/interpreter/classes/minigame/game/GameTemplate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/berty/plugincoder/interpreter/classes/minigame/game/GameTemplate.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/berty/plugincoder/interpreter/listener/PluginListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/berty/plugincoder/interpreter/listener/PluginListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/berty/plugincoder/interpreter/translators/classes/minigame/events/GameEventsMethodsTranslator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/berty/plugincoder/interpreter/translators/classes/minigame/events/GameEventsMethodsTranslator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/berty/plugincoder/interpreter/translators/player/PlayerMethodsTranslator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/berty/plugincoder/interpreter/translators/player/PlayerMethodsTranslator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/berty/plugincoder/main/PluginCoder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/berty/plugincoder/main/PluginCoder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/berty/plugincoder/interpreter/classes/minigame/game/Winner.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/berty/plugincoder/interpreter/classes/minigame/game/Winner.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/berty/plugincoder/interpreter/classes/minigame/team/Team.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/berty/plugincoder/interpreter/classes/minigame/game/team/Team.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/berty/plugincoder/interpreter/classes/minigame/team/TeamEquipment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/berty/plugincoder/interpreter/classes/minigame/game/team/TeamEquipment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/berty/plugincoder/interpreter/classes/minigame/team/Teams.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/berty/plugincoder/interpreter/classes/minigame/game/team/Teams.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/berty/plugincoder/interpreter/translators/classes/minigame/team/TeamMethodsTranslator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/berty/plugincoder/interpreter/translators/classes/minigame/team/TeamMethodsTranslator.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

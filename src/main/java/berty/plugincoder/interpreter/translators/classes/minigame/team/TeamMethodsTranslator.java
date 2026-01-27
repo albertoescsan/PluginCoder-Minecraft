@@ -1,8 +1,8 @@
 package berty.plugincoder.interpreter.translators.classes.minigame.team;
 
-import berty.plugincoder.interpreter.classes.minigame.team.Team;
-import berty.plugincoder.interpreter.classes.minigame.team.TeamEquipment;
-import berty.plugincoder.interpreter.classes.minigame.team.Teams;
+import berty.plugincoder.interpreter.classes.minigame.game.team.Team;
+import berty.plugincoder.interpreter.classes.minigame.game.team.TeamEquipment;
+import berty.plugincoder.interpreter.classes.minigame.game.team.Teams;
 import berty.plugincoder.interpreter.objects.PluginMethod;
 
 import java.util.ArrayList;

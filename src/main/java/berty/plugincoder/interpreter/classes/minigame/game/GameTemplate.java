@@ -1,7 +1,7 @@
 package berty.plugincoder.interpreter.classes.minigame.game;
 
 import berty.plugincoder.interpreter.classes.scoreboard.Scoreboard;
-import berty.plugincoder.interpreter.classes.minigame.team.Teams;
+import berty.plugincoder.interpreter.classes.minigame.game.team.Teams;
 
 public class GameTemplate {
     private Scoreboard scoreboard=new Scoreboard("");

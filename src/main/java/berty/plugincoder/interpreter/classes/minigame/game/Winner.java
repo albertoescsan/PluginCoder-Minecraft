@@ -1,7 +1,7 @@
 package berty.plugincoder.interpreter.classes.minigame.game;
 
 import org.bukkit.entity.Player;
-import berty.plugincoder.interpreter.classes.minigame.team.Team;
+import berty.plugincoder.interpreter.classes.minigame.game.team.Team;
 
 import java.util.Arrays;
 import java.util.List;

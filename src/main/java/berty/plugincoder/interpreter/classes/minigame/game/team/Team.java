@@ -1,4 +1,4 @@
-package berty.plugincoder.interpreter.classes.minigame.team;
+package berty.plugincoder.interpreter.classes.minigame.game.team;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
@@ -50,11 +50,13 @@ public class Team {
             default:           return Color.WHITE;
         }
     }
-    public void addPlayer(Player player){
+    public boolean addPlayer(Player player){
+        if(team.getPlayers().size()>=maxPlayers)return false;
         team.addPlayer(player);
+        return true;
     }
-    public void removePlayer(Player player){
-        team.removePlayer(player);
+    public boolean removePlayer(Player player){
+        return team.removePlayer(player);
     }
 
     public int getMaxPlayers() {

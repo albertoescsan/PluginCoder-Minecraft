@@ -9,8 +9,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import berty.plugincoder.interpreter.classes.scoreboard.Scoreboard;
 import berty.plugincoder.interpreter.classes.minigame.events.*;
 import org.bukkit.entity.Player;
-import berty.plugincoder.interpreter.classes.minigame.team.Team;
-import berty.plugincoder.interpreter.classes.minigame.team.Teams;
+import berty.plugincoder.interpreter.classes.minigame.game.team.Team;
+import berty.plugincoder.interpreter.classes.minigame.game.team.Teams;
 import berty.plugincoder.main.PluginCoder;
 import org.bukkit.FireworkEffect.Type;
 import java.util.*;
@@ -27,7 +27,7 @@ public class Game {
     private Map<String, PlayerData> playerData=new HashMap<>();
     private Teams teams;
     private Location spawn;
-    private Scoreboard scoreboard=new Scoreboard("");
+    private Scoreboard scoreboard;
     private int minPlayers;
     private int maxPlayers;
     private GameState gameState=GameState.WAITING;
@@ -35,22 +35,26 @@ public class Game {
 
     public Game(String name){
         this.name=name;
+        scoreboard=new Scoreboard(name);
         teams=new Teams(scoreboard.getBukkitScoreboard());
     }
     public void activate(){
         if(activated)return;
         activated=true;
+        gameState=GameState.WAITING;
         int maxPlayers=teams.getList().stream().mapToInt(team->team.getMaxPlayers()).sum();
         if(maxPlayers>0)this.maxPlayers=maxPlayers;
         spawn=new Location(Bukkit.getWorld("world"),-25,100,-330);//TODO quitar
     }
     public void deactivate(){
         if(!activated)return;
+        gameState=GameState.DEACTIVATED;
         activated=false;
         for(Player player:players)leave(player);
     }
     public boolean join(Player player){
-        if(!activated||gameState.equals(GameState.DEACTIVATED)||players.size()==maxPlayers||spawn==null)return false;
+        activate();
+        if(players.size()==maxPlayers||spawn==null)return false;
         PlayerJoinGameEvent event=new PlayerJoinGameEvent(this,player);
         Bukkit.getServer().getPluginManager().callEvent(event);
         if(event.isCancelled())return false;
@@ -82,7 +86,6 @@ public class Game {
         player.setLevel(data.getLevel());
         player.setScoreboard(data.getScoreboard());
         playerData.remove(player.getName());
-        //volver al lobby
         if(!event.getMessage().isEmpty())for(Player gamePlayer:players)gamePlayer.sendMessage(event.getMessage());
         return true;
     }
@@ -197,6 +200,10 @@ public class Game {
     public void setMaxPlayers(int maxPlayers) {
         if(activated)return;
         this.maxPlayers = maxPlayers;
+    }
+
+    public GameState getState() {
+        return gameState;
     }
     public void setWinner(Player player){
         if(player==null)return;
