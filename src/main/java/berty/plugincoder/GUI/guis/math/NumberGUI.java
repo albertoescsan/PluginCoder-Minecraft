@@ -92,7 +92,7 @@ public class NumberGUI {
         gui.setItem(39,red);gui.setItem(41,green);
     }
     public void updateGUI(String number){
-        ItemStack numberItem=new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.OAK_SIGN));
+        ItemStack numberItem=new ItemStack(plugin.getCodeUtils().getVersionedMaterial("OAK_SIGN"));
         ItemMeta meta=numberItem.getItemMeta();
         meta.setDisplayName(ChatColor.WHITE+number);
         numberItem.setItemMeta(meta);

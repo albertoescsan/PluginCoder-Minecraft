@@ -8,6 +8,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -102,7 +103,7 @@ public class FunctionGUI {
         String title=PluginCoder.getCoderGUI().getGuiText("executeFunction");
         meta.setDisplayName(ChatColor.GREEN+title);
         execute.setItemMeta(meta);
-        ItemStack add=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.MAP));
+        ItemStack add=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial("MAP"));
         meta=add.getItemMeta();
         String addTitle=PluginCoder.getCoderGUI().getGuiText("addInstruction");
         meta.setDisplayName(ChatColor.YELLOW+addTitle);
@@ -112,15 +113,15 @@ public class FunctionGUI {
         String deleteTitle=PluginCoder.getCoderGUI().getGuiText("deleteInstruction");
         meta.setDisplayName(ChatColor.GRAY+deleteTitle);
         delete.setItemMeta(meta);
-        ItemStack move=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.ENDER_PEARL));
+        ItemStack move=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial("ENDER_PEARL"));
         meta=move.getItemMeta();
         meta.setDisplayName(ChatColor.DARK_AQUA+PluginCoder.getCoderGUI().getGuiText("moveInstruction"));
         move.setItemMeta(meta);
-        ItemStack copy=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.FEATHER));
+        ItemStack copy=new ItemStack(Material.FEATHER);
         meta=copy.getItemMeta();
         meta.setDisplayName(ChatColor.WHITE+PluginCoder.getCoderGUI().getGuiText("copyInstruction"));
         copy.setItemMeta(meta);
-        ItemStack parameters=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.OAK_SIGN));
+        ItemStack parameters=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial("OAK_SIGN"));
         meta=parameters.getItemMeta();
         String parametersEditText = PluginCoder.getCoderGUI().getGuiText("clickEditParams");
         meta.setDisplayName("§f"+PluginCoder.getCoderGUI().putTextColor(functionName));
@@ -242,15 +243,16 @@ public class FunctionGUI {
         if(mainPlugin.getCodeExecuter().instructionIsFunction(instruction)){
             instruction=ChatColor.stripColor(instruction.replace("&","§"));
             String instructionName=ChatColor.DARK_RED+instruction.replaceAll("^([^{]+)\\{(.*)}$","$1");
-            instructionItem=PluginCoder.getCoderGUI().getFunctionItem(instruction,new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.WRITABLE_BOOK)),instructionName);
-        }else {
-            instructionItem=!instruction.trim().isEmpty()?(new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP)))
-                    :(new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.MAP)));
-            instruction="§f"+PluginCoder.getCoderGUI().putTextColor(instruction);
-            ItemMeta meta=instructionItem.getItemMeta();
-            meta.setDisplayName(instruction);
-            instructionItem.setItemMeta(meta);
+            instructionItem=PluginCoder.getCoderGUI().getFunctionItem(instruction,new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial("WRITABLE_BOOK")),instructionName);
+            return instructionItem;
         }
+        instructionItem=!instruction.trim().isEmpty()?(new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial("FILLED_MAP")))
+                :(new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial("MAP")));
+        instruction="§f"+PluginCoder.getCoderGUI().putTextColor(instruction);
+        ItemMeta meta=instructionItem.getItemMeta();
+        meta.setDisplayName(instruction);
+        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        instructionItem.setItemMeta(meta);
         return instructionItem;
     }
 

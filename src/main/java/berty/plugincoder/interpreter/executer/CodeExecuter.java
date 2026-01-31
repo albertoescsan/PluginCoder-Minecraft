@@ -380,13 +380,18 @@ public class CodeExecuter {
 		String text="";
 		String textToProcess="";
 		int parentesisCount=0;
-		for(Character c:instruction.toCharArray()) {
-			if(c.equals('('))parentesisCount++;
-			else if(c.equals(')'))parentesisCount--;
-			else if(!c.equals('+')||parentesisCount!=0) {
-				textToProcess+=String.valueOf(c);continue;
+		for(Character character:instruction.toCharArray()) {
+			if(character.equals('('))parentesisCount++;
+			else if(character.equals(')'))parentesisCount--;
+			else if(!character.equals('+')||parentesisCount!=0) {
+				textToProcess+=String.valueOf(character);continue;
 			}
 			if(mainPlugin.getColorTranslator().get(textToProcess)!=null)textToProcess= mainPlugin.getColorTranslator().get(textToProcess);
+			else if(textToProcess.matches("^#[A-Fa-f0-9]{6}$")){
+				String hexColor="§x";
+				for(Character hexChar:textToProcess.substring(1).toCharArray())hexColor+="§"+hexChar;
+				textToProcess=hexColor;
+			}
 			text=getStringFromTextVar(textToProcess,text,instruction,variables);
 			if(text==null)return Void.class;
 			textToProcess="";

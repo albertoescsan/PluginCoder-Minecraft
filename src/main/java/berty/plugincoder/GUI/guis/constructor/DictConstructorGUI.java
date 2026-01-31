@@ -121,7 +121,7 @@ public class DictConstructorGUI {
         }
        if(dictInstruction.endsWith(","))dictInstruction=dictInstruction.substring(0,dictInstruction.length()-1);
         dictInstruction+="}";
-       ItemStack sign=new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.OAK_SIGN));
+       ItemStack sign=new ItemStack(plugin.getCodeUtils().getVersionedMaterial("OAK_SIGN"));
        ItemMeta meta=sign.getItemMeta();
        meta.setDisplayName("§f"+PluginCoder.getCoderGUI().putTextColor(dictInstruction));
        sign.setItemMeta(meta);

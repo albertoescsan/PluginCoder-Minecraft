@@ -3,7 +3,7 @@ package berty.plugincoder.interpreter.listener;
 import java.util.HashMap;
 import java.util.Map;
 
-import berty.plugincoder.interpreter.classes.minigame.events.*;
+import berty.plugincoder.interpreter.classes.game.events.*;
 import berty.plugincoder.interpreter.plugin.Plugin;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

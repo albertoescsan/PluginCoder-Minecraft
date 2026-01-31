@@ -61,7 +61,7 @@ public class EventsGUI {
         meta.setDisplayName(ChatColor.AQUA+"onPlayerTeleport");
         playerTeleport.setItemMeta(meta);
         eventItems.put("onPlayerTeleport",playerTeleport);
-        ItemStack blockPlace=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.GRASS_BLOCK));
+        ItemStack blockPlace=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial("GRASS_BLOCK"));
         meta=blockPlace.getItemMeta();
         meta.setDisplayName(ChatColor.DARK_GREEN+"onBlockPlace");
         blockPlace.setItemMeta(meta);
@@ -69,8 +69,6 @@ public class EventsGUI {
         ItemStack blockBreak=new ItemStack(Material.IRON_PICKAXE);
         meta=blockBreak.getItemMeta();
         meta.setDisplayName(ChatColor.GRAY+"onBlockBreak");
-        AttributeModifier attackSpeedModifier = new AttributeModifier("attack_speed", 0.0, AttributeModifier.Operation.ADD_NUMBER);
-        meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, attackSpeedModifier);
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         blockBreak.setItemMeta(meta);
         eventItems.put("onBlockBreak",blockBreak);
@@ -81,7 +79,7 @@ public class EventsGUI {
         eventItems.put("onInventoryClick",inventoryClick);
         ItemStack playerChat=PluginCoder.getCoderGUI().getFunctionGUI().getInstructionItem("onPlayerChat");
         eventItems.put("onPlayerChat",playerChat);
-        ItemStack playerDie=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.SKELETON_SKULL),1,(short)3);
+        ItemStack playerDie=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial("SKELETON_SKULL"),1,(short)3);
         meta=playerDie.getItemMeta();
         meta.setDisplayName(ChatColor.GRAY+"onPlayerDie");
         playerDie.setItemMeta(meta);
@@ -91,7 +89,7 @@ public class EventsGUI {
     public void updateGUI() {
         events.clear();
         String eventsTitle= PluginCoder.getCoderGUI().getGuiText("eventsTitle").toUpperCase();
-        ItemStack add=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.ENDER_EYE));
+        ItemStack add=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial("ENDER_EYE"));
         ItemMeta meta=add.getItemMeta();
         String addEventTitle=PluginCoder.getCoderGUI().getGuiText("addEventTitle");
         meta.setDisplayName(ChatColor.AQUA+addEventTitle);
@@ -132,8 +130,8 @@ public class EventsGUI {
         int i=10;
         int invIndex=0;
         List<String> events=new ArrayList<>();
-        events.add("onPlayerJoin");events.add("onPlayerLeave");events.add("onPlayerChat");events.add("onPlayerClick");events.add("onPlayerMove");
-        events.add("onPlayerTeleport");events.add("onPlayerDie");events.add("onBlockPlace");events.add("onBlockBreak");events.add("onInventoryClick");
+        events.add("onPlayerJoin");events.add("onPlayerLeave");events.add("onPlayerClick");events.add("onPlayerMove");events.add("onPlayerTeleport");
+        events.add("onPlayerDie");events.add("onPlayerChat");events.add("onBlockPlace");events.add("onBlockBreak");events.add("onInventoryClick");
         //TODO añadir más eventos
         String eventsSelectTitle= PluginCoder.getCoderGUI().getGuiText("eventsSelectTitle").toUpperCase();
         eventsItemsGUI.add(Bukkit.createInventory(null,54, ChatColor.translateAlternateColorCodes('&',"&f&l"+eventsSelectTitle)));

@@ -30,7 +30,7 @@ public class ForParametersGUI {
     private void createInventory(){
         gui=Bukkit.createInventory(null,54," ");
         PluginCoder.getCoderGUI().createUpperLineInventory(gui,false);
-        ItemStack instructionItem=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.OAK_SIGN));
+        ItemStack instructionItem=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial("OAK_SIGN"));
         gui.setItem(4,instructionItem);
         ItemStack negro= mainPlugin.getVersionNumber()<13?
                 new ItemStack(Material.getMaterial("STAINED_GLASS_PANE"),1,(short)15):new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
@@ -52,11 +52,11 @@ public class ForParametersGUI {
         }
         PluginCoder.getCoderGUI().getExecutionWriterGUI().updateVariables();
         String[] params=instruction.replaceAll("^for\\s*\\((.*)\\)$","$1").split(":");
-        ItemStack varItem=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.MAP));
+        ItemStack varItem=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial("MAP"));
         ItemMeta meta=varItem.getItemMeta();
         if(params.length>=1&&!params[0].isEmpty()){
             meta.setDisplayName(ChatColor.WHITE+params[0]);
-            varItem.setType(mainPlugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP));
+            varItem.setType(mainPlugin.getCodeUtils().getVersionedMaterial("FILLED_MAP"));
             oldIteratorName=params[0];
         }else{
             meta.setDisplayName(ChatColor.WHITE+"");
@@ -64,20 +64,20 @@ public class ForParametersGUI {
         }
         varItem.setItemMeta(meta);
         gui.setItem(11,varItem);
-        ItemStack iterableItem=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.MAP));
+        ItemStack iterableItem=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial("MAP"));
         meta=iterableItem.getItemMeta();
         if(params.length>=2){
             meta.setDisplayName("§f"+PluginCoder.getCoderGUI().putTextColor(params[1]));
-            iterableItem.setType(mainPlugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP));
+            iterableItem.setType(mainPlugin.getCodeUtils().getVersionedMaterial("FILLED_MAP"));
             if(params[1].contains("->")||params[1].contains("<-"))iterableVarSelected=true;
         }else meta.setDisplayName(ChatColor.WHITE+"");
         iterableItem.setItemMeta(meta);
         gui.setItem(13,iterableItem);
-        ItemStack iteratorItem=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.MAP));
+        ItemStack iteratorItem=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial("MAP"));
         meta=iteratorItem.getItemMeta();
         if(params.length>=3){
             meta.setDisplayName("§f"+PluginCoder.getCoderGUI().putTextColor(params[2]));
-            iterableItem.setType(mainPlugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP));
+            iterableItem.setType(mainPlugin.getCodeUtils().getVersionedMaterial("FILLED_MAP"));
         }else{
             meta.setDisplayName(ChatColor.WHITE+"");
         }
@@ -87,11 +87,11 @@ public class ForParametersGUI {
         updateInstructionSign();
     }
     public void saveToForParametersGUI(String instruction,boolean closingInventoryWithoutReturning) {
-        ItemStack instructionItem=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.MAP));
+        ItemStack instructionItem=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial("MAP"));
         ItemMeta meta=instructionItem.getItemMeta();
         if(!instruction.isEmpty()){
             meta.setDisplayName("§f"+PluginCoder.getCoderGUI().putTextColor(instruction));
-            instructionItem.setType(mainPlugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP));
+            instructionItem.setType(mainPlugin.getCodeUtils().getVersionedMaterial("FILLED_MAP"));
         }else meta.setDisplayName(ChatColor.WHITE+"");
         instructionItem.setItemMeta(meta);
         gui.setItem(selectedSlot,instructionItem);
@@ -173,7 +173,7 @@ public class ForParametersGUI {
                iterable="";arrow=PluginCoder.getCoderGUI().getNextItem();
            }
            for(int i=0;i<2;i++){
-               ItemStack num=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP));
+               ItemStack num=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial("FILLED_MAP"));
                meta=num.getItemMeta();
                if(!iterable.isEmpty()){
                    meta.setDisplayName("§f"+PluginCoder.getCoderGUI().putTextColor(rangeNums[i]));
@@ -214,7 +214,7 @@ public class ForParametersGUI {
         iterableVarSelected=true;
         List<ItemStack> iterableItems=new ArrayList<>();
         for(String iterable:iterables.stream().sorted().collect(Collectors.toList())){
-            ItemStack iterableItem=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP));
+            ItemStack iterableItem=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial("FILLED_MAP"));
             ItemMeta meta=iterableItem.getItemMeta();
             meta.setDisplayName(ChatColor.WHITE+iterable);
             iterableItem.setItemMeta(meta);

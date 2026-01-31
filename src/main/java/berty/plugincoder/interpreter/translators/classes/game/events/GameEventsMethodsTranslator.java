@@ -1,6 +1,6 @@
-package berty.plugincoder.interpreter.translators.classes.minigame.events;
+package berty.plugincoder.interpreter.translators.classes.game.events;
 
-import berty.plugincoder.interpreter.classes.minigame.events.*;
+import berty.plugincoder.interpreter.classes.game.events.*;
 import berty.plugincoder.interpreter.objects.PluginMethod;
 
 import java.util.ArrayList;

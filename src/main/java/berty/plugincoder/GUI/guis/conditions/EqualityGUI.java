@@ -55,9 +55,9 @@ public class EqualityGUI {
     public void updateInventoryLanguage(){
         gui.setItem(0,PluginCoder.getCoderGUI().getReturnItem());
         gui.setItem(8,PluginCoder.getCoderGUI().getHomeItem());
-        ItemStack instructionItem=new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.OAK_SIGN));
+        ItemStack instructionItem=new ItemStack(plugin.getCodeUtils().getVersionedMaterial("OAK_SIGN"));
         gui.setItem(4,instructionItem);
-        ItemStack text=new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.WRITABLE_BOOK));
+        ItemStack text=new ItemStack(plugin.getCodeUtils().getVersionedMaterial("WRITABLE_BOOK"));
         ItemMeta meta=text.getItemMeta();
         meta.setDisplayName(ChatColor.RED+PluginCoder.getCoderGUI().getGuiText("text"));
         text.setItemMeta(meta);
@@ -108,11 +108,11 @@ public class EqualityGUI {
         if(element2.isEmpty())element2="null";
         operator=operator.trim();
         if(operator.isEmpty())operator="=";
-        ItemStack element1Item=new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP));
+        ItemStack element1Item=new ItemStack(plugin.getCodeUtils().getVersionedMaterial("FILLED_MAP"));
         ItemMeta meta=element1Item.getItemMeta();
         meta.setDisplayName("§f"+PluginCoder.getCoderGUI().putTextColor(element1));
         element1Item.setItemMeta(meta);
-        ItemStack element2Item=new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP));
+        ItemStack element2Item=new ItemStack(plugin.getCodeUtils().getVersionedMaterial("FILLED_MAP"));
         meta=element2Item.getItemMeta();
         meta.setDisplayName("§f"+PluginCoder.getCoderGUI().putTextColor(element2));
         element2Item.setItemMeta(meta);
@@ -169,7 +169,7 @@ public class EqualityGUI {
     public void saveToEqualityGUI(String instruction,boolean closingInventoryWithoutReturning){
         updateGUIWithPreviousInstruction();
         if(instruction.trim().isEmpty())instruction="null";
-        ItemStack instructionItem=new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP));
+        ItemStack instructionItem=new ItemStack(plugin.getCodeUtils().getVersionedMaterial("FILLED_MAP"));
         ItemMeta meta=instructionItem.getItemMeta();
         meta.setDisplayName("§f"+PluginCoder.getCoderGUI().putTextColor(instruction));
         meta.addEnchant(Enchantment.values()[0],1,false);
@@ -184,7 +184,7 @@ public class EqualityGUI {
         renderedInstructions.set(renderedInstructions.size()-1,ChatColor.stripColor(gui.getItem(4).getItemMeta().getDisplayName()).trim());
     }
     public void updateEqualityInstruction(){
-        ItemStack instructionItem=new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.OAK_SIGN));
+        ItemStack instructionItem=new ItemStack(plugin.getCodeUtils().getVersionedMaterial("OAK_SIGN"));
         String element1=ChatColor.stripColor(gui.getItem(11).getItemMeta().getDisplayName()).trim();
         String element2=ChatColor.stripColor(gui.getItem(15).getItemMeta().getDisplayName()).trim();
         String operator=ChatColor.stripColor(gui.getItem(13).getItemMeta().getDisplayName()).trim();

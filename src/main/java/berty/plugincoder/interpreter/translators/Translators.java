@@ -1,13 +1,13 @@
 package berty.plugincoder.interpreter.translators;
 
 import berty.plugincoder.interpreter.classes.scoreboard.Scoreboard;
-import berty.plugincoder.interpreter.classes.minigame.game.Game;
-import berty.plugincoder.interpreter.classes.minigame.game.GameTemplate;
+import berty.plugincoder.interpreter.classes.game.game.Game;
+import berty.plugincoder.interpreter.classes.game.game.GameTemplate;
 import berty.plugincoder.interpreter.objects.PluginMethod;
 import org.bukkit.Location;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import berty.plugincoder.interpreter.translators.classes.minigame.MinigameMethodsTranslator;
+import berty.plugincoder.interpreter.translators.classes.game.MinigameMethodsTranslator;
 import berty.plugincoder.interpreter.translators.classes.scoreboard.ScoreboardMethodsTranslator;
 import berty.plugincoder.interpreter.translators.container.ListMethodsTranslator;
 import berty.plugincoder.interpreter.translators.container.MapMethodsTranslator;

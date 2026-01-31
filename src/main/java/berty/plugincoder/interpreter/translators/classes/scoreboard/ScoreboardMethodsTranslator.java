@@ -12,7 +12,7 @@ public class ScoreboardMethodsTranslator {
         List<String> scoreboardClass= Arrays.asList(Scoreboard.class.getTypeName());
         PluginMethod.getMethod("clear").getTranslatedMethodClasses().get("clear").add(Scoreboard.class.getTypeName());
         PluginMethod line=new PluginMethod("line()");
-        line.getTranslatedMethodClasses().put("addLine",scoreboardClass);
+        line.getTranslatedMethodClasses().put("setLine",scoreboardClass);
         PluginMethod title=new PluginMethod("title");
         title.getTranslatedMethodClasses().put("getTitle",scoreboardClass);
         PluginMethod titleP=new PluginMethod("title()");

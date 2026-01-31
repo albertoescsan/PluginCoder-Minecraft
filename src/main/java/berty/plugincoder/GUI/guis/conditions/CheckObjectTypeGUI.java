@@ -43,7 +43,7 @@ public class CheckObjectTypeGUI {
     private void createInventory(){
         gui= Bukkit.createInventory(null,45," ");
         PluginCoder.getCoderGUI().createUpperLineInventory(gui,false);
-        ItemStack instructionItem=new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.OAK_SIGN));
+        ItemStack instructionItem=new ItemStack(plugin.getCodeUtils().getVersionedMaterial("OAK_SIGN"));
         ItemMeta meta=instructionItem.getItemMeta();
         meta.setDisplayName(ChatColor.WHITE+"");
         instructionItem.setItemMeta(meta);
@@ -138,7 +138,7 @@ public class CheckObjectTypeGUI {
     public void updateInstructionItem(){
         String objectInstruction=ChatColor.stripColor(gui.getItem(10).getItemMeta().getDisplayName()).trim();
         String objectTypeName=ChatColor.stripColor(gui.getItem(16).getItemMeta().getDisplayName()).trim();
-        ItemStack instructionItem=new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.OAK_SIGN));
+        ItemStack instructionItem=new ItemStack(plugin.getCodeUtils().getVersionedMaterial("OAK_SIGN"));
         ItemMeta meta=instructionItem.getItemMeta();
         meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',"&f"+objectInstruction+" is "+objectTypeName));
         instructionItem.setItemMeta(meta);

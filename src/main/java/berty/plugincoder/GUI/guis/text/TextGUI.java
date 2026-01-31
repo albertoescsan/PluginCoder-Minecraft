@@ -28,7 +28,7 @@ public class TextGUI {
     private List<Integer> lastIndex=new ArrayList<>();
     public TextGUI(PluginCoder plugin){
         this.plugin=plugin;
-        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> createInventory(), 2);
+        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> createInventory(), 3);
     }
 
     private void createInventory() {
@@ -53,7 +53,7 @@ public class TextGUI {
             gui.setItem(28+i,negro);
             gui.setItem(28+9+i,negro);
         }
-        ItemStack instructionItem=new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.OAK_SIGN));
+        ItemStack instructionItem=new ItemStack(plugin.getCodeUtils().getVersionedMaterial("OAK_SIGN"));
         gui.setItem(4,instructionItem);
         ItemStack openParentesis=PluginCoder.getCoderGUI().getPlayerHead("http://textures.minecraft.net/texture/674153bb6a3fa8979a889f99aa0fc84ba9f427ff0d8e487f76fa6c8831d18e9");
         meta=openParentesis.getItemMeta();
@@ -168,9 +168,8 @@ public class TextGUI {
             PluginCoder.getCoderGUI().getEqualityGUI().saveToEqualityGUI(newInstruction,closingInventoryWithoutReturning);
         }else if(inv.equals(PluginCoder.getCoderGUI().getParametersGUI().getGUI())){
             PluginCoder.getCoderGUI().getParametersGUI().saveToParametersGUI(newInstruction,closingInventoryWithoutReturning);
-        }else{
-            //TODO añadir más inventarios
         }
+        //TODO añadir más inventarios
         return true;
     }
     public void startColorTask(){

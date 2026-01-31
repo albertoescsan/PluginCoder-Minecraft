@@ -41,7 +41,7 @@ public class CommandsGUI{
     private void renderCommand(Command command,int index,ItemStack flecha,boolean renderBoth){
         if(renderBoth&&index!=0&&index%4==0) addNewInventory();
         if(renderBoth||isEditingPrompt){
-            ItemStack prompt=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP));
+            ItemStack prompt=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial("FILLED_MAP"));
             ItemMeta meta=prompt.getItemMeta();
             String promptTitle= "/"+command.getPrompt();
             for(String promptVar:command.getCommandVars().keySet()){
@@ -70,7 +70,7 @@ public class CommandsGUI{
         meta.setDisplayName(ChatColor.WHITE+"");
         negro.setItemMeta(meta);
         for(int i=0;i<4;i++)for(int y=0;y<4;y++)inventory.setItem(10+i*9+y*2,negro);
-        ItemStack addCommand=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.MAP));
+        ItemStack addCommand=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial("MAP"));
         meta=addCommand.getItemMeta();
         meta.setDisplayName(ChatColor.YELLOW+PluginCoder.getCoderGUI().getGuiText("addCommand"));
         addCommand.setItemMeta(meta);

@@ -38,7 +38,7 @@ public class ExecutionWriterGUI {
     public void createInventory(){
         gui= Bukkit.createInventory(null,54," ");
         PluginCoder.getCoderGUI().createUpperLineInventory(gui,true);
-        ItemStack instructionItem=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.OAK_SIGN));
+        ItemStack instructionItem=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial("OAK_SIGN"));
         gui.setItem(4,instructionItem);
         String deleteTitle=PluginCoder.getCoderGUI().getGuiText("deleteProperty");
         ItemStack delete=new ItemStack(Material.LAVA_BUCKET);

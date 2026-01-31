@@ -242,30 +242,41 @@ public class CodeUtils {
             else return methods.stream().filter(me->me.endsWith("()")).findFirst().get();
         }else return methods.get(0);
     }
-    public Material getVersionedMaterial(Material material){
-        if(material==Material.MAP){
-            if(pluginCoder.getVersionNumber()<13)material=Material.getMaterial("EMPTY_MAP");
-        }else if(material==Material.FILLED_MAP){
-            if(pluginCoder.getVersionNumber()<13)material=Material.getMaterial("MAP");
-        }else if(material==Material.OAK_SIGN){
-            if(pluginCoder.getVersionNumber()<14)material=Material.getMaterial("SIGN");
-        }else if(material==Material.WRITABLE_BOOK){
-            if(pluginCoder.getVersionNumber()<14)material=Material.getMaterial("BOOK_AND_QUILL");
-        }else if(material==Material.CRAFTING_TABLE){
-            if(pluginCoder.getVersionNumber()<13)material=Material.getMaterial("WORKBENCH");
-        }else if(material==Material.WHITE_STAINED_GLASS_PANE){
-            if(pluginCoder.getVersionNumber()<13)material=Material.getMaterial("STAINED_GLASS_PANE");
-        }else if(material==Material.GRASS_BLOCK){
-            if(pluginCoder.getVersionNumber()<13)material=Material.getMaterial("GRASS");
-        }else if(material==Material.SKELETON_SKULL){
-            if(pluginCoder.getVersionNumber()<13)material=Material.getMaterial("SKULL_ITEM");
-        }else if(material==Material.ENDER_EYE){
-            if(pluginCoder.getVersionNumber()<13)material=Material.getMaterial("EYE_OF_ENDER");
-        }else if(material==Material.COMMAND_BLOCK){
-            if(pluginCoder.getVersionNumber()<13)material=Material.getMaterial("COMMAND");
+    public Material getVersionedMaterial(String material) {
+        if("MAP".equals(material)) {
+            if(pluginCoder.getVersionNumber() < 13)return Material.getMaterial("EMPTY_MAP");
+            return Material.MAP;
+        }else if("FILLED_MAP".equals(material)) {
+            if (pluginCoder.getVersionNumber() < 13)return Material.getMaterial("MAP");
+            return Material.FILLED_MAP;
+        }else if("OAK_SIGN".equals(material)) {
+            if (pluginCoder.getVersionNumber() < 14)return Material.getMaterial("SIGN");
+            return Material.OAK_SIGN;
+        }else if ("WRITABLE_BOOK".equals(material)) {
+            if(pluginCoder.getVersionNumber() < 14)return Material.getMaterial("BOOK_AND_QUILL");
+            return Material.WRITABLE_BOOK;
+        }else if("CRAFTING_TABLE".equals(material)) {
+            if (pluginCoder.getVersionNumber() < 13)return Material.getMaterial("WORKBENCH");
+            return Material.CRAFTING_TABLE;
+        }else if ("WHITE_STAINED_GLASS_PANE".equals(material)) {
+            if(pluginCoder.getVersionNumber() < 13)return Material.getMaterial("STAINED_GLASS_PANE");
+            return Material.WHITE_STAINED_GLASS_PANE;
+        }else if ("GRASS_BLOCK".equals(material)) {
+            if(pluginCoder.getVersionNumber() < 13)return Material.getMaterial("GRASS");
+            return Material.GRASS_BLOCK;
+        }else if("SKELETON_SKULL".equals(material)) {
+            if(pluginCoder.getVersionNumber() < 13)return Material.getMaterial("SKULL_ITEM");
+            return Material.SKELETON_SKULL;
+        }else if("ENDER_EYE".equals(material)) {
+            if(pluginCoder.getVersionNumber() < 13)return Material.getMaterial("EYE_OF_ENDER");
+            return Material.ENDER_EYE;
+        }else if("COMMAND_BLOCK".equals(material)) {
+            if(pluginCoder.getVersionNumber() < 13)return Material.getMaterial("COMMAND");
+            return Material.COMMAND_BLOCK;
         }
-        return material;
+        return Material.getMaterial(material);
     }
+
     public String checkCustomType(String type){
         Class classType;
         try{

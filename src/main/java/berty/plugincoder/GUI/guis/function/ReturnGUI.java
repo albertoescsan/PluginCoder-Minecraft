@@ -27,8 +27,8 @@ public class ReturnGUI {
     public void updateGUI(String instruction){
         this.instruction=instruction;
         String valueInstruction=instruction.replaceAll("^return\\s*(.*)","$1");
-        ItemStack executeItem=!instruction.isEmpty()?(new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP)))
-                :(new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.MAP)));
+        ItemStack executeItem=!instruction.isEmpty()?(new ItemStack(plugin.getCodeUtils().getVersionedMaterial("FILLED_MAP")))
+                :(new ItemStack(plugin.getCodeUtils().getVersionedMaterial("MAP")));
         ItemMeta meta=executeItem.getItemMeta();
         meta.setDisplayName("§f"+PluginCoder.getCoderGUI().putTextColor(valueInstruction));
         executeItem.setItemMeta(meta);

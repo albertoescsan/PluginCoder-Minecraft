@@ -76,7 +76,7 @@ public class MathGUI {
     meta.setDisplayName(ChatColor.WHITE+"");
     nextItem.setItemMeta(meta);
     gui.setItem(18,backItem);gui.setItem(26,nextItem);
-    ItemStack instructionItem=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.OAK_SIGN));
+    ItemStack instructionItem=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial("OAK_SIGN"));
     gui.setItem(4,instructionItem);
     updateInventoryLanguage();
     }
@@ -125,8 +125,8 @@ public class MathGUI {
         else if(operation.equals("("))operationItem=gui.getItem(42);
         else if(operation.equals(")"))operationItem=gui.getItem(43);
         else{
-            operationItem=!operation.isEmpty()?(new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP)))
-                    :(new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.MAP)));
+            operationItem=!operation.isEmpty()?(new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial("FILLED_MAP")))
+                    :(new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial("MAP")));
             ItemMeta meta=operationItem.getItemMeta();
             meta.setDisplayName("§f"+PluginCoder.getCoderGUI().putTextColor(operation));
             operationItem.setItemMeta(meta);

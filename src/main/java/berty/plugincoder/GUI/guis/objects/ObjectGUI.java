@@ -48,24 +48,24 @@ public class ObjectGUI {
         gui.setItem(8,PluginCoder.getCoderGUI().getHomeItem());
         gui.setItem(45,PluginCoder.getCoderGUI().getBackItem());
         gui.setItem(53,PluginCoder.getCoderGUI().getNextItem());
-        ItemStack properties=new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP));
+        ItemStack properties=new ItemStack(plugin.getCodeUtils().getVersionedMaterial("FILLED_MAP"));
         ItemMeta meta=properties.getItemMeta();
         meta.setDisplayName(ChatColor.YELLOW+PluginCoder.getCoderGUI().getGuiText("properties"));
         properties.setItemMeta(meta);
         gui.setItem(11,properties);
-        ItemStack functions=new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.WRITABLE_BOOK));
+        ItemStack functions=new ItemStack(plugin.getCodeUtils().getVersionedMaterial("WRITABLE_BOOK"));
         meta=functions.getItemMeta();
         meta.setDisplayName(ChatColor.DARK_RED+PluginCoder.getCoderGUI().getGuiText("functions"));
         functions.setItemMeta(meta);
         gui.setItem(13,functions);
-        ItemStack constructors=new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.CRAFTING_TABLE));
+        ItemStack constructors=new ItemStack(plugin.getCodeUtils().getVersionedMaterial("CRAFTING_TABLE"));
         meta=constructors.getItemMeta();
         meta.setDisplayName(ChatColor.GOLD+PluginCoder.getCoderGUI().getGuiText("constructors"));
         constructors.setItemMeta(meta);
         gui.setItem(15,constructors);
     }
     public void updateGUI(PluginObject object){
-        ItemStack parent=new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.CHEST));
+        ItemStack parent=new ItemStack(Material.CHEST);
         ItemMeta meta=parent.getItemMeta();
         String heritage=object.getParent()!=null?ChatColor.GOLD+PluginCoder.getCoderGUI().getGuiText("objectParent").replace("%object%",ChatColor.YELLOW+object.getParent().getName()):
                 ChatColor.RED+PluginCoder.getCoderGUI().getGuiText("noObjectParent");
@@ -90,7 +90,7 @@ public class ObjectGUI {
         renderedSlot=11;renderedPage=0;
         deletingItem=false;
         renderedItems.clear();
-        ItemStack addProperty=new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP));
+        ItemStack addProperty=new ItemStack(plugin.getCodeUtils().getVersionedMaterial("FILLED_MAP"));
         ItemMeta meta=addProperty.getItemMeta();
         meta.setDisplayName(ChatColor.YELLOW+PluginCoder.getCoderGUI().getGuiText("addProperty"));
         addProperty.setItemMeta(meta);
@@ -110,7 +110,7 @@ public class ObjectGUI {
     }
 
     public ItemStack getPropertyItem(String property,String equality) {
-        ItemStack propertyItem=new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP));
+        ItemStack propertyItem=new ItemStack(plugin.getCodeUtils().getVersionedMaterial("FILLED_MAP"));
         ItemMeta meta=propertyItem.getItemMeta();
         meta.setDisplayName(ChatColor.YELLOW+property);
         if(equality!=null&&!equality.isEmpty()){
@@ -127,7 +127,7 @@ public class ObjectGUI {
         renderedSlot=13;renderedPage=0;
         renderedItems.clear();
         deletingItem=false;
-        ItemStack addFunction=new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.WRITABLE_BOOK));
+        ItemStack addFunction=new ItemStack(plugin.getCodeUtils().getVersionedMaterial("WRITABLE_BOOK"));
         ItemMeta meta=addFunction.getItemMeta();
         meta.setDisplayName(ChatColor.DARK_RED+PluginCoder.getCoderGUI().getGuiText("addFunction"));
         addFunction.setItemMeta(meta);
@@ -148,7 +148,7 @@ public class ObjectGUI {
         renderedSlot=15;renderedPage=0;
         renderedItems.clear();
         deletingItem=false;
-        ItemStack addConstructor=new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.CRAFTING_TABLE));
+        ItemStack addConstructor=new ItemStack(plugin.getCodeUtils().getVersionedMaterial("CRAFTING_TABLE"));
         ItemMeta meta=addConstructor.getItemMeta();
         meta.setDisplayName(ChatColor.GOLD+PluginCoder.getCoderGUI().getGuiText("addConstructor"));
         addConstructor.setItemMeta(meta);
@@ -166,7 +166,7 @@ public class ObjectGUI {
     }
 
     private ItemStack getConstructorItem(String constructor) {
-        ItemStack constructorItem=new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.CRAFTING_TABLE));
+        ItemStack constructorItem=new ItemStack(plugin.getCodeUtils().getVersionedMaterial("CRAFTING_TABLE"));
         String constructorName=constructor.replaceAll("^"+object.getName()+"\\(([^(]*)\\)(.+)$",object.getName()+"($1)");
         if(constructorName.equals(constructor))constructorName=object.getName();
         constructorItem=PluginCoder.getCoderGUI().getFunctionItem(constructor,constructorItem,ChatColor.GOLD+constructorName);

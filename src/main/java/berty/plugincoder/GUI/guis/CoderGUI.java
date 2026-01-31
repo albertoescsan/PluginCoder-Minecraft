@@ -22,15 +22,16 @@ import berty.plugincoder.GUI.guis.parameters.ParametersGUI;
 import berty.plugincoder.GUI.guis.plugins.PluginsGUI;
 import berty.plugincoder.GUI.guis.text.TextColorGUI;
 import berty.plugincoder.GUI.guis.text.TextGUI;
+import berty.plugincoder.GUI.guis.text.TextHexColorGUI;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
-import org.apache.commons.codec.binary.Base64;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import berty.plugincoder.main.PluginCoder;
@@ -40,6 +41,7 @@ import org.bukkit.profile.PlayerTextures;
 
 import java.lang.reflect.Field;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.function.Function;
 
@@ -81,6 +83,7 @@ public class CoderGUI {
 	private CommandPromptGUI commandPromptGUI;
 	private TextGUI textGUI;
 	private TextColorGUI textColorGUI;
+	private TextHexColorGUI textHexColorGUI;
 	private ParametersGUI parametersGUI;
 	private ForParametersGUI forParametersGUI;
 	private FunctionParametersGUI functionParametersGUI;
@@ -98,40 +101,41 @@ public class CoderGUI {
 		return instructionsGUI;
 	}
 
-	public CoderGUI(PluginCoder plugin) {
-		this.mainPlugin =plugin;
-		pluginsGUI=new PluginsGUI(plugin);
-		eventsGUI=new EventsGUI(plugin);
-		objectsGUI=new ObjectsGUI(plugin);
-		objectGUI=new ObjectGUI(plugin);
-		funcionGUI=new FunctionGUI(plugin);
-		instructionsGUI=new InstructionsGUI(plugin);
-		variableGUI=new VariableGUI(plugin);
-		executionWriterGUI=new ExecutionWriterGUI(plugin);
-		returnGUI=new ReturnGUI(plugin);
-		setValueGUI=new SetValueGUI(plugin);
-		mathGUI=new MathGUI(plugin);
-		numberGUI=new NumberGUI(plugin);
-		conditionsGUI=new ConditionsGUI(plugin);
-		checkObjectTypeGUI=new CheckObjectTypeGUI(plugin);
-		equalityGUI=new EqualityGUI(plugin);
-		commandsGUI=new CommandsGUI(plugin);
-		commandPromptGUI=new CommandPromptGUI(plugin);
-		textColorGUI=new TextColorGUI(plugin);
-		textGUI=new TextGUI(plugin);
-		parametersGUI=new ParametersGUI(plugin);
-		forParametersGUI=new ForParametersGUI(plugin);
-		functionParametersGUI= new FunctionParametersGUI(plugin);
-		constructorsGUI=new ConstructorsGUI(plugin);
-		objectConstructorsGUI=new ObjectConstructorsGUI(plugin);
-		listConstructorGUI=new ListConstructorGUI(plugin);
-		dictConstructorGUI=new DictConstructorGUI(plugin);
-		Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+	public CoderGUI(PluginCoder mainPlugin) {
+		this.mainPlugin =mainPlugin;
+		pluginsGUI=new PluginsGUI(mainPlugin);
+		eventsGUI=new EventsGUI(mainPlugin);
+		objectsGUI=new ObjectsGUI(mainPlugin);
+		objectGUI=new ObjectGUI(mainPlugin);
+		funcionGUI=new FunctionGUI(mainPlugin);
+		instructionsGUI=new InstructionsGUI(mainPlugin);
+		variableGUI=new VariableGUI(mainPlugin);
+		executionWriterGUI=new ExecutionWriterGUI(mainPlugin);
+		returnGUI=new ReturnGUI(mainPlugin);
+		setValueGUI=new SetValueGUI(mainPlugin);
+		mathGUI=new MathGUI(mainPlugin);
+		numberGUI=new NumberGUI(mainPlugin);
+		conditionsGUI=new ConditionsGUI(mainPlugin);
+		checkObjectTypeGUI=new CheckObjectTypeGUI(mainPlugin);
+		equalityGUI=new EqualityGUI(mainPlugin);
+		commandsGUI=new CommandsGUI(mainPlugin);
+		commandPromptGUI=new CommandPromptGUI(mainPlugin);
+		textColorGUI=new TextColorGUI(mainPlugin);
+		textGUI=new TextGUI(mainPlugin);
+		parametersGUI=new ParametersGUI(mainPlugin);
+		forParametersGUI=new ForParametersGUI(mainPlugin);
+		functionParametersGUI= new FunctionParametersGUI(mainPlugin);
+		constructorsGUI=new ConstructorsGUI(mainPlugin);
+		objectConstructorsGUI=new ObjectConstructorsGUI(mainPlugin);
+		listConstructorGUI=new ListConstructorGUI(mainPlugin);
+		dictConstructorGUI=new DictConstructorGUI(mainPlugin);
+		if(mainPlugin.getVersionNumber()>=16)textHexColorGUI=new TextHexColorGUI(mainPlugin);
+		Bukkit.getScheduler().scheduleSyncDelayedTask(mainPlugin, () -> {
 			updateHomeItem();updateReturnItem();updateBackItem();updateNextItem();
 		}, 1);
 		//si da problemas cambiar el retardo
-		Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> createMainInventory(), 2);
-		Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> createLanguageInventory(), 2);
+		Bukkit.getScheduler().scheduleSyncDelayedTask(mainPlugin, () -> createMainInventory(), 2);
+		Bukkit.getScheduler().scheduleSyncDelayedTask(mainPlugin, () -> createLanguageInventory(), 2);
 
 	}
 	public void createMainInventory() {
@@ -143,7 +147,7 @@ public class CoderGUI {
 		plugins.setItemMeta(meta);
 		updatePluginItem(mainPlugin.getSelectedPlugin().getName());
 		String commandTitle=getGuiText("commandsTitle");
-		ItemStack commands=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.COMMAND_BLOCK));
+		ItemStack commands=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial("COMMAND_BLOCK"));
 		meta=commands.getItemMeta();
 		meta.setDisplayName(ChatColor.RED+commandTitle);
 		commands.setItemMeta(meta);
@@ -152,7 +156,7 @@ public class CoderGUI {
 		String objectsTitle=getGuiText("objectsTitle");
 		meta.setDisplayName(ChatColor.GOLD+objectsTitle);
 		objects.setItemMeta(meta);
-		ItemStack listener=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.ENDER_EYE));
+		ItemStack listener=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial("ENDER_EYE"));
 		meta=listener.getItemMeta();
 		String eventsTitle=getGuiText("eventsTitle");
 		meta.setDisplayName(ChatColor.AQUA+eventsTitle);
@@ -163,12 +167,12 @@ public class CoderGUI {
 		meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',"&3"+languageTitle));
 		languageItem.setItemMeta(meta);
 		String onEnableTitle=getGuiText("onEnableTitle");
-		ItemStack onEnable=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.WRITABLE_BOOK));
+		ItemStack onEnable=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial("WRITABLE_BOOK"));
 		meta=onEnable.getItemMeta();
 		meta.setDisplayName(ChatColor.GREEN+onEnableTitle);
 		onEnable.setItemMeta(meta);
 		String onDisableTitle=getGuiText("onDisableTitle");
-		ItemStack onDisable=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.WRITABLE_BOOK));
+		ItemStack onDisable=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial("WRITABLE_BOOK"));
 		meta=onDisable.getItemMeta();
 		meta.setDisplayName(ChatColor.DARK_RED+onDisableTitle);
 		onDisable.setItemMeta(meta);
@@ -281,31 +285,28 @@ public class CoderGUI {
 		if(mainPlugin.getVersionNumber()<17){//codigo para versiones inferiores a 1.17
 			//TODO funciona para versiones inferiores a 1.13, pero hay que comprobar que funcione para 1.16
 			ItemMeta headMeta=head.getItemMeta();
-			if (url != null && !url.isEmpty()) {
-				GameProfile profile = new GameProfile(UUID.randomUUID(), "PlayerHead");
-				byte[] encodedData = Base64.encodeBase64(String.format("{textures:{SKIN:{url:\"%s\"}}}", url).getBytes());
-				profile.getProperties().put("textures", new Property("textures", new String(encodedData)));
-				try {
-					Field profileField = headMeta.getClass().getDeclaredField("profile");
-					profileField.setAccessible(true);
-					profileField.set(headMeta, profile);
-				} catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException e) {
-					e.printStackTrace();
-				}
-			}
+			if (url == null || url.isEmpty())return head;
+			GameProfile profile = new GameProfile(UUID.randomUUID(), "PlayerHead");
+			byte[] encodedData = Base64.getEncoder().encode(String.format("{textures:{SKIN:{url:\"%s\"}}}", url).getBytes());
+			profile.getProperties().put("textures", new Property("textures", new String(encodedData)));
+			try {
+				Field profileField = headMeta.getClass().getDeclaredField("profile");
+				profileField.setAccessible(true);
+				profileField.set(headMeta, profile);
+			} catch (Exception e) {e.printStackTrace();}
 			head.setItemMeta(headMeta);
-		}else{//codigo para versiones superiores a 1.17
-			SkullMeta skullMeta = (SkullMeta) head.getItemMeta();
-			PlayerProfile profile =  Bukkit.createPlayerProfile(UUID.randomUUID(), "PlayerHead");
-			PlayerTextures textures = profile.getTextures();
-			try{
-				URL urlLink = new URL(url);
-				textures.setSkin(urlLink);
-				profile.setTextures(textures);
-			}catch (Exception e){e.printStackTrace();}
-			skullMeta.setOwnerProfile(profile);
-			head.setItemMeta(skullMeta);
+			return head;
 		}
+		//codigo para versiones superiores a 1.17
+		SkullMeta skullMeta = (SkullMeta) head.getItemMeta();
+		PlayerProfile profile =  Bukkit.createPlayerProfile(UUID.randomUUID(), "PlayerHead");
+		PlayerTextures textures = profile.getTextures();
+		try{
+			textures.setSkin(new URL(url));
+			profile.setTextures(textures);
+		}catch (Exception e){e.printStackTrace();}
+		skullMeta.setOwnerProfile(profile);
+		head.setItemMeta(skullMeta);
 		return head;
 	}
 	public String getGuiText(String textId){
@@ -347,16 +348,10 @@ public class CoderGUI {
 	}
 	public String putTextColor(String text){
 		for(String color: mainPlugin.getColorTranslator().keySet()){
-			if(color.equals("BOLD")||color.equals("ITALIC")||color.equals("UNDERLINE")||color.equals("STRIKE")){
-				text=text.replaceAll("^"+color+"\\+","§f"+ mainPlugin.getColorTranslator().get(color)+color+"§f+");
-				text=text.replaceAll("([+,(=])"+color+"\\+","$1§f"+ mainPlugin.getColorTranslator().get(color)+color+"§f+");
-			}else if(color.equals("RESET")){
-				text=text.replaceAll("^"+color+"\\+","§f"+color+"§f+");
-				text=text.replaceAll("([+,(=])"+color+"\\+","§1§f"+color+"§f+");
-			}else{
-				text=text.replaceAll("^"+color+"\\+", mainPlugin.getColorTranslator().get(color)+color+"§f+");
-				text=text.replaceAll("([+,(=])"+color+"\\+","$1"+ mainPlugin.getColorTranslator().get(color)+color+"§f+");
-			}
+			String colorTranslation=color.equals("RESET")?"§f":mainPlugin.getColorTranslator().get(color);
+			if(!colorTranslation.matches("^§[a-f0-9]$"))colorTranslation="§f"+colorTranslation;
+			text=text.replaceAll("^"+color+"\\+",colorTranslation+color+"§f+");
+			text=text.replaceAll("([+,(=])"+color+"\\+","$1"+ colorTranslation+color+"§f+");
 		}
 		text=getColoredValueText(text,"true","§a");
 		text=getColoredValueText(text,"false","§c");
@@ -452,6 +447,7 @@ public class CoderGUI {
 		ItemStack item=baseItem.clone();
 		ItemMeta meta=item.getItemMeta();
 		meta.setDisplayName(functionName);
+		meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 		item.setItemMeta(meta);
 		item=addInstructionsToFunctionItem(function,item);
 		return item;
@@ -648,6 +644,9 @@ public class CoderGUI {
 		return textColorGUI;
 	}
 
+	public TextHexColorGUI getTextHexColorGUI() {
+		return textHexColorGUI;
+	}
 	public ParametersGUI getParametersGUI() {
 		return parametersGUI;
 	}

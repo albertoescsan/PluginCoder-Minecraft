@@ -1,9 +1,9 @@
-package berty.plugincoder.interpreter.classes.minigame.game.team;
+package berty.plugincoder.interpreter.classes.game.game.team;
 
 
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
-import berty.plugincoder.interpreter.classes.minigame.game.Game;
+import berty.plugincoder.interpreter.classes.game.game.Game;
 
 import java.util.ArrayList;
 import java.util.List;

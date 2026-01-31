@@ -655,7 +655,7 @@ public class PluginGuiListener implements Listener {
 				}
 				else {
 					PluginCoder.getCoderGUI().getFunctionGUI().updateFunctionIndexes(event.getInventory(),event.getSlot());
-					if(event.getCurrentItem().getType().equals(mainPlugin.getCodeUtils().getVersionedMaterial(Material.WRITABLE_BOOK))){
+					if(event.getCurrentItem().getType().equals(mainPlugin.getCodeUtils().getVersionedMaterial("WRITABLE_BOOK"))){
 						PluginCoder.getCoderGUI().getFunctionGUI().saveChanges(false);
 						PluginCoder.getCoderGUI().getFunctionGUI().updateGUIWithNewFunction(instructionIndex,PluginCoder.getCoderGUI().getFunctionGUI().getInitialFunctionContainer());
 						player.openInventory(PluginCoder.getCoderGUI().getFunctionGUI().getGUI().get(0));
@@ -1250,7 +1250,7 @@ public class PluginGuiListener implements Listener {
 				PluginCoder.getCoderGUI().buttonSound(player);
 			}else if(event.getSlot()==2||event.getSlot()==6){
 				if(ChatColor.stripColor(event.getInventory().getItem(event.getSlot()+9).getItemMeta().getDisplayName()).trim().isEmpty())return;
-				ItemStack instructionItem=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP));
+				ItemStack instructionItem=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial("FILLED_MAP"));
 				ItemMeta meta=instructionItem.getItemMeta();
 				meta.setDisplayName(ChatColor.DARK_RED+"null");
 				if(PluginCoder.getCoderGUI().getEqualityGUI().getSelectedInstructionSlot()-9==event.getSlot()){

@@ -41,7 +41,7 @@ public class ListConstructorGUI {
         meta.setDisplayName(ChatColor.GRAY+PluginCoder.getCoderGUI().getGuiText("deleteElement"));
         delete.setItemMeta(meta);
         gui.setItem(24,delete);
-        ItemStack add=new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.MAP));
+        ItemStack add=new ItemStack(plugin.getCodeUtils().getVersionedMaterial("MAP"));
         meta= add.getItemMeta();
         meta.setDisplayName(ChatColor.YELLOW+PluginCoder.getCoderGUI().getGuiText("addElement"));
         add.setItemMeta(meta);
@@ -66,7 +66,7 @@ public class ListConstructorGUI {
     }
 
     public ItemStack getListElementItem(String element){
-        ItemStack elementItem=new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP));
+        ItemStack elementItem=new ItemStack(plugin.getCodeUtils().getVersionedMaterial("FILLED_MAP"));
         ItemMeta meta= elementItem.getItemMeta();
         meta.setDisplayName(PluginCoder.getCoderGUI().putTextColor(element));
         elementItem.setItemMeta(meta);
@@ -108,7 +108,7 @@ public class ListConstructorGUI {
         }
        if(listInstruction.endsWith(","))listInstruction=listInstruction.substring(0,listInstruction.length()-1);
        listInstruction+="]";
-       ItemStack sign=new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.OAK_SIGN));
+       ItemStack sign=new ItemStack(plugin.getCodeUtils().getVersionedMaterial("OAK_SIGN"));
        ItemMeta meta=sign.getItemMeta();
        meta.setDisplayName("§f"+PluginCoder.getCoderGUI().putTextColor(listInstruction));
        sign.setItemMeta(meta);

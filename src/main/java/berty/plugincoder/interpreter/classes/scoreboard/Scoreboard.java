@@ -1,5 +1,6 @@
 package berty.plugincoder.interpreter.classes.scoreboard;
 
+import berty.plugincoder.interpreter.classes.rank.Rank;
 import org.bukkit.Bukkit;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
@@ -22,7 +23,7 @@ public class Scoreboard{
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
         scoreboardInstances.put(bukkitScoreboard,this);
     }
-    public void addLine(int score,String text) {
+    public void setLine(int score,String text) {
         bukkitScoreboard.getObjective("dummy").getScore(text).setScore(score);
     }
     public void clear() {
@@ -40,6 +41,16 @@ public class Scoreboard{
     public void setTitle(String title){
         this.title=title;
         bukkitScoreboard.getObjective("dummy").setDisplayName(title);
+    }
+    public boolean addRank(Rank rank){
+        if(rank.getTeam()!=null)Scoreboard.getScoreboard(rank.getTeam().getScoreboard()).removeRank(rank);
+        rank.setTeam(bukkitScoreboard.registerNewTeam(rank.getName()));
+        return true;
+    }
+    public boolean removeRank(Rank rank){
+        if(!bukkitScoreboard.equals(rank.getTeam()))return false;
+        rank.getTeam().unregister();
+        return true;
     }
     @Override
     public String toString(){
@@ -63,7 +74,7 @@ public class Scoreboard{
         scoreboard.clear();
         for(String entry: bukkitScoreboard.getEntries()){
             int score=bukkitScoreboard.getObjective("dummy").getScore(entry).getScore();
-            scoreboard.addLine(score,entry);
+            scoreboard.setLine(score,entry);
         }
     }
 }

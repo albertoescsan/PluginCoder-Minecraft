@@ -1,4 +1,4 @@
-package berty.plugincoder.interpreter.classes.minigame.game;
+package berty.plugincoder.interpreter.classes.game.game;
 
 import org.bukkit.*;
 import org.bukkit.entity.EntityType;
@@ -7,10 +7,10 @@ import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import berty.plugincoder.interpreter.classes.scoreboard.Scoreboard;
-import berty.plugincoder.interpreter.classes.minigame.events.*;
+import berty.plugincoder.interpreter.classes.game.events.*;
 import org.bukkit.entity.Player;
-import berty.plugincoder.interpreter.classes.minigame.game.team.Team;
-import berty.plugincoder.interpreter.classes.minigame.game.team.Teams;
+import berty.plugincoder.interpreter.classes.game.game.team.Team;
+import berty.plugincoder.interpreter.classes.game.game.team.Teams;
 import berty.plugincoder.main.PluginCoder;
 import org.bukkit.FireworkEffect.Type;
 import java.util.*;
@@ -38,23 +38,23 @@ public class Game {
         scoreboard=new Scoreboard(name);
         teams=new Teams(scoreboard.getBukkitScoreboard());
     }
-    public void activate(){
-        if(activated)return;
+    public boolean activate(){
+        if(activated||spawn==null)return false;
         activated=true;
         gameState=GameState.WAITING;
         int maxPlayers=teams.getList().stream().mapToInt(team->team.getMaxPlayers()).sum();
         if(maxPlayers>0)this.maxPlayers=maxPlayers;
-        spawn=new Location(Bukkit.getWorld("world"),-25,100,-330);//TODO quitar
+        return true;
     }
-    public void deactivate(){
-        if(!activated)return;
+    public boolean deactivate(){
+        if(!activated)return false;
         gameState=GameState.DEACTIVATED;
         activated=false;
         for(Player player:players)leave(player);
+        return true;
     }
     public boolean join(Player player){
-        activate();
-        if(players.size()==maxPlayers||spawn==null)return false;
+        if(!activated||players.size()==maxPlayers||spawn==null)return false;
         PlayerJoinGameEvent event=new PlayerJoinGameEvent(this,player);
         Bukkit.getServer().getPluginManager().callEvent(event);
         if(event.isCancelled())return false;
@@ -93,8 +93,7 @@ public class Game {
         gameState=GameState.STARTING;
         GameStartingEvent event=new GameStartingEvent(this);
         Bukkit.getServer().getPluginManager().callEvent(event);
-        AtomicInteger seconds= new AtomicInteger();
-        seconds.set(event.getTime());
+        AtomicInteger seconds= new AtomicInteger(event.getTime());
         new BukkitRunnable() {
             public void run() {
                 if(event.getMessages().containsKey(seconds.get())){
@@ -133,7 +132,14 @@ public class Game {
         GameFinishEvent event=new GameFinishEvent(this,winner);
         Bukkit.getServer().getPluginManager().callEvent(event);
         if(!event.getMessage().isEmpty())for(Player gamePlayer:players)gamePlayer.sendMessage(event.getMessage());
-        AtomicInteger seconds= new AtomicInteger();
+        BiFunction<Color,Double,Color> colorVariant=(color,factor)->
+                Color.fromRGB(Math.max(0,Math.min(255,(int)(color.getRed()*factor))),
+                        Math.max(0,Math.min(255,(int)(color.getGreen()*factor))),
+                        Math.max(0,Math.min(255,(int)(color.getBlue()*factor))));
+        Color color=winner.getTeam()!=null?winner.getTeam().getColor():Color.WHITE;
+        Color backColor=colorVariant.apply(color,1.3);
+        Color fadeColor=colorVariant.apply(color,0.7);
+        AtomicInteger seconds= new AtomicInteger(event.getTime());
         new BukkitRunnable() {
             public void run() {
                 if(seconds.get()==0){
@@ -142,16 +148,9 @@ public class Game {
                     cancel();}
                 seconds.decrementAndGet();
                 if(!event.isFireworks())return;
-                BiFunction<Color,Double,Color> colorVariant=(color,factor)->
-                        Color.fromRGB(Math.max(0,Math.min(255,(int)(color.getRed()*factor))),
-                                Math.max(0,Math.min(255,(int)(color.getGreen()*factor))),
-                                Math.max(0,Math.min(255,(int)(color.getBlue()*factor))));
-                Color color=winner.getTeam()!=null?winner.getTeam().getColor():Color.WHITE;
-                Color backColor=colorVariant.apply(color,1.3);
-                Color fadeColor=colorVariant.apply(color,0.7);
                 winner.getPlayers().stream().forEach(player -> {
-                    Firework firework= (Firework) player.getWorld().spawnEntity(player.getLocation(), EntityType.FIREWORK);
-                    FireworkMeta fireworkMeta= firework.getFireworkMeta();
+                    Firework firework=(Firework) player.getWorld().spawnEntity(player.getLocation(), EntityType.FIREWORK);
+                    FireworkMeta fireworkMeta=firework.getFireworkMeta();
                     fireworkMeta.addEffect(FireworkEffect.builder().withColor(color,backColor).withFade(fadeColor).with(Type.BALL).build());
                     fireworkMeta.setPower(2);
                     firework.setFireworkMeta(fireworkMeta);

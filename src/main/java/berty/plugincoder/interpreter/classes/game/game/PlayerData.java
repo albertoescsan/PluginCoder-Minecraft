@@ -1,4 +1,4 @@
-package berty.plugincoder.interpreter.classes.minigame.game;
+package berty.plugincoder.interpreter.classes.game.game;
 
 import org.bukkit.GameMode;
 import org.bukkit.inventory.ItemStack;

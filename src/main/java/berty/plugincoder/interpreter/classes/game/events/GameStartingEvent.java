@@ -1,8 +1,8 @@
-package berty.plugincoder.interpreter.classes.minigame.events;
+package berty.plugincoder.interpreter.classes.game.events;
 
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
-import berty.plugincoder.interpreter.classes.minigame.game.Game;
+import berty.plugincoder.interpreter.classes.game.game.Game;
 
 import java.util.HashMap;
 import java.util.Map;

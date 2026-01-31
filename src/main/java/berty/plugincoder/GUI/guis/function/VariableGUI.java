@@ -49,7 +49,7 @@ public class VariableGUI {
         String guiTitle= PluginCoder.getCoderGUI().getGuiText("declareVariable").toUpperCase();
         gui= Bukkit.createInventory(null,45, ChatColor.translateAlternateColorCodes('&',"&f&l"+guiTitle));
         PluginCoder.getCoderGUI().createInventoryBase(gui,false);
-        ItemStack blanco=new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.WHITE_STAINED_GLASS_PANE));
+        ItemStack blanco=new ItemStack(plugin.getCodeUtils().getVersionedMaterial("WHITE_STAINED_GLASS_PANE"));
         ItemMeta meta=blanco.getItemMeta();
         meta.setDisplayName(ChatColor.WHITE+"");
         blanco.setItemMeta(meta);
@@ -68,12 +68,12 @@ public class VariableGUI {
         String varName; String exectute;
         varName=instruction.replaceAll("^([^=]+)\\=(.*)$","$1");
         exectute=instruction.replaceAll("^([^=]+)\\=(.*)$","$2");
-        ItemStack varNameItem=new ItemStack(plugin.getVersionNumber()<14?Material.getMaterial("SIGN"):Material.OAK_SIGN);
+        ItemStack varNameItem=new ItemStack(plugin.getCodeUtils().getVersionedMaterial("OAK_SIGN"));
         ItemMeta meta=varNameItem.getItemMeta();
         meta.setDisplayName(ChatColor.GOLD+varName);
         varNameItem.setItemMeta(meta);
-        ItemStack executeItem=!exectute.isEmpty()?(new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP)))
-                :(new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.MAP)));
+        ItemStack executeItem=!exectute.isEmpty()?(new ItemStack(plugin.getCodeUtils().getVersionedMaterial("FILLED_MAP")))
+                :(new ItemStack(plugin.getCodeUtils().getVersionedMaterial("MAP")));
         meta=executeItem.getItemMeta();
         meta.setDisplayName("§f"+PluginCoder.getCoderGUI().putTextColor(exectute));
         executeItem.setItemMeta(meta);

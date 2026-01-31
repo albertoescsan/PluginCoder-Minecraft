@@ -1,7 +1,7 @@
-package berty.plugincoder.interpreter.translators.classes.minigame.game;
+package berty.plugincoder.interpreter.translators.classes.game.game;
 
-import berty.plugincoder.interpreter.classes.minigame.game.Game;
-import berty.plugincoder.interpreter.classes.minigame.game.GameTemplate;
+import berty.plugincoder.interpreter.classes.game.game.Game;
+import berty.plugincoder.interpreter.classes.game.game.GameTemplate;
 import berty.plugincoder.interpreter.objects.PluginMethod;
 
 import java.util.ArrayList;

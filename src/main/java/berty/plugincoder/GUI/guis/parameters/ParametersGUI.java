@@ -44,7 +44,7 @@ public class ParametersGUI {
     private void createInventory(){
         gui=Bukkit.createInventory(null,54," ");
         PluginCoder.getCoderGUI().createUpperLineInventory(gui,true);
-        ItemStack instructionItem=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.OAK_SIGN));
+        ItemStack instructionItem=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial("OAK_SIGN"));
         gui.setItem(4,instructionItem);
         updateInventoryLanguage();
     }
@@ -199,7 +199,7 @@ public class ParametersGUI {
         }
     }
     private ItemStack getParamItem(String paramType,int index,List<String> parameters){
-        ItemStack paramItem=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP));
+        ItemStack paramItem=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial("FILLED_MAP"));
         ItemMeta meta=paramItem.getItemMeta();
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         if(index==0){
@@ -290,7 +290,7 @@ public class ParametersGUI {
         meta.setDisplayName(ChatColor.GOLD+PluginCoder.getCoderGUI().getGuiText("variablesTitle"));
         vars.setItemMeta(meta);
         gui.setItem(48,vars);
-        ItemStack newObject=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.CRAFTING_TABLE));
+        ItemStack newObject=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial("CRAFTING_TABLE"));
         meta=newObject.getItemMeta();
         meta.setDisplayName(ChatColor.GOLD+PluginCoder.getCoderGUI().getGuiText("newObject"));
         newObject.setItemMeta(meta);
@@ -309,7 +309,7 @@ public class ParametersGUI {
                 paramItem=new ItemStack(itemMaterial);
                 if(!paramItem.getType().isItem()||param.startsWith("LEGACY_"))continue;
             }
-            else  paramItem=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP));
+            else  paramItem=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial("FILLED_MAP"));
             ItemMeta itemMeta=paramItem.getItemMeta();
             if(itemMeta==null)continue;
             itemMeta.setDisplayName(ChatColor.WHITE+param);

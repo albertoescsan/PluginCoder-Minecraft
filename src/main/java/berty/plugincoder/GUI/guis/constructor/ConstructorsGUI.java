@@ -24,7 +24,7 @@ public class ConstructorsGUI {
     private void createInventory() {
         gui=Bukkit.createInventory(null,54," ");
         PluginCoder.getCoderGUI().createInventoryBase(gui,false);
-        ItemStack instructionItem=new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.OAK_SIGN));
+        ItemStack instructionItem=new ItemStack(plugin.getCodeUtils().getVersionedMaterial("OAK_SIGN"));
         gui.setItem(4,instructionItem);
         updateInventoryLanguage();
     }

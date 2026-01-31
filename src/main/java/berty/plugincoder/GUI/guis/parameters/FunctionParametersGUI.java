@@ -26,12 +26,12 @@ public class FunctionParametersGUI {
     private void createInventory(){
         gui=Bukkit.createInventory(null,27,"");
         PluginCoder.getCoderGUI().createInventoryBase(gui,false);
-        ItemStack instructionItem=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.OAK_SIGN));
+        ItemStack instructionItem=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial("OAK_SIGN"));
         gui.setItem(4,instructionItem);
         updateInventoryLanguage();
     }
     private void updateInventoryLanguage(){
-        ItemStack addParam=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP));
+        ItemStack addParam=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial("FILLED_MAP"));
         ItemMeta meta=addParam.getItemMeta();
         meta.setDisplayName(ChatColor.YELLOW+PluginCoder.getCoderGUI().getGuiText("addParameter"));
         addParam.setItemMeta(meta);

@@ -30,7 +30,7 @@ public class CommandPromptGUI {
 
     private void createInventory() {
         gui=Bukkit.createInventory(null,45," ");
-        ItemStack blanco= new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.WHITE_STAINED_GLASS_PANE));
+        ItemStack blanco= new ItemStack(plugin.getCodeUtils().getVersionedMaterial("WHITE_STAINED_GLASS_PANE"));
         ItemMeta meta=blanco.getItemMeta();
         meta.setDisplayName(ChatColor.WHITE+"");
         blanco.setItemMeta(meta);
@@ -53,7 +53,7 @@ public class CommandPromptGUI {
         nextItem.setItemMeta(meta);
         gui.setItem(18,backItem);gui.setItem(26,nextItem);
         updateInventoryLanguage();
-        ItemStack commandItem=new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.OAK_SIGN));
+        ItemStack commandItem=new ItemStack(plugin.getCodeUtils().getVersionedMaterial("OAK_SIGN"));
         meta=commandItem.getItemMeta();
         meta.setDisplayName(ChatColor.WHITE+"");
         commandItem.setItemMeta(meta);
@@ -66,12 +66,12 @@ public class CommandPromptGUI {
         meta.setDisplayName(ChatColor.GRAY+PluginCoder.getCoderGUI().getGuiText("deleteArg"));
         removeArg.setItemMeta(meta);
         gui.setItem(23,removeArg);
-        ItemStack addArg=new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.MAP));
+        ItemStack addArg=new ItemStack(plugin.getCodeUtils().getVersionedMaterial("MAP"));
         meta=addArg.getItemMeta();
         meta.setDisplayName(ChatColor.YELLOW+PluginCoder.getCoderGUI().getGuiText("addArg"));
         addArg.setItemMeta(meta);
         gui.setItem(21,addArg);
-        ItemStack text=new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.WRITABLE_BOOK));
+        ItemStack text=new ItemStack(plugin.getCodeUtils().getVersionedMaterial("WRITABLE_BOOK"));
         meta=text.getItemMeta();
         meta.setDisplayName(ChatColor.RED+PluginCoder.getCoderGUI().getGuiText("addTextVar"));
         text.setItemMeta(meta);
@@ -130,7 +130,7 @@ public class CommandPromptGUI {
             else if(type==CommandVarType.TEXT)argItem=gui.getItem(30).clone();
             else if(type==CommandVarType.NUMBER)argItem=gui.getItem(32).clone();
             else argItem=gui.getItem(34).clone();
-        }else argItem=new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP));
+        }else argItem=new ItemStack(plugin.getCodeUtils().getVersionedMaterial("FILLED_MAP"));
         ItemMeta meta=argItem.getItemMeta();
         meta.setDisplayName(ChatColor.WHITE+arg);
         argItem.setItemMeta(meta);

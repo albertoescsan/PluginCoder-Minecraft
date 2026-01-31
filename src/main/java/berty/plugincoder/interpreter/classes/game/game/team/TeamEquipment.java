@@ -1,4 +1,4 @@
-package berty.plugincoder.interpreter.classes.minigame.game.team;
+package berty.plugincoder.interpreter.classes.game.game.team;
 
 import org.bukkit.Color;
 import org.bukkit.Material;

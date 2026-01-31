@@ -1,6 +1,6 @@
-package berty.plugincoder.interpreter.classes.minigame.events;
+package berty.plugincoder.interpreter.classes.game.events;
 
-import berty.plugincoder.interpreter.classes.minigame.game.Game;
+import berty.plugincoder.interpreter.classes.game.game.Game;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 

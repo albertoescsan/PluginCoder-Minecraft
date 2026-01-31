@@ -206,8 +206,8 @@ public class ConditionsGUI {
         else if(operation.equals("true"))operationItem=gui.getItem(42);
         else if(operation.equals("false"))operationItem=gui.getItem(43);
         else{
-            operationItem=!operation.isEmpty()?(new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP)))
-                    :(new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial(Material.MAP)));
+            operationItem=!operation.isEmpty()?(new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial("FILLED_MAP")))
+                    :(new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial("MAP")));
             ItemMeta meta=operationItem.getItemMeta();
             meta.setDisplayName("§f"+PluginCoder.getCoderGUI().putTextColor(operation));
             operationItem.setItemMeta(meta);

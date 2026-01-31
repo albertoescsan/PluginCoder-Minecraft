@@ -37,7 +37,7 @@ public class SetValueGUI {
         ItemMeta meta=delete.getItemMeta();
         meta.setDisplayName(ChatColor.GRAY+PluginCoder.getCoderGUI().getGuiText("deleteInstruction"));
         delete.setItemMeta(meta);
-        ItemStack text=new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.WRITABLE_BOOK));
+        ItemStack text=new ItemStack(plugin.getCodeUtils().getVersionedMaterial("WRITABLE_BOOK"));
         meta=text.getItemMeta();
         meta.setDisplayName(ChatColor.RED+PluginCoder.getCoderGUI().getGuiText("text"));
         text.setItemMeta(meta);
@@ -53,7 +53,7 @@ public class SetValueGUI {
         meta=vars.getItemMeta();
         meta.setDisplayName(ChatColor.GOLD+PluginCoder.getCoderGUI().getGuiText("variablesTitle"));
         vars.setItemMeta(meta);
-        ItemStack newObject=new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.CRAFTING_TABLE));
+        ItemStack newObject=new ItemStack(plugin.getCodeUtils().getVersionedMaterial("CRAFTING_TABLE"));
         meta=newObject.getItemMeta();
         meta.setDisplayName(ChatColor.GOLD+PluginCoder.getCoderGUI().getGuiText("newObject"));
         newObject.setItemMeta(meta);
@@ -63,7 +63,7 @@ public class SetValueGUI {
     public void updateGUI(String instruction,Inventory inventory){
         renderedInstructions.add(instruction);
         previousInvs.add(inventory);
-        ItemStack instructionItem=new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP));
+        ItemStack instructionItem=new ItemStack(plugin.getCodeUtils().getVersionedMaterial("FILLED_MAP"));
         ItemMeta meta=instructionItem.getItemMeta();
         meta.setDisplayName("§f"+PluginCoder.getCoderGUI().putTextColor(instruction));
         instructionItem.setItemMeta(meta);
@@ -84,8 +84,8 @@ public class SetValueGUI {
         String newInstruction=ChatColor.stripColor(gui.getItem(22).getItemMeta().getDisplayName()).trim();
         if(newInstruction.equals(oldExecuteInstruction))return false;
         if(previousInv.equals(PluginCoder.getCoderGUI().getVariableGUI().getGui())){
-            ItemStack executeItem=!newInstruction.isEmpty()?(new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP)))
-                    :(new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.MAP)));
+            ItemStack executeItem=!newInstruction.isEmpty()?(new ItemStack(plugin.getCodeUtils().getVersionedMaterial("FILLED_MAP")))
+                    :(new ItemStack(plugin.getCodeUtils().getVersionedMaterial("MAP")));
             ItemMeta meta=executeItem.getItemMeta();
             meta.setDisplayName("§f"+PluginCoder.getCoderGUI().putTextColor(newInstruction));
             executeItem.setItemMeta(meta);
@@ -114,7 +114,7 @@ public class SetValueGUI {
     }
     public void saveToSetGuiPage(String newInstruction,boolean closingInventoryWithoutReturning){
         if(newInstruction.trim().isEmpty())newInstruction="null";
-        ItemStack executeItem=new ItemStack(plugin.getCodeUtils().getVersionedMaterial(Material.FILLED_MAP));
+        ItemStack executeItem=new ItemStack(plugin.getCodeUtils().getVersionedMaterial("FILLED_MAP"));
         ItemMeta meta=executeItem.getItemMeta();
         meta.setDisplayName("§f"+PluginCoder.getCoderGUI().putTextColor(newInstruction));
         executeItem.setItemMeta(meta);
