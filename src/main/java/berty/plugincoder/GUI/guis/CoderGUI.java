@@ -233,36 +233,37 @@ public class CoderGUI {
 		languages.setItem(16,russian);
 	}
 	public void updateInventories() {
-		PluginCoder.getCoderGUI().updateHomeItem();
-		PluginCoder.getCoderGUI().updateReturnItem();
-		PluginCoder.getCoderGUI().updateBackItem();
-		PluginCoder.getCoderGUI().updateNextItem();
-		PluginCoder.getCoderGUI().createMainInventory();
-		PluginCoder.getCoderGUI().createLanguageInventory();
-		PluginCoder.getCoderGUI().getEventsGUI().updateGUI();
-		PluginCoder.getCoderGUI().getObjectsGUI().updateGUI();
-		PluginCoder.getCoderGUI().getCommandsGUI().updateGUI();
-		PluginCoder.getCoderGUI().getPluginsGUI().createPluginEditor();
-		PluginCoder.getCoderGUI().getEventsGUI().updateEventItemsGUI();
-		PluginCoder.getCoderGUI().getVariableGUI().createInventory();
-		PluginCoder.getCoderGUI().getInstructionsGUI().updateGUI();
-		PluginCoder.getCoderGUI().getExecutionWriterGUI().createInventory();
-		PluginCoder.getCoderGUI().getSetValueGUI().updateInventoryLanguage();
-		PluginCoder.getCoderGUI().getMathGUI().updateInventoryLanguage();
-		PluginCoder.getCoderGUI().getNumberGUI().updateInventoryLanguage();
-		PluginCoder.getCoderGUI().getConditionsGUI().updateInventoryLanguage();
-		PluginCoder.getCoderGUI().getCheckObjectTypeGUI().updateInventoryLanguage();
-		PluginCoder.getCoderGUI().getEqualityGUI().updateInventoryLanguage();
-		PluginCoder.getCoderGUI().getCommandPromptGUI().updateInventoryLanguage();
-		PluginCoder.getCoderGUI().getTextGUI().updateInventoryLanguage();
-		PluginCoder.getCoderGUI().getTextColorGUI().updateInventoryLanguage();
-		PluginCoder.getCoderGUI().getParametersGUI().updateInventoryLanguage();
-		PluginCoder.getCoderGUI().getForParametersGUI().updateInventoryLanguage();
-		PluginCoder.getCoderGUI().getObjectGUI().updateInventoryLanguage();
-		PluginCoder.getCoderGUI().getConstructorsGUI().updateInventoryLanguage();
-		PluginCoder.getCoderGUI().getObjectConstructorsGUI().updateGUI();
-		PluginCoder.getCoderGUI().getListConstructorGUI().updateInventoryLanguage();
-		PluginCoder.getCoderGUI().getDictConstructorGUI().updateInventoryLanguage();
+		updateHomeItem();
+		updateReturnItem();
+		updateBackItem();
+		updateNextItem();
+		createMainInventory();
+		createLanguageInventory();
+		eventsGUI.updateGUI();
+		eventsGUI.updateEventItemsGUI();
+		objectsGUI.updateGUI();
+		objectGUI.updateInventoryLanguage();
+		commandsGUI.updateGUI();
+		commandPromptGUI.updateInventoryLanguage();
+		pluginsGUI.createPluginEditor();
+		variableGUI.createInventory();
+		instructionsGUI.updateGUI();
+		executionWriterGUI.createInventory();
+		setValueGUI.updateInventoryLanguage();
+		mathGUI.updateInventoryLanguage();
+		numberGUI.updateInventoryLanguage();
+		conditionsGUI.updateInventoryLanguage();
+		checkObjectTypeGUI.updateInventoryLanguage();
+		equalityGUI.updateInventoryLanguage();
+		textGUI.updateInventoryLanguage();
+		textColorGUI.updateInventoryLanguage();
+		textHexColorGUI.updateInventoryLanguage();
+		parametersGUI.updateInventoryLanguage();
+		forParametersGUI.updateInventoryLanguage();
+		constructorsGUI.updateInventoryLanguage();
+		objectConstructorsGUI.updateGUI();
+		listConstructorGUI.updateInventoryLanguage();
+		dictConstructorGUI.updateInventoryLanguage();
 	}
 	private void fillWithWhiteBorder(Inventory inventory){
 		ItemStack blanco=new ItemStack(mainPlugin.getVersionNumber()<13?
@@ -353,6 +354,14 @@ public class CoderGUI {
 			text=text.replaceAll("^"+color+"\\+",colorTranslation+color+"§f+");
 			text=text.replaceAll("([+,(=])"+color+"\\+","$1"+ colorTranslation+color+"§f+");
 		}
+		//hex color
+		while(text.matches("^(.*)#[A-Fa-f0-9]{6}(.*)$")){
+			String hexCode=text.replaceAll("^(.*)(#[A-Fa-f0-9]{6})(.*)$","$2");
+			String parsedHexCode=mainPlugin.getCodeExecuter().parseHexColor(hexCode);
+			text=text.replaceAll(hexCode,parsedHexCode+"¤"+hexCode.substring(1)+"§f");
+		}
+		text=text.replace("¤","#");
+
 		text=getColoredValueText(text,"true","§a");
 		text=getColoredValueText(text,"false","§c");
 		text=getColoredValueText(text,"null","§4");
@@ -371,18 +380,18 @@ public class CoderGUI {
 	}
 	public void returnHome(Player p,boolean openInventory) {
 		if(openInventory){
-			p.openInventory(PluginCoder.getCoderGUI().getPluginCoderGUI());
+			p.openInventory(getPluginCoderGUI());
 		}else guiPlayer=null;
 
-		PluginCoder.getCoderGUI().getFunctionGUI().setDeleteInstruction(false);
-		PluginCoder.getCoderGUI().getFunctionGUI().getFunctions().clear();
-		PluginCoder.getCoderGUI().getFunctionGUI().getGUI().clear();
-		PluginCoder.getCoderGUI().getFunctionGUI().getFunctionsIndexes().clear();
-		PluginCoder.getCoderGUI().getFunctionGUI().setOriginalFunctionIndex(0);
+		getFunctionGUI().setDeleteInstruction(false);
+		getFunctionGUI().getFunctions().clear();
+		getFunctionGUI().getGUI().clear();
+		getFunctionGUI().getFunctionsIndexes().clear();
+		getFunctionGUI().setOriginalFunctionIndex(0);
 		InicVars.functionType="";
 	}
 	public void createInventoryBase(Inventory inventory,boolean paged){
-		PluginCoder.getCoderGUI().fillWithWhiteBorder(inventory);
+		fillWithWhiteBorder(inventory);
 		inventory.setItem(8,homeItem);
 		inventory.setItem(0,returnItem);
 		if(!paged)return;
@@ -463,14 +472,14 @@ public class CoderGUI {
 		for(String instruction: mainPlugin.getCodeExecuter().getGUIInstructionsFromFunction(function)){
 			if(instruction.matches("^([^{]+)\\{(.*)}$")&&!instruction.matches("^([A-Za-z0-9_]+)\\s*=(.*)$")){
 				String functionTitle=instruction.replaceAll("^([^{]+)\\{(.*)}$","$1{");
-				functionTitle="§f"+PluginCoder.getCoderGUI().putTextColor(functionTitle);
+				functionTitle="§f"+putTextColor(functionTitle);
 				instructions.add(functionTitle);
 				for(String subInstruction:getDisplayLore(instruction)){
 					instructions.add(subInstruction);
 				}
 				instructions.add(ChatColor.WHITE+"}");
 			}else{
-				instruction="§f"+PluginCoder.getCoderGUI().putTextColor(instruction);
+				instruction="§f"+putTextColor(instruction);
 				instructions.add(ChatColor.WHITE+instruction);
 			}
 			if(instructions.size()>=15){
@@ -496,13 +505,13 @@ public class CoderGUI {
 		return item;
 	}
 	public void createCenteredItemInventory(Inventory inventory){
-		PluginCoder.getCoderGUI().createInventoryBase(inventory,false);
+		createInventoryBase(inventory,false);
 		ItemStack negro= mainPlugin.getVersionNumber()<13?
 				new ItemStack(Material.getMaterial("STAINED_GLASS_PANE"),1,(short)15):new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
 		ItemMeta meta=negro.getItemMeta();
 		meta.setDisplayName(ChatColor.WHITE+"");
 		negro.setItemMeta(meta);
-		PluginCoder.getCoderGUI().createCircleArroundSlot(22,inventory,negro);
+		createCircleArroundSlot(22,inventory,negro);
 		ItemStack gris= mainPlugin.getVersionNumber()<13?
 				new ItemStack(Material.getMaterial("STAINED_GLASS_PANE"),1,(short)8):new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
 		meta=negro.getItemMeta();
@@ -515,7 +524,7 @@ public class CoderGUI {
 		}
 	}
 	public void createUpperLineInventory(Inventory inventory,boolean paged){
-		PluginCoder.getCoderGUI().createInventoryBase(inventory,paged);
+		createInventoryBase(inventory,paged);
 		ItemStack blanco=new ItemStack(mainPlugin.getVersionNumber()<13?
 				Material.getMaterial("STAINED_GLASS_PANE"):Material.WHITE_STAINED_GLASS_PANE);
 		ItemMeta meta=blanco.getItemMeta();

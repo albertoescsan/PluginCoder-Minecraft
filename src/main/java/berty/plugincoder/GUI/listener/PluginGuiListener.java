@@ -1292,6 +1292,9 @@ public class PluginGuiListener implements Listener {
 					if(mainPlugin.getColorTranslator().keySet().contains(instruction)){
 						PluginCoder.getCoderGUI().getTextGUI().cancelColorTask();
 						player.openInventory(PluginCoder.getCoderGUI().getTextColorGUI().getGUI());
+					}else if(instruction.matches("^#[A-Fa-f0-9]{6}$")){
+						PluginCoder.getCoderGUI().getTextHexColorGUI().setHexCode(instruction);
+						player.openInventory(PluginCoder.getCoderGUI().getTextColorGUI().getGUI());
 					}else if(mainPlugin.getCodeExecuter().isExecution(instruction,PluginCoder.getCoderGUI().getExecutionWriterGUI().getVariables())){
 						PluginCoder.getCoderGUI().getTextGUI().prepareToNextGUI();
 						PluginCoder.getCoderGUI().getExecutionWriterGUI().updateGUI(instruction,event.getClickedInventory());
@@ -1353,16 +1356,37 @@ public class PluginGuiListener implements Listener {
 				player.openInventory(PluginCoder.getCoderGUI().getTextGUI().getGUI());
 				PluginCoder.getCoderGUI().buttonSound(player);
 			}else if(event.getSlot()==8){
-				PluginCoder.getCoderGUI().getFunctionGUI().returnHome(player,true);
+				PluginCoder.getCoderGUI().getTextGUI().returnHome(player);
 				PluginCoder.getCoderGUI().buttonSound(player);
-			}
-			else if(event.getCurrentItem()!=null&&event.getSlot()%9!=0&&(event.getSlot()+1)%9!=0){
+			}else if(event.getSlot()==40&&!event.getCurrentItem().getType().toString().contains("STAINED_GLASS_PANE")){
+				PluginCoder.getCoderGUI().getTextHexColorGUI().updateInventory();
+				player.openInventory(PluginCoder.getCoderGUI().getTextHexColorGUI().getGUI());
+				PluginCoder.getCoderGUI().buttonSound(player);
+			}else if(event.getSlot()>9&&event.getSlot()<35&&event.getSlot()%9!=0&&(event.getSlot()+1)%9!=0){
 				PluginCoder.getCoderGUI().getTextColorGUI().saveColor(event.getCurrentItem(),event.getSlot());
 				PluginCoder.getCoderGUI().getTextGUI().startColorTask();
 				player.openInventory(PluginCoder.getCoderGUI().getTextGUI().getGUI());
 				PluginCoder.getCoderGUI().buttonSound(player);
 			}
-            //parameters gui
+            //Text hex color gui
+		}else if(event.getInventory().equals(PluginCoder.getCoderGUI().getTextHexColorGUI().getGUI())){
+			event.setCancelled(true);
+			if(event.getClickedInventory().getType()==InventoryType.PLAYER)return;
+			if(event.getSlot()==0){
+				PluginCoder.getCoderGUI().getTextHexColorGUI().saveHexCode();
+				player.openInventory(PluginCoder.getCoderGUI().getTextGUI().getGUI());
+				PluginCoder.getCoderGUI().buttonSound(player);
+			}else if(event.getSlot()==8){
+				PluginCoder.getCoderGUI().getFunctionGUI().returnHome(player,true);
+				PluginCoder.getCoderGUI().buttonSound(player);
+			}else if(event.getSlot()==11||event.getSlot()==13||event.getSlot()==15){
+				PluginCoder.getCoderGUI().getTextHexColorGUI().updateSelectedColor(event.getSlot());
+				PluginCoder.getCoderGUI().buttonSound(player);
+			}else if(event.getSlot()==29||event.getSlot()==33||event.getSlot()==38||event.getSlot()==42){
+				PluginCoder.getCoderGUI().getTextHexColorGUI().updateColorCode(event.getSlot());
+				PluginCoder.getCoderGUI().buttonSound(player);
+			}
+			//parameters gui
 		}else if(event.getInventory().equals(PluginCoder.getCoderGUI().getParametersGUI().getGUI())){
 			event.setCancelled(true);
 			if(event.getClickedInventory().getType()==InventoryType.PLAYER)return;

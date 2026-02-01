@@ -294,10 +294,11 @@ public class PluginGuiSavingListener implements Listener {
         }else if(event.getInventory().equals(PluginCoder.getCoderGUI().getTextGUI().getGUI())){
             Bukkit.getScheduler().scheduleSyncDelayedTask(mainPlugin, () ->{
                 if(PluginCoder.getCoderGUI().getPluginCoderGUI().equals(player.getOpenInventory().getTopInventory()))return;
+                if(PluginCoder.getCoderGUI().getTextColorGUI().getGUI().equals(player.getOpenInventory().getTopInventory()))return;
+                if(PluginCoder.getCoderGUI().getTextHexColorGUI().getGUI().equals(player.getOpenInventory().getTopInventory()))return;
                 if(player.getOpenInventory().getTopInventory().equals(PluginCoder.getCoderGUI().getExecutionWriterGUI().getGui()))return;
                 if(PluginCoder.getCoderGUI().getSetValueGUI().getGUI().equals(player.getOpenInventory().getTopInventory()))return;
                 if(PluginCoder.getCoderGUI().getEqualityGUI().getGUI().equals(player.getOpenInventory().getTopInventory()))return;
-                if(PluginCoder.getCoderGUI().getTextColorGUI().getGUI().equals(player.getOpenInventory().getTopInventory()))return;
                 if(PluginCoder.getCoderGUI().getExecutionWriterGUI().getGui().equals(player.getOpenInventory().getTopInventory()))return;
                 if(PluginCoder.getCoderGUI().getParametersGUI().getGUI().equals(player.getOpenInventory().getTopInventory()))return;
                 if(PluginCoder.getCoderGUI().getTextGUI().isAddingText())return;
@@ -307,6 +308,16 @@ public class PluginGuiSavingListener implements Listener {
             }, 1);
         }//cerrar text color gui
         else if(event.getInventory().equals(PluginCoder.getCoderGUI().getTextColorGUI().getGUI())){
+            Bukkit.getScheduler().scheduleSyncDelayedTask(mainPlugin, () ->{
+                if(PluginCoder.getCoderGUI().getPluginCoderGUI().equals(player.getOpenInventory().getTopInventory()))return;
+                if(PluginCoder.getCoderGUI().getTextGUI().getGUI().equals(player.getOpenInventory().getTopInventory()))return;
+                if(PluginCoder.getCoderGUI().getTextHexColorGUI().getGUI().equals(player.getOpenInventory().getTopInventory()))return;
+                //TODO añadir mas inventarios
+                PluginCoder.getCoderGUI().getTextGUI().saveChanges(true);
+                PluginCoder.getCoderGUI().returnHome(player,false);
+            }, 1);
+            //cerrar text hex color gui
+        }else if(event.getInventory().equals(PluginCoder.getCoderGUI().getTextHexColorGUI().getGUI())){
             Bukkit.getScheduler().scheduleSyncDelayedTask(mainPlugin, () ->{
                 if(PluginCoder.getCoderGUI().getPluginCoderGUI().equals(player.getOpenInventory().getTopInventory()))return;
                 if(PluginCoder.getCoderGUI().getTextGUI().getGUI().equals(player.getOpenInventory().getTopInventory()))return;

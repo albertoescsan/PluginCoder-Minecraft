@@ -30,9 +30,9 @@ public class TextColorGUI {
     public void updateInventoryLanguage() {
         gui.setItem(0,PluginCoder.getCoderGUI().getReturnItem());
         gui.setItem(8,PluginCoder.getCoderGUI().getHomeItem());
+        String[] colorTexts=PluginCoder.getCoderGUI().getGuiText("colorNames").split(",");
         ItemStack rojoOscuro=PluginCoder.getCoderGUI().getPlayerHead("http://textures.minecraft.net/texture/97d0b9b3c419d3e321397bedc6dcd649e51cc2fa36b883b02f4da39582cdff1b");
         ItemMeta meta=rojoOscuro.getItemMeta();
-        String[] colorTexts=PluginCoder.getCoderGUI().getGuiText("colorNames").split(",");
         meta.setDisplayName(ChatColor.DARK_RED+colorTexts[0]);
         rojoOscuro.setItemMeta(meta);
         gui.setItem(10,rojoOscuro);
@@ -137,10 +137,9 @@ public class TextColorGUI {
         reset.setItemMeta(meta);
         gui.setItem(34,reset);
         if(mainPlugin.getVersionNumber()>=16){
-            //ItemStack hexColor=PluginCoder.getCoderGUI().getPlayerHead("");
-            ItemStack hexColor=new ItemStack(Material.PLAYER_HEAD);
+            ItemStack hexColor=PluginCoder.getCoderGUI().getPlayerHead("http://textures.minecraft.net/texture/343530cff0176636787df7f23a5a5f84b353ab029b8a6be4aca71d42b79050d1");
             meta=hexColor.getItemMeta();
-            meta.setDisplayName(ChatColor.WHITE+"Hexadecimal colors");
+            meta.setDisplayName(ChatColor.WHITE+PluginCoder.getCoderGUI().getGuiText("hexColors"));
             hexColor.setItemMeta(meta);
             gui.setItem(40,hexColor);
         }

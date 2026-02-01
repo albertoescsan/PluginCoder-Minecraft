@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Set;
 
 public class TextGUI {
-    private PluginCoder plugin;
+    private PluginCoder mainPlugin;
     private Inventory gui;
     private List<ItemStack> colores=new ArrayList<>();
     private int colorTaskId;
@@ -27,7 +27,7 @@ public class TextGUI {
     private List<String> textContents=new ArrayList<>();
     private List<Integer> lastIndex=new ArrayList<>();
     public TextGUI(PluginCoder plugin){
-        this.plugin=plugin;
+        this.mainPlugin =plugin;
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> createInventory(), 3);
     }
 
@@ -44,16 +44,16 @@ public class TextGUI {
         nextItem.setItemMeta(meta);
         gui.setItem(18,backItem);
         gui.setItem(26,nextItem);
-        ItemStack negro=plugin.getVersionNumber()<13?
+        ItemStack negro= mainPlugin.getVersionNumber()<13?
                 new ItemStack(Material.getMaterial("STAINED_GLASS_PANE"),1,(short)15):new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
         meta=negro.getItemMeta();
         meta.setDisplayName(ChatColor.WHITE+"");
         negro.setItemMeta(meta);
         for(int i=0;i<7;i++){
             gui.setItem(28+i,negro);
-            gui.setItem(28+9+i,negro);
+            gui.setItem(37+i,negro);
         }
-        ItemStack instructionItem=new ItemStack(plugin.getCodeUtils().getVersionedMaterial("OAK_SIGN"));
+        ItemStack instructionItem=new ItemStack(mainPlugin.getCodeUtils().getVersionedMaterial("OAK_SIGN"));
         gui.setItem(4,instructionItem);
         ItemStack openParentesis=PluginCoder.getCoderGUI().getPlayerHead("http://textures.minecraft.net/texture/674153bb6a3fa8979a889f99aa0fc84ba9f427ff0d8e487f76fa6c8831d18e9");
         meta=openParentesis.getItemMeta();
@@ -90,13 +90,13 @@ public class TextGUI {
         delete.setItemMeta(meta);gui.setItem(22,delete);
         colores.clear();
         String colorText=PluginCoder.getCoderGUI().getGuiText("textColor");
-        ItemStack rojo=PluginCoder.getCoderGUI().getTextColorGUI().getColorItem("DARK_RED");
-        ItemStack naranja=PluginCoder.getCoderGUI().getTextColorGUI().getColorItem("ORANGE");
-        ItemStack amarillo=PluginCoder.getCoderGUI().getTextColorGUI().getColorItem("YELLOW");
-        ItemStack verde=PluginCoder.getCoderGUI().getTextColorGUI().getColorItem("GREEN");
-        ItemStack celeste=PluginCoder.getCoderGUI().getTextColorGUI().getColorItem("CYAN");
-        ItemStack azul=PluginCoder.getCoderGUI().getTextColorGUI().getColorItem("DARK_BLUE");
-        ItemStack morado=PluginCoder.getCoderGUI().getTextColorGUI().getColorItem("PURPLE");
+        ItemStack rojo=PluginCoder.getCoderGUI().getTextColorGUI().getColorItem("DARK_RED").clone();
+        ItemStack naranja=PluginCoder.getCoderGUI().getTextColorGUI().getColorItem("ORANGE").clone();
+        ItemStack amarillo=PluginCoder.getCoderGUI().getTextColorGUI().getColorItem("YELLOW").clone();
+        ItemStack verde=PluginCoder.getCoderGUI().getTextColorGUI().getColorItem("GREEN").clone();
+        ItemStack celeste=PluginCoder.getCoderGUI().getTextColorGUI().getColorItem("CYAN").clone();
+        ItemStack azul=PluginCoder.getCoderGUI().getTextColorGUI().getColorItem("DARK_BLUE").clone();
+        ItemStack morado=PluginCoder.getCoderGUI().getTextColorGUI().getColorItem("PURPLE").clone();
         colores.add(putColorTextName(rojo,ChatColor.DARK_RED,colorText));colores.add(putColorTextName(naranja,ChatColor.GOLD,colorText));
         colores.add(putColorTextName(amarillo,ChatColor.YELLOW,colorText));colores.add(putColorTextName(verde,ChatColor.GREEN,colorText));
         colores.add(putColorTextName(celeste,ChatColor.AQUA,colorText));colores.add(putColorTextName(azul,ChatColor.DARK_BLUE,colorText));
@@ -173,7 +173,7 @@ public class TextGUI {
         return true;
     }
     public void startColorTask(){
-        colorTaskId=Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
+        colorTaskId=Bukkit.getScheduler().scheduleSyncRepeatingTask(mainPlugin, () -> {
             int index=colores.indexOf(gui.getItem(29));
             if(index+1==colores.size())index=-1;
             ItemStack newColor=colores.get(index+1);
@@ -206,17 +206,24 @@ public class TextGUI {
             text+=content+(content.equals("(")?"":"+");
         }
         if(!text.endsWith("(")&&!text.isEmpty())text=text.substring(0,text.length()-1);
-        ItemStack commandItem=gui.getItem(4);
-        ItemMeta meta=commandItem.getItemMeta();
+        ItemStack signItem=gui.getItem(4);
+        ItemMeta meta=signItem.getItemMeta();
         meta.setDisplayName("§f"+PluginCoder.getCoderGUI().putTextColor(text));
-        commandItem.setItemMeta(meta);
-        gui.setItem(4,commandItem);
+        signItem.setItemMeta(meta);
+        gui.setItem(4,signItem);
     }
 
     private ItemStack getContentItem(String text) {
-        if(plugin.getColorTranslator().containsKey(text))return PluginCoder.getCoderGUI().getTextColorGUI().getColorItem(text);
-        else if(text.equals("("))return gui.getItem(39);
-        else if(text.equals(")"))return gui.getItem(41);
+        if(mainPlugin.getColorTranslator().containsKey(text))return PluginCoder.getCoderGUI().getTextColorGUI().getColorItem(text);
+        else if(text.matches("^#[A-Fa-f0-9]{6}$")){
+            ItemStack hexColorItem=PluginCoder.getCoderGUI().getPlayerHead("http://textures.minecraft.net/texture/343530cff0176636787df7f23a5a5f84b353ab029b8a6be4aca71d42b79050d1");
+            ItemMeta meta=hexColorItem.getItemMeta();
+            meta.setDisplayName(mainPlugin.getCodeExecuter().parseHexColor(text)+text);
+            hexColorItem.setItemMeta(meta);
+            return hexColorItem;
+        }
+        else if(text.equals("("))return gui.getItem(39).clone();
+        else if(text.equals(")"))return gui.getItem(41).clone();
         else return PluginCoder.getCoderGUI().getFunctionGUI().getInstructionItem(text);
     }
     public void addNewContent(String content) {

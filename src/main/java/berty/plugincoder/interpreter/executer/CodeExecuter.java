@@ -400,6 +400,14 @@ public class CodeExecuter {
 		if(text==null||PluginCoder.isErrorFound())return Void.class;
 		return text;
 	}
+	public String parseHexColor(String hexCode){
+		if(hexCode.matches("^#[A-Fa-f0-9]{6}$")){
+			String hexColor="§x";
+			for(Character hexChar:hexCode.substring(1).toCharArray())hexColor+="§"+hexChar;
+			hexCode=hexColor;
+		}
+		return hexCode;
+	}
 	private String getStringFromTextVar(String textToProcess,String text,String originalInstruction, Map<String, Object> variables) {
 		String parsedString="";
 		for(Character character:textToProcess.toCharArray()){
